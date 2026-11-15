@@ -32,8 +32,8 @@ classifies a video clip as `truth` or `deception`.
    website, label it as such and say when the local data diverges.
 4. **Do not invent dataset facts.** If something cannot be verified from the files, write that it is
    unverified instead of filling the gap.
-5. **Keep third-party code in submodules**, never copy-paste it into the tree. Submodules are hosted
-   under `lie-detector/vendor/` (see §4).
+5. **Keep third-party code in submodules**, never copy-paste it into the tree. Submodules live under
+   `lie-detector/vendor/` (tooling) and `lie-detector/baselines/` (reference implementations) — see §4.
 
 ---
 
@@ -42,7 +42,7 @@ classifies a video clip as `truth` or `deception`.
 ```
 DeepLearningCourse/
 ├── AGENTS.md                      # this file
-├── .gitignore                     # ignores .venv, dist, the DOLOS dataset, data/ and clips/
+├── .gitignore                     # .venv, dist, DOLOS and every generated artifact
 ├── presentation/                  # slide deck + pmaker tool (not related to lie-detector)
 └── lie-detector/
     ├── README.md                  # project README: goal, layout, preprocessing, evaluation, plan
@@ -51,12 +51,23 @@ DeepLearningCourse/
     │   ├── README.md              # dataset documentation — the reference for everything DOLOS
     │   └── DOLOS/                 # DATASET, NOT TRACKED, NO VIDEOS (annotations only)
     ├── notebooks/
-    │   ├── preprocessing.ipynb    # SHARED preprocessing → data/processed/ (to be written)
+    │   ├── preprocessing.ipynb    # SHARED: splits + download + publish to Drive
+    │   ├── architecture_template.ipynb   # skeleton to copy per direction
     │   └── architectures/         # one sub-folder per research direction
-    ├── data/                      # generated artifacts — NOT TRACKED
-    ├── clips/                     # downloaded .mp4 — NOT TRACKED
-    └── vendor/                    # git submodules (third-party code, pinned commits)
-        ├── AV-Data-Processing/    # YouTube downloader + face/audio extraction
+    ├── scripts/
+    │   ├── build_dataset.py       # clips + dataset.csv (project README §3.1)
+    │   └── make_splits.py         # frozen splits      (project README §3.2)
+    ├── lib/
+    │   ├── dataset.py             # splits + loaders imported by notebooks (§3.3)
+    │   └── metrics.py             # ACC / F1 / AUC, identical for every direction
+    ├── data/processed/
+    │   ├── clips/                 # downloaded .mp4 — NOT TRACKED
+    │   ├── audio/                 # 16 kHz wav — NOT TRACKED
+    │   ├── dataset.csv            # clip table + MUMIN — NOT TRACKED
+    │   └── splits/                # frozen protocol — published on Drive, NOT TRACKED
+    ├── vendor/                    # submodule: third-party tooling
+    │   └── AV-Data-Processing/    # YouTube downloader + face/audio extraction
+    └── baselines/                 # submodule: reference implementations
         └── DOLOS-PECL/            # official training code (PECL architecture)
 ```
 
@@ -64,13 +75,14 @@ DeepLearningCourse/
 
 ## 4. Submodules
 
-Two official NTU/NMS05 repositories are registered as git submodules. Both are required for the full
-pipeline and are pinned to `main` at the commits recorded in the index.
+Two official NTU/NMS05 repositories are registered as git submodules — one as tooling, one as the
+reference implementation. Both are useful for the full pipeline and are pinned to `main` at the commits
+recorded in the index.
 
 | Path | Upstream | Purpose |
 |---|---|---|
 | `lie-detector/vendor/AV-Data-Processing` | [NMS05/AV-Data-Processing](https://github.com/NMS05/AV-Data-Processing) | `YT_video_downloader.py`, `extract_face_frames.py`, `video_to_audio.py` |
-| `lie-detector/vendor/DOLOS-PECL` | [NMS05/Audio-Visual-Deception-Detection-DOLOS-…](https://github.com/NMS05/Audio-Visual-Deception-Detection-DOLOS-Dataset-and-Parameter-Efficient-Crossmodal-Learning) | `scripts/` — dataloader, Wav2Vec2/ViT + UT-Adapter models, PAVF fusion, `train_fusion.sh` |
+| `lie-detector/baselines/DOLOS-PECL` | [NMS05/Audio-Visual-Deception-Detection-DOLOS-…](https://github.com/NMS05/Audio-Visual-Deception-Detection-DOLOS-Dataset-and-Parameter-Efficient-Crossmodal-Learning) | `scripts/` — dataloader, Wav2Vec2/ViT + UT-Adapter models, PAVF fusion, `train_fusion.sh` |
 
 After cloning this repository, initialise them with:
 
@@ -94,12 +106,13 @@ writing any loader; it is the single source of truth for this project.
 | File | Content |
 |---|---|
 | `DOLOS/Dolos.xlsx` | primary annotations: URL, timestamps, label, subject, 41 MUMIN features as time intervals |
-| `DOLOS/train_dolos.xlsx` | the same 41 features binarised to 0/1, row-aligned with the above |
+| `DOLOS/train_dolos.xlsx` | the same 41 features binarised to 0/1, row-aligned with the above — merged into `dataset.csv` as `mumin_*` |
 | `DOLOS/dolos_timestamps.csv` | `YT_Video_ID, file_name, start_time, end_time, label` — input for the downloader |
 | `DOLOS/Training_Protocols/*.csv` | `train_fold1..3`, `test_fold1..3`, `short`, `long`, `male`, `female` |
 
-**What is *not* on disk:** any `.mp4`. Videos are fetched with the submodule script, and availability is
-not guaranteed.
+**What is *not* on disk:** any `.mp4`. Videos are fetched with `scripts/build_dataset.py` (preferred — it
+cuts, extracts audio and writes `data/processed/dataset.csv`, see project README §3.1), and availability
+is not guaranteed. The upstream script below is kept for reference only.
 
 ⚠️ `YT_video_downloader.py` does **not** accept `dolos_timestamps.csv` as-is. It expects
 `yt_id,file_name,start_seconds,end_seconds` with **no header**, while the shipped CSV has a header
@@ -147,8 +160,8 @@ from NTU ROSE Lab. Access is granted through the request form at
 ## 6. Environment
 
 - Python: `.venv/bin/python` at the repository root. It has `numpy`, `pandas`, `torch`, `scikit-learn`,
-  `matplotlib` — but **not `openpyxl`**, so `pandas.read_excel` fails until it is installed
-  (`pip install openpyxl`). Reading only the CSVs needs no extra dependency.
+  `matplotlib`, plus `yt-dlp` and `openpyxl` (needed by `scripts/build_dataset.py` and to read
+  `Dolos.xlsx`). `ffmpeg`/`ffprobe` are on `PATH` via Homebrew.
 - The `presentation/` tool is pure HTML/JS: open `presentation/pmaker.html` in a browser, keep the
   bundled `presentation/vendor/` folder beside it for PDF export. There is no build step and no server.
 - Paths in docs and scripts are written relative to the repository root. Do not hardcode absolute

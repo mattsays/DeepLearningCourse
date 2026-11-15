@@ -33,7 +33,8 @@ References:
 - Official code (PECL + dataloader): [NMS05/Audio-Visual-Deception-Detection-DOLOS-...](https://github.com/NMS05/Audio-Visual-Deception-Detection-DOLOS-Dataset-and-Parameter-Efficient-Crossmodal-Learning)
 - Download / pre-processing tools: [NMS05/AV-Data-Processing](https://github.com/NMS05/AV-Data-Processing)
 
-Both external repos are available locally as git submodules (see `../vendor/` and [AGENTS.md](../../AGENTS.md)).
+Both external repos are available locally as git submodules: the download tools under `../vendor/`, the
+reference implementation under `../baselines/` (see [AGENTS.md](../../AGENTS.md)).
 
 ---
 
@@ -402,7 +403,8 @@ DOLOS/
 
 Steps 1–3 live in the `AV-Data-Processing` submodule, step 4 in the `DOLOS-PECL` submodule (the **PECL**
 architecture, *Parameter-Efficient Crossmodal Learning*: frozen backbones + temporal adapters +
-crossmodal fusion). Both are checked out under `../vendor/`; initialise them with
+crossmodal fusion). The tools are under `../vendor/`, the reference implementation under `../baselines/`;
+initialise both with
 `git submodule update --init --recursive`.
 
 ### 9.1 Preparing the download

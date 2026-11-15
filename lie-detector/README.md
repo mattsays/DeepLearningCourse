@@ -56,7 +56,8 @@ lie-detector/
 │   └── architectures/         # one sub-folder per research direction, named by its author
 ├── data/                      # generated artifacts — NOT tracked
 ├── clips/                     # downloaded .mp4 — NOT tracked
-└── vendor/                    # git submodules: AV-Data-Processing, DOLOS-PECL
+├── vendor/                    # submodule: download / extraction tools
+└── baselines/                 # submodule: official reference implementation
 ```
 
 Two things are strictly one-per-person, one-per-team:
@@ -69,50 +70,196 @@ Two things are strictly one-per-person, one-per-team:
 
 ---
 
-## 3. Shared preprocessing (single notebook)
+## 3. Shared preprocessing
 
-Goal: **after preprocessing, every member works from the same decoded clips**, which is the only way
-four people without GPUs can iterate before 26 November.
+Goal: **after preprocessing, every member works from the same clips and the same splits**, which is the
+only way four people without GPUs can iterate before 26 November.
 
-The shared notebook does *data* work only. It stops at decoded, ready-to-load material:
+The work is implemented by two scripts; the notebook only drives them.
 
-```
-clips/<file_name>.mp4                  # the clip itself, cut from the episode
-data/processed/frames/<file_name>/     # decoded RGB frames
-data/processed/audio/<file_name>.wav   # 16 kHz mono
-data/processed/mumin.parquet           # annotations (auxiliary / reference only)
-data/processed/splits/*.json           # official 3-fold + subject-level split
-data/processed/manifest.csv            # processed / failed clips, runtime per stage
+```bash
+python scripts/build_dataset.py --workers 4     # clips + audio + metadata  (§3.1)
+python scripts/make_splits.py                   # frozen splits            (§3.2)
 ```
 
-Proposed contract — to be confirmed when the notebook is written:
+```
+data/
+└── processed/
+    ├── clips/<clip_id>.mp4      # the annotated range, video + audio track
+    ├── audio/<clip_id>.wav      # 16 kHz mono
+    ├── dataset.csv              # one row per clip: label, subject, paths, 41 MUMIN features
+    ├── splits/*.json            # frozen protocol — published with the dataset
+    └── <direction>/             # a member's own caches
+```
 
 | Artifact | Content |
 |---|---|
 | `clips/` | one `.mp4` per clip that downloaded successfully |
-| `frames/` | RGB frames at a documented, fixed rate, same naming as the clip |
 | `audio/` | 16 kHz mono wav extracted from the clip's audio track |
-| `mumin.parquet` | `file_name, y, gender` + the 41 MUMIN columns — **never an inference input** (§1) |
-| `splits/` | clip lists for the official 3-fold **and** a subject-level split |
-| `manifest.csv` | which clips succeeded/failed and why, plus runtime |
+| `dataset.csv` | label, `y`, gender, subject, both paths, download status, **41 MUMIN columns** |
+| `splits/` | the virgin test set and the 5 cross-validation folds |
+| `cached_features/<encoder>/` | features produced by one encoding model (see §3.5) |
 
 **Why it stops there.** Any further step — cropping faces, sampling frames differently, computing
 features, caching embeddings — already encodes a modelling choice, and this project is precisely about
 letting four different choices compete. Each member does that inside their own notebook and caches
-whatever they like under `data/processed/<their-direction>/`. Two members who happen to want the same
-intermediate representation can share it privately; the shared notebook does not pick one.
+whatever they like under `data/processed/<direction>/`. Two members who happen to want the same
+intermediate representation can share it privately; the shared pipeline does not pick one.
 
-Rules for the notebook:
+Rules:
 
-1. **Idempotent and resumable** — it must skip clips already processed, because Colab sessions die.
-2. **Mount Drive first** (`from google.colab import drive; drive.mount('/content/drive')`) and keep
+1. **Only the scripts touch the raw data.** Nobody re-downloads or re-decodes clips inside an architecture
+   notebook.
+2. **Idempotent and resumable** — `build_dataset.py` skips what is already on disk, because Colab sessions
+   die mid-run.
+3. **Mount Drive first** (`from google.colab import drive; drive.mount('/content/drive')`) and keep
    artifacts there; `/content` is wiped on disconnect.
-3. **Deterministic** — seed everything, sort file lists before iterating, no shuffling when writing.
-4. **Validated** — drop the 7 clips with `end ≤ start`, and report how many of the 75 episodes are still
-   downloadable. The 1,678 annotation rows shrink in practice; record the final count.
-5. **One run produces everything.**
-6. **Same clip set for everybody** — if a clip fails processing, it is dropped from *all* directions, so
-   the four results stay comparable.
+4. **Same clip set for everybody** — filter by `metadata.status == "ok"` at load time, always the same way,
+   or two members train on different subsets and nothing is comparable.
+
+### 3.1 Canonical dataset (`scripts/build_dataset.py`)
+
+One script turns the annotations into the files every notebook reads:
+
+```
+clips/<clip_id>.mp4                   # annotated range only, video + audio track
+data/processed/audio/<clip_id>.wav    # 16 kHz mono
+data/processed/dataset.csv            # one row per clip: metadata + MUMIN — the source of truth
+```
+
+`clip_id` is the lower-case slug of the DOLOS `file_name`, so it can always be recomputed from the
+dataset files alone: `AN_WILTY_EP15_truth1` → `an_wilty_ep15_truth1`. The single duplicated name in
+DOLOS becomes `yw_wilty_ep46_truth1` and `yw_wilty_ep46_truth1_2`.
+
+`dataset.csv` carries, per clip: the 17 metadata columns above (`clip_id, source_name, yt_id, start_s,
+end_s, duration_expected, duration_actual, label, y, gender, subject, test_fold, protocols, video_path,
+audio_path, status, error`) plus the **41 binary MUMIN features** as `mumin_*` columns. Paths are relative
+to the folder that contains the CSV, so the archive can be extracted anywhere.
+
+`dataset.csv`, `clips/` and `audio/` are published together in the shared Drive folder (§3.5).
+
+```bash
+python scripts/build_dataset.py --dry-run                  # writes dataset.csv, downloads nothing
+python scripts/build_dataset.py --limit 20                 # smoke test
+python scripts/build_dataset.py --workers 4                # full run
+```
+
+The script is idempotent (valid existing clips are skipped), resumable, and marks broken annotations
+(`end ≤ start`, 7 rows) as `invalid_range` instead of downloading them. Budget roughly 15 s per clip:
+a full run is a couple of hours with 4 workers.
+
+### 3.2 Splits (`scripts/make_splits.py`)
+
+One command freezes the evaluation protocol into JSON files that nobody regenerates by hand:
+
+```bash
+python scripts/make_splits.py --test-fraction 0.15 --folds 5 --val-fraction 0.15
+```
+
+```
+<shared folder>/splits/
+├── official_fold{1,2,3}.json   # straight from the DOLOS CSVs, for the paper comparison
+├── subject_test.json           # the virgin test set — untouched until the end
+├── subject_fold{1..5}.json     # train / val / holdout per fold
+└── manifest.json               # seed, counts, sha256 of every file
+```
+
+The files are written **straight into the shared folder** by the preprocessing notebook, together with the
+rest of the dataset (§3.5). They are **not in git**: one copy, on Drive, read by everybody with
+`Protocol.load(DATA / "splits")`.
+
+On the shipped annotations (180 distinct subjects after merging name aliases):
+
+| Block | Subjects | Clips | Deception | Role |
+|---|---:|---:|---:|---|
+| test | 27 | 182 | 47.5% | virgin, evaluated once at the end |
+| working, 5 folds | 151 | 1,021 | 47.7% | cross-validation and model selection |
+| captains, train only | 2 | 468 | 69.1% | never evaluated |
+
+Each fold file lists clip ids per split, so a notebook only has to load them:
+`train` ≈ 102 subjects, `val` ≈ 18 (early stopping), `holdout` ≈ 30 (the score of that fold).
+Every working subject lands in exactly one `holdout` and in no `val`.
+
+Two facts that are easy to get wrong: the split is defined on **annotations**, so it references clips that
+may have failed to download — filter by `metadata.status == "ok"` at load time, the same way for everybody.
+And a changed `--seed` produces a different protocol: the `manifest.json` hash catches a hand edit, but
+nothing catches a *coherent regeneration* — which is why the folder is shared **view-only** with the team.
+
+### 3.3 Loading in a notebook (`lib/dataset.py`)
+
+```python
+import sys; sys.path.insert(0, "/content/lie-detector")
+from lib.dataset import Protocol, Clips, CachedFeatures, make_loader
+
+folds = Protocol.load()          # verifies the manifest hashes, raises if the split was edited
+clips = Clips.load()             # annotated clips; clips.available() = files actually on disk
+
+train, val, holdout = folds.subject(1)
+ds = CachedFeatures(val, clips, cache="data/processed/<your-features>")
+dl = make_loader(ds, batch_size=16)
+```
+
+The module hands out **paths** (`clips.paths(ids)`) or **cached arrays** (`CachedFeatures`), never a
+fixed tensor pipeline: decoding a clip, picking frames, resizing, normalising is each direction's job.
+
+Two helpers that prevent the usual mistakes:
+
+- `clips.describe(ids)` — clips, subjects, % deception and the **majority baseline of that subset**;
+- `clips.class_weights(ids)` — `pos_weight` ready for `BCEWithLogitsLoss`.
+
+⚠️ On our splits the training set is **56.3% deception** while the holdout is **47.3%**: the two captains
+(69% deception) are 40% of the training clips. A plain BCE trained on that over-predicts `deception`.
+Either pass `pos_weight`, or pick the decision threshold on `val` instead of using 0.5.
+
+`python -m lib.dataset --fold 1` prints the composition of every split against what is on disk.
+
+### 3.4 The two notebooks
+
+| Notebook | Who runs it | What it does |
+|---|---|---|
+| `notebooks/preprocessing.ipynb` | **one member, once** | runs both scripts with explicit paths, so clips, audio, splits and `dataset.csv` are written straight into the shared folder |
+| `notebooks/architecture_template.ipynb` | everybody | skeleton to copy into `architectures/<direction>/` |
+
+The template does the plumbing once: mount Drive, point at the shared folder, load the frozen splits, five
+folds with early stopping on `val`, metrics from `lib/metrics.py`, per-gender breakdown, and predictions
+saved to `preds/cv_<direction>.csv`. Members replace only the model and the feature loader, then paste the
+results row it prints.
+
+### 3.5 The shared folder on Drive
+
+One folder, one path, for everybody:
+
+```
+dolos/                          # /content/drive/MyDrive/dolos
+├── dataset.csv                 # 1 MB
+├── clips/                      # ~510 MB, 1,671 files
+├── audio/                      # ~270 MB, 1,671 files
+├── splits/                     # the frozen protocol
+└── cached_features/            # one sub-folder per encoding model
+    ├── wav2vec2-base/<clip_id>.npy
+    └── vit-b16/<clip_id>.npy
+```
+
+The owner shares it, everybody else adds a **shortcut** named `dolos` in their own My Drive, so the path
+`/content/drive/MyDrive/dolos` is identical in every notebook. There is no archive to extract: the folder
+*is* the dataset.
+
+`cached_features/` is named after the **encoder**, not after the direction: two people using the same model
+land in the same folder for free, and a third can see what already exists before recomputing it.
+
+The rule for reading it: **anything read once per epoch must come from RAM or local disk**. `dataset.csv`
+and the feature caches are fine over the mount — `CachedFeatures` preloads a cache into RAM when it is
+under 1 GB, so features cost nothing per epoch. The 1,671 `mp4`/`wav` files do not: decoding video from the
+mount pays a network round-trip per file, so a video direction should copy `clips/` to local disk first.
+
+Since nothing is versioned, the loader prints the identity of the table it is reading:
+
+```
+dataset.csv sha256:a1027d7ef46d  1678 clips  2 with media
+```
+
+Post it in the chat. Two members with different fingerprints are not training on the same dataset, and
+nothing they report is comparable.
 
 ---
 
@@ -147,11 +294,24 @@ Rules that keep the four results comparable:
 `test_fold*.csv`). Report mean ± std across the three folds. This is what makes our numbers comparable
 with the paper.
 
-**Secondary split — subject-level.** ⚠️ The official folds are **clip-level**: train and test share 147
-subjects and all 75 episodes, and 1–2 clips leak across the boundary. Any suspiciously high accuracy is
-leakage, not skill. So the preprocessing notebook must also emit a split grouped by *subject*, and every
-member reports both numbers. The gap between the two is one of the most interesting results this project
-can produce.
+**Secondary split — our subject-level protocol** (`subject_test.json` + `subject_fold*.json`, see §3.2).
+⚠️ The official folds are **clip-level**: train and test share 147 subjects and all 75 episodes, and 1–2
+clips leak across the boundary. Any suspiciously high accuracy there is leakage, not skill.
+
+Our protocol works the other way round: one **virgin test set** of 27 subjects, and a **working set** of
+151 subjects used for 5-fold cross-validation. Different subjects in every split, so a model cannot
+recognise the person. Report both protocols: the gap between them is one of the most interesting results
+this project can produce, and it is the honest measure of generalisation.
+
+| Estimate | Subjects | 95% CI on 60% ACC |
+|---|---:|---:|
+| working set, mean of 5 folds | 151 | ±7.8 pp |
+| virgin test set | 27 | ±18.5 pp |
+
+**The results board is filled from the cross-validation.** Every direction reports the mean over the five
+fold holdouts; nobody trains or evaluates on the test set during the project. It stays in the protocol as
+the only uncontaminated check left: if the group wants one final number, it is produced once, at the end,
+by one person, with a configuration chosen before opening it.
 
 Metrics, in this order: **ACC, F1, AUC**, then per-gender ACC (male clips are 79% of the data and show
 56.6% deception vs 43.8% for female clips — a model that ignores this will look fine and be useless).
@@ -182,15 +342,23 @@ after a few idle hours, and a 12-hour ceiling.
 
 ## 7. Results board
 
-Filled in as directions land. One row per configuration; the best per direction in bold.
+Filled in as directions land, from the **cross-validation** numbers the template prints. One row per
+configuration; the best per direction in bold.
 
-| Direction | Owner | Method | Trainable params | ACC (3-fold) | F1 | AUC | ACC (subject split) | Runtime |
-|---|---|---|---:|---:|---:|---:|---:|---:|
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-| *reference* | — | majority class | — | 53.70 | — | — | — | — |
+| Direction | Owner | Method | Trainable params | ACC (CV) | F1 | AUC | Balanced ACC | Majority | Runtime |
+|---|---|---|---:|---:|---:|---:|---:|---:|---:|
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| *reference* | — | majority class | — | 52.4 | — | — | 50.0 | — | — |
+
+`ACC (CV)` is the mean ± spread over the five fold holdouts. `Majority` is the baseline **on the same
+clips** (52.4% on the working set — not the 53.7% of the whole dataset): if a row does not beat it, the
+model is worse than guessing the most frequent class.
+
+The official 3-fold split is not run by the template. It stays available (`official_fold*.json`) for a
+single reproduction of the paper's protocol, reported separately if someone does it.
 
 ---
 
@@ -215,5 +383,5 @@ not a result, because those numbers would not be comparable with the others.
 - Paper: Guo et al., *Audio-Visual Deception Detection: DOLOS Dataset and Parameter-Efficient Crossmodal
   Learning*, ICCV 2023 — <https://arxiv.org/abs/2303.12745>
 - Dataset page: <https://rose1.ntu.edu.sg/dataset/DOLOS/>
-- Official code (submodule): [`vendor/DOLOS-PECL`](vendor/DOLOS-PECL)
+- Official code (submodule): [`baselines/DOLOS-PECL`](baselines/DOLOS-PECL)
 - Download / pre-processing tools (submodule): [`vendor/AV-Data-Processing`](vendor/AV-Data-Processing)
