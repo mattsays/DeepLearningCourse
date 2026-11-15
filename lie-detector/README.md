@@ -80,6 +80,7 @@ lie-detector/
 | [`docs/notebooks.md`](docs/notebooks.md) | what a notebook reads, the `lib/` API, the rules per direction |
 | [`docs/evaluation.md`](docs/evaluation.md) | what to measure, the baselines, the precision you can claim |
 | [`docs/colab.md`](docs/colab.md) | Colab limits, session setup, the two things that bite |
+| [`docs/architectures.md`](docs/architectures.md) | the three architectural paradigms the team is exploring |
 | [`dataset/README.md`](dataset/README.md) | the DOLOS dataset itself: formats, statistics, 16 pitfalls |
 
 ## Results board
