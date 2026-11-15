@@ -6,3 +6,7 @@ __pycache__/
 # DOLOS deception dataset (NTU ROSE Lab) — annotations and videos are not
 # redistributable and must stay local. See lie-detector/dataset/README.md.
 lie-detector/dataset/DOLOS/
+
+# Generated artifacts and downloaded clips (large, reproducible, not redistributable)
+lie-detector/data/
+lie-detector/clips/

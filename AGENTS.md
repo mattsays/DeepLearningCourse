@@ -11,10 +11,10 @@ A Deep Learning course project, split in two independent parts:
 | Path | Content |
 |---|---|
 | `presentation/` | HTML slide deck + the `pmaker.html` tool that renders and exports it to PDF |
-| `lie-detector/` | Multimodal **deception detection** project built on the DOLOS dataset |
+| `lie-detector/` | Multimodal **deception detection** project built on the DOLOS dataset — project README: [`lie-detector/README.md`](lie-detector/README.md) |
 
 Everything under `lie-detector/` belongs to the same goal: train and evaluate a detector that
-classifies a video clip as `truth` or `deception` from face + voice.
+classifies a video clip as `truth` or `deception`.
 
 ---
 
@@ -42,12 +42,19 @@ classifies a video clip as `truth` or `deception` from face + voice.
 ```
 DeepLearningCourse/
 ├── AGENTS.md                      # this file
-├── .gitignore                     # ignores .venv, dist, and the DOLOS dataset
+├── .gitignore                     # ignores .venv, dist, the DOLOS dataset, data/ and clips/
 ├── presentation/                  # slide deck + pmaker tool (not related to lie-detector)
 └── lie-detector/
+    ├── README.md                  # project README: goal, layout, preprocessing, evaluation, plan
+    ├── AGENTS.md                  # project-level rules (data, notebooks, shared files, results)
     ├── dataset/
     │   ├── README.md              # dataset documentation — the reference for everything DOLOS
     │   └── DOLOS/                 # DATASET, NOT TRACKED, NO VIDEOS (annotations only)
+    ├── notebooks/
+    │   ├── preprocessing.ipynb    # SHARED preprocessing → data/processed/ (to be written)
+    │   └── architectures/         # one sub-folder per research direction
+    ├── data/                      # generated artifacts — NOT TRACKED
+    ├── clips/                     # downloaded .mp4 — NOT TRACKED
     └── vendor/                    # git submodules (third-party code, pinned commits)
         ├── AV-Data-Processing/    # YouTube downloader + face/audio extraction
         └── DOLOS-PECL/            # official training code (PECL architecture)
