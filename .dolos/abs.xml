@@ -1,0 +1,364 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ir6ESRdeuhD0pXKGM7BeQOCMCkQ</id>
+  <title>arXiv Query: search_query=&amp;id_list=2508.04129,2604.05748,2508.12842,2610.12118,2506.09424,2606.18988,2603.23916,2603.26064,2606.11385,2604.17037&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T11:12:58Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=10&amp;id_list=2508.04129,2604.05748,2508.12842,2610.12118,2506.09424,2606.18988,2603.23916,2603.26064,2606.11385,2604.17037" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>10</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2604.17037v1</id>
+    <title>Dynamic Emotion and Personality Profiling for Multimodal Deception Detection</title>
+    <updated>2026-04-18T15:38:36Z</updated>
+    <link href="https://arxiv.org/abs/2604.17037v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.17037v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is of great significance for ensuring information security and conducting public opinion analysis, with personality factors and emotion cues playing a critical role. However, existing methods lack sample-level dynamic annotations for emotions and personality.In this paper, we propose an innovative multi-model multi-prompt annotation scheme and a strict label quality evaluation standard, and establish a multimodal joint detection dataset DDEP for deception, emotion, and personality. Meanwhile, we propose Rel-DDEP, an adaptive reliability-weighted fusion framework. Our framework quantifies uncertainty by mapping modal features to a high-dimensional Gaussian distribution space. It then performs reliability-weighted fusion and incorporates an alignment module and a sorting constraint module to achieve joint detection of deception, emotion, and personality. Experimental results on the MDPE and DDEP datasets show that our Rel-DDEP significantly outperforms the existing state-of-the-art baseline models in three tasks. The F1 score of the deception detection increases by 2.53%, that of the emotion detection increases by 2.66%, and that of the personality detection increases by 9.30%. The experiments fully verify the necessity of annotating dynamic emotion and personality labels for each sample and the effectiveness of reliability-weighted fusion.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-18T15:38:36Z</published>
+    <arxiv:comment>Accepted by ACL 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Li Zheng</name>
+    </author>
+    <author>
+      <name>Yanyi Luo</name>
+    </author>
+    <author>
+      <name>Hao Fei</name>
+    </author>
+    <author>
+      <name>Yuzhe Ding</name>
+    </author>
+    <author>
+      <name>Yujie Huang</name>
+    </author>
+    <author>
+      <name>Fei Li</name>
+    </author>
+    <author>
+      <name>Chong Teng</name>
+    </author>
+    <author>
+      <name>Donghong Ji</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.26064v2</id>
+    <title>MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection</title>
+    <updated>2026-04-05T15:20:21Z</updated>
+    <link href="https://arxiv.org/abs/2603.26064v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.26064v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Non-contact automatic deception detection remains challenging because visual and auditory deception cues often lack stable cross-subject patterns. In contrast, galvanic skin response (GSR) provides more reliable physiological cues and has been widely used in contact-based deception detection. In this work, we leverage stable deception-related knowledge in GSR to guide representation learning in non-contact modalities through cross-modal knowledge distillation. A key obstacle, however, is the lack of a suitable dataset for this setting. To address this, we introduce MuDD, a large-scale Multimodal Deception Detection dataset containing recordings from 130 participants over 690 minutes. In addition to video, audio, and GSR, MuDD also provides Photoplethysmography, heart rate, and personality traits, supporting broader scientific studies of deception. Based on this dataset, we propose GSR-guided Progressive Distillation (GPD), a cross-modal distillation framework for mitigating the negative transfer caused by the large modality mismatch between GSR and non-contact signals. The core innovation of GPD is the integration of progressive feature-level and digit-level distillation with dynamic routing, which allows the model to adaptively determine how teacher knowledge should be transferred during training, leading to more stable cross-modal knowledge transfer. Extensive experiments and visualizations show that GPD outperforms existing methods and achieves state-of-the-art performance on both deception detection and concealed-digit identification.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-27T04:11:02Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Peiyuan Jiang</name>
+    </author>
+    <author>
+      <name>Yao Liu</name>
+    </author>
+    <author>
+      <name>Yanglei Gan</name>
+    </author>
+    <author>
+      <name>Jiaye Yang</name>
+    </author>
+    <author>
+      <name>Lu Liu</name>
+    </author>
+    <author>
+      <name>Daibing Yao</name>
+    </author>
+    <author>
+      <name>Qiao Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.12118v1</id>
+    <title>A persistent accuracy ceiling in automated verbal deception detection</title>
+    <updated>2026-10-08T15:15:32Z</updated>
+    <link href="https://arxiv.org/abs/2610.12118v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.12118v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automated methods have been proposed to overcome the limitations of human verbal deception detection, but evidence remains fragmented across disciplines. We systematically reviewed 25 years of research (289 reports, 6,136 classification models) and meta-analyzed 3,653 models nested within 97 datasets. Pooled accuracy was 74.4% (95% CI: 71.2%-77.4%) with substantial heterogeneity. Accuracy was driven by methodological quality (ground truth, data source, class balance, evaluation procedure) more than by model complexity: the adoption of embeddings and large language models has not translated into improved predictive performance. Only 12.46% of reports used data with verifiable ground-truth, and only 23.96% of models were evaluated on independent data. The pooled accuracy aligns with meta-analyses of manual approaches, suggesting a ceiling of 70-75%, unlikely to be lifted by current research conventions.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-08T15:15:32Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Riccardo Loconte</name>
+    </author>
+    <author>
+      <name>Jonas Festor</name>
+    </author>
+    <author>
+      <name>Zane Fatjanova</name>
+    </author>
+    <author>
+      <name>Mariam Bolkvadze</name>
+    </author>
+    <author>
+      <name>Bennett Kleinberg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.18988v1</id>
+    <title>ThinkDeception: A Progressive Reinforcement Learning Framework for Interpretable Multimodal Deception Detection</title>
+    <updated>2026-06-17T12:08:20Z</updated>
+    <link href="https://arxiv.org/abs/2606.18988v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.18988v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal deception detection is critical for identifying fraudulent intentions, yet existing approaches predominantly rely on end to end black--box paradigms. These methods suffer from a severe lack of interpretability failing to provide transparent reasoning trajectories and struggling to explicitly capture the subtle, cross modal inconsistencies inherent in deceptive behaviors. To transcend these limitations, we propose ThinkDeception, a novel and interpretable multimodal deception detection framework. As a pioneering effort, it introduces Multimodal Large Language Models (MLLMs) into this domain, transforming deception detection from a traditional binary classification task into an explicit cognitive reasoning process. Facilitated by the first meticulously annotated step--by--step multimodal Chain of Thought (CoT) dataset, we develop a foundational model, ThinkDeception Base, empirically validating the critical role of modal inconsistency in decoding deception. Building upon this foundation, our core innovation lies in proposing Visual-Audio Consistency Group Relative Policy Optimization(VAC--GRPO) equipped with a progressive training strategy. Distinct from standard GRPO, we stratify the training data into four progressive difficulty tiers, guiding the model through a psychologically grounded easy--to--hard cognitive transition. By innovatively coupling this dynamic curriculum scheduler with a multi dimensional, process aware reward mechanism and a reflective learning paradigm, we significantly elevate the model's overall reasoning quality. Extensive experiments on mainstream benchmarks demonstrate that ThinkDeception establishes a new SOTA, significantly outperforming existing methods in both detection accuracy and rationale quality. Ultimately, this work successfully drives the field of deception detection toward interpretable, multimodal cognitive reasoning.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-17T12:08:20Z</published>
+    <arxiv:comment>10pages,4figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Jinhao Song</name>
+    </author>
+    <author>
+      <name>Shan Liang</name>
+    </author>
+    <author>
+      <name>Yiqun Yue</name>
+    </author>
+    <author>
+      <name>Zhuhuayang Zhang</name>
+    </author>
+    <author>
+      <name>Tianqi Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.05748v1</id>
+    <title>SVC 2026: the Second Multimodal Deception Detection Challenge and the First Domain Generalized Remote Physiological Measurement Challenge</title>
+    <updated>2026-04-07T11:47:31Z</updated>
+    <link href="https://arxiv.org/abs/2604.05748v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.05748v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Subtle visual signals, although difficult to perceive with the naked eye, contain important information that can reveal hidden patterns in visual data. These signals play a key role in many applications, including biometric security, multimedia forensics, medical diagnosis, industrial inspection, and affective computing. With the rapid development of computer vision and representation learning techniques, detecting and interpreting such subtle signals has become an emerging research direction. However, existing studies often focus on specific tasks or modalities, and models still face challenges in robustness, representation ability, and generalization when handling subtle and weak signals in real-world environments. To promote research in this area, we organize the Subtle visual Challenge, which aims to learn robust representations for subtle visual signals. The challenge includes two tasks: cross-domain multimodal deception detection and remote photoplethysmography (rPPG) estimation. We hope that this challenge will encourage the development of more robust and generalizable models for subtle visual understanding, and further advance research in computer vision and multimodal learning. A total of 22 teams submitted their final results to this workshop competition, and the corresponding baseline models have been released on the \href{https://sites.google.com/view/svc-cvpr26}{MMDD2026 platform}\footnote{https://sites.google.com/view/svc-cvpr26}</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-07T11:47:31Z</published>
+    <arxiv:comment>Accepted by the SVC workshop @ CVPR 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Dongliang Zhu</name>
+    </author>
+    <author>
+      <name>Zhiyi Niu</name>
+    </author>
+    <author>
+      <name>Bo Zhao</name>
+    </author>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Shuo Ye</name>
+    </author>
+    <author>
+      <name>Xun Lin</name>
+    </author>
+    <author>
+      <name>Hui Ma</name>
+    </author>
+    <author>
+      <name>Taorui Wang</name>
+    </author>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Chunmei Zhu</name>
+    </author>
+    <author>
+      <name>Junzhe Cao</name>
+    </author>
+    <author>
+      <name>Yingjie Ma</name>
+    </author>
+    <author>
+      <name>Rencheng Song</name>
+    </author>
+    <author>
+      <name>Albert Clapés</name>
+    </author>
+    <author>
+      <name>Sergio Escalera</name>
+    </author>
+    <author>
+      <name>Dan Guo</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.11385v2</id>
+    <title>DeceptionX: From Multimodal Evidence to Explainable Deception Detection</title>
+    <updated>2026-07-31T21:56:40Z</updated>
+    <link href="https://arxiv.org/abs/2606.11385v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.11385v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is a critical and highly challenging task within affective computing and behavioral analysis. Existing deep learning methods typically treat this task as a straightforward classification problem; however, this black-box approach lacks interpretability and fails to capture the complex logical deduction processes utilized by human experts when identifying lies. While Multimodal Large Language Models (MLLMs) have shown potential, applying them effectively requires a bridge between low-level audiovisual cues and high-level logical reasoning. In this paper, we propose DeceptionX, a novel MLLM framework that shifts the paradigm of deception detection from black-box classification to an interpretable Observe-Think-Summarize reasoning process. To address the scarcity of high-quality reasoning data, we first constructed DeceptChain, a high-quality dataset developed through a human-in-the-loop process. This dataset synthesizes fine-grained visual and auditory evidence (such as micro-expressions and vocal tremors) into structured chain-of-thought reasoning data. Furthermore, we propose a three-stage training pipeline and a Discrepancy-Aware Redundancy Elimination~(DARE) strategy for DeceptionX to further enhance the model's generalization capabilities. Extensive experiments demonstrate that DeceptionX not only outperforms existing MLLM baselines and state-of-the-art methods on standard real-world benchmarks but also provides transparent, expert-level reasoning paths, bridging the critical gap between accuracy and interpretability in multimodal deception detection.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-09T19:08:00Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Shuo Ye</name>
+    </author>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Yawen Cui</name>
+    </author>
+    <author>
+      <name>Taorui Wang</name>
+    </author>
+    <author>
+      <name>Wei Xia</name>
+    </author>
+    <author>
+      <name>Zeheng Wang</name>
+    </author>
+    <author>
+      <name>Haowen Tang</name>
+    </author>
+    <author>
+      <name>Yelin Wang</name>
+    </author>
+    <author>
+      <name>Hui Ma</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.12842v1</id>
+    <title>Multi-source Multimodal Progressive Domain Adaption for Audio-Visual Deception Detection</title>
+    <updated>2025-08-18T11:30:08Z</updated>
+    <link href="https://arxiv.org/abs/2508.12842v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.12842v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents the winning approach for the 1st MultiModal Deception Detection (MMDD) Challenge at the 1st Workshop on Subtle Visual Computing (SVC). Aiming at the domain shift issue across source and target domains, we propose a Multi-source Multimodal Progressive Domain Adaptation (MMPDA) framework that transfers the audio-visual knowledge from diverse source domains to the target domain. By gradually aligning source and the target domain at both feature and decision levels, our method bridges domain shifts across diverse multimodal datasets. Extensive experiments demonstrate the effectiveness of our approach securing Top-2 place. Our approach reaches 60.43% on accuracy and 56.99\% on F1-score on competition stage 2, surpassing the 1st place team by 5.59% on F1-score and the 3rd place teams by 6.75% on accuracy. Our code is available at https://github.com/RH-Lin/MMPDA.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-18T11:30:08Z</published>
+    <arxiv:comment>Accepted at ACM MM 2025 SVC Workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ronghao Lin</name>
+    </author>
+    <author>
+      <name>Sijie Mai</name>
+    </author>
+    <author>
+      <name>Ying Zeng</name>
+    </author>
+    <author>
+      <name>Qiaolin He</name>
+    </author>
+    <author>
+      <name>Aolin Xiong</name>
+    </author>
+    <author>
+      <name>Haifeng Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.23916v4</id>
+    <title>DecepGPT: Schema-Driven Deception Detection with Multicultural Datasets and Robust Multimodal Learning</title>
+    <updated>2026-07-07T12:17:42Z</updated>
+    <link href="https://arxiv.org/abs/2603.23916v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.23916v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal deception detection aims to identify deceptive behavior by analyzing audiovisual cues for forensics and security. In these high-stakes settings, investigators need verifiable evidence connecting audiovisual cues to final decisions, along with reliable generalization across domains and cultural contexts. However, existing benchmarks provide only binary labels without intermediate reasoning cues. Datasets are also small with limited scenario coverage, leading to shortcut learning. We address these issues through three contributions. First, we construct reasoning datasets by augmenting existing benchmarks with structured cue-level descriptions and reasoning chains, enabling models to output auditable reports. Second, we release T4-Deception, a multicultural dataset based on the unified ``To Tell the Truth'' television format implemented across four countries. With 1695 samples, it is the largest non-laboratory deception detection dataset. Third, we propose two modules for robust learning under small-data conditions. Stabilized Individuality-Commonality Synergy (SICS) refines multimodal representations by combining learnable global priors with sample-adaptive residuals and applying polarity-aware recalibration. Distilled Modality Consistency (DMC) aligns modality-specific predictions with the fused multimodal predictions via knowledge distillation to prevent unimodal shortcut learning. Experiments on three established benchmarks and our novel dataset demonstrate that our method achieves state-of-the-art performance in both in-domain and cross-domain scenarios, while exhibiting superior transferability across diverse cultural contexts. The datasets and code are available at this link.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-25T04:06:36Z</published>
+    <arxiv:comment>Accepted by ECCV 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Dongliang Zhu</name>
+    </author>
+    <author>
+      <name>Zitong YU</name>
+    </author>
+    <author>
+      <name>Hui Ma</name>
+    </author>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Chunmei Zhu</name>
+    </author>
+    <author>
+      <name>Xiaochun Cao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.04129v1</id>
+    <title>SVC 2025: the First Multimodal Deception Detection Challenge</title>
+    <updated>2025-08-06T06:56:39Z</updated>
+    <link href="https://arxiv.org/abs/2508.04129v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.04129v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is a critical task in real-world applications such as security screening, fraud prevention, and credibility assessment. While deep learning methods have shown promise in surpassing human-level performance, their effectiveness often depends on the availability of high-quality and diverse deception samples. Existing research predominantly focuses on single-domain scenarios, overlooking the significant performance degradation caused by domain shifts. To address this gap, we present the SVC 2025 Multimodal Deception Detection Challenge, a new benchmark designed to evaluate cross-domain generalization in audio-visual deception detection. Participants are required to develop models that not only perform well within individual domains but also generalize across multiple heterogeneous datasets. By leveraging multimodal data, including audio, video, and text, this challenge encourages the design of models capable of capturing subtle and implicit deceptive cues. Through this benchmark, we aim to foster the development of more adaptable, explainable, and practically deployable deception detection systems, advancing the broader field of multimodal learning. By the conclusion of the workshop competition, a total of 21 teams had submitted their final results. https://sites.google.com/view/svc-mm25 for more information.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-06T06:56:39Z</published>
+    <arxiv:comment>Accepted by Workshop SVC of ACM MM 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Xun Lin</name>
+    </author>
+    <author>
+      <name>Xiaobao Guo</name>
+    </author>
+    <author>
+      <name>Taorui Wang</name>
+    </author>
+    <author>
+      <name>Yingjie Ma</name>
+    </author>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Junzhe Cao</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.09424v1</id>
+    <title>Hidden in Plain Sight: Evaluation of the Deception Detection Capabilities of LLMs in Multimodal Settings</title>
+    <updated>2025-06-11T06:12:50Z</updated>
+    <link href="https://arxiv.org/abs/2506.09424v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.09424v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Detecting deception in an increasingly digital world is both a critical and challenging task. In this study, we present a comprehensive evaluation of the automated deception detection capabilities of Large Language Models (LLMs) and Large Multimodal Models (LMMs) across diverse domains. We assess the performance of both open-source and commercial LLMs on three distinct datasets: real life trial interviews (RLTD), instructed deception in interpersonal scenarios (MU3D), and deceptive reviews (OpSpam). We systematically analyze the effectiveness of different experimental setups for deception detection, including zero-shot and few-shot approaches with random or similarity-based in-context example selection. Our results show that fine-tuned LLMs achieve state-of-the-art performance on textual deception detection tasks, while LMMs struggle to fully leverage cross-modal cues. Additionally, we analyze the impact of auxiliary features, such as non-verbal gestures and video summaries, and examine the effectiveness of different prompting strategies, including direct label generation and chain-of-thought reasoning. Our findings provide key insights into how LLMs process and interpret deceptive cues across modalities, highlighting their potential and limitations in real-world deception detection applications.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-11T06:12:50Z</published>
+    <arxiv:comment>Accepted to ACL 2025 Main Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Md Messal Monem Miah</name>
+    </author>
+    <author>
+      <name>Adrita Anika</name>
+    </author>
+    <author>
+      <name>Xi Shi</name>
+    </author>
+    <author>
+      <name>Ruihong Huang</name>
+    </author>
+  </entry>
+</feed>

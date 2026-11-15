@@ -1,0 +1,675 @@
+                                           Audio-Visual Deception Detection: DOLOS Dataset and Parameter-Efficient
+                                                                    Crossmodal Learning
+
+                                            Xiaobao Guo12 *           Nithish Muthuchamy Selvaraj3 *   Zitong Yu3†                  Adams Wai-Kin Kong2
+                                                                                              4
+                                                                                Bingquan Shen        Alex Kot3
+                                           1
+                                               Rapid-Rich Object Search (ROSE) Lab, Interdisciplinary Graduate Programme, Nanyang Technological University
+                                                2
+                                                  School of Computer Science and Engineering, NTU 3 School of Electrical & Electronic Engineering, NTU
+
+
+
+
+arXiv:2303.12745v2 [cs.CV] 4 Aug 2023
+                                                                                 4
+                                                                                   DSO National Laboratories, Singapore
+                                               {xiaobao001, ms.nithish, zitong.yu, adamskong, eackot}@ntu.edu.sg sbingqua@dso.org.sg
+
+
+
+                                                                   Abstract                            1. Introduction
+                                                                                                           Deception is a pervasive and complex phenomenon that
+                                            Deception detection in conversations is a challenging      occurs in all areas of life, and understanding its nature and
+                                        yet important task, having pivotal applications in many        impact is crucial in preventing negative consequences. Ef-
+                                        fields such as credibility assessment in business, multime-    fective deception detection has crucial implications in the
+                                        dia anti-frauds, and custom security. Despite this, decep-     area of border security, anti-fraud, business negotiations and
+                                        tion detection research is hindered by the lack of high-       etc. [14, 12, 1, 13, 9, 27, 44]. Deep learning algorithms have
+                                        quality deception datasets, as well as the difficulties of     achieved comparable or even better performance than hu-
+                                        learning multimodal features effectively. To address this      man in many complex tasks [22, 41, 40, 7, 38]. One may
+                                        issue, we introduce DOLOS1 , the largest gameshow de-          expect AI models can also bring significant breakthroughs
+                                        ception detection dataset with rich deceptive conversations.   in deception detection. Albeit the fruitful progress in com-
+                                        DOLOS includes 1,675 video clips featuring 213 subjects,       puter vision [48, 10, 31, 46] and audio representation learn-
+                                        and it has been labeled with audio-visual feature anno-        ing [5, 18, 28], it remains a significant challenge to effi-
+                                        tations. We provide train-test, duration, and gender pro-      ciently explore AI ability to process multimodal informa-
+                                        tocols to investigate the impact of different factors. We      tion in perceiving and predicting human deceptive behav-
+                                        benchmark our dataset on previously proposed deception         iors.
+                                        detection approaches. To further improve the performance           The performance of AI models in deception detection
+                                        by fine-tuning fewer parameters, we propose Parameter-         is heavily reliant on the availability of authentic and effec-
+                                        Efficient Crossmodal Learning (PECL), where a Uniform          tive deception samples from the real world. The deceptive
+                                        Temporal Adapter (UT-Adapter) explores temporal atten-         subjects must be spontaneous and motivated [8, 49] such
+                                        tion in transformer-based architectures, and a crossmodal      that certain behavioral cues (e.g., vocal pitch and chin raise)
+                                        fusion module, Plug-in Audio-Visual Fusion (PAVF), com-        could be more pronounced. Public benchmark datasets col-
+                                        bines crossmodal information from audio-visual features.       lected from court trials [36], game shows [42], and lab-
+                                        Based on the rich fine-grained audio-visual annotations on     based scenarios [15], have contributed to spurring interest
+                                        DOLOS, we also exploit multi-task learning to enhance per-     and progress in deception detection research. Deception can
+                                        formance by concurrently predicting deception and audio-       be affected by a range of factors in diverse real-world situa-
+                                        visual features. Experimental results demonstrate the de-      tions. Thus, it is necessary to create deception datasets from
+                                        sired quality of the DOLOS dataset and the effectiveness of    different scenarios. However, current datasets are still insuf-
+                                        the PECL. The DOLOS dataset and the source codes are           ficient to drive further progress and inspire novel ideas due
+                                        available at here.                                             to their limitations on both quantity and quality. These lim-
+                                                                                                       itations include (1) the small number of deceptive samples
+                                                                                                       and subjects, (2) the lack of rich annotated visual and speech
+                                                                                                       attributes, and (3) the variety of protocols. It is imperative to
+                                          * Equal contribution
+                                                                                                       build a larger and richer deception detection dataset. In par-
+                                          † Corresponding author                                       ticular, more deceptive samples and subjects, better anno-
+                                          1 The name “DOLOS” comes from Greek mythology.               tations for facial movements, gestures, and audio attributes,
+and more types of protocols for investigating factors affect-    PAVF modules, and the classifier being trainable. Fur-
+ing deception detection.                                         thermore, we explore the benefits of multi-task learning,
+    In addition to a high-quality dataset, effective methods     a proven method that enhances performance in audio and
+are equally important to deception detection. A variety of       visual tasks [54, 45]. By simultaneously predicting decep-
+works have been done towards using visual and acoustic           tion, facial movements, and phonetic features, our proposed
+information in videos for deception detection [42, 15, 36].      method can be further improved.
+Current methods fall into two categories: unimodal learn-           To compare and show the advantages of our dataset and
+ing and multimodal fusion. However, both approaches have         the proposed method, we conducted extensive experiments.
+limitations as they do not fully exploit unimodal features or    In the cross-testing with the current gameshow benchmark
+integrate complementary information from multiple modal-         dataset [42], DOLOS performs better on several test sets
+ities. To make better use of available information, fine-        in different scenarios. The experimental results on DO-
+tuning large pre-trained models has shown promising re-          LOS also showed that PECL yields superior performance
+sults [39, 26, 20, 47]. However, fully fine-tuning pre-trained   on different protocols. Through our experiments, we un-
+models, such as W2V2 [5] and ViT [10], can be ineffi-            cover valuable insights into multimodal deception detec-
+cient and lead to overfitting, especially if the downstream      tion. We believe that DOLOS, the proposed method, and
+dataset is limited. Therefore, it is important to consider       the benchmarking experiments provide valuable resources
+parameter efficiency when fine-tuning pre-trained models.        to other researchers in advancing research in this area.
+Adapters [17, 21] offer an efficient approach for fine-tuning
+models. While originally proposed for language [17] or vi-       2. Related Work
+sion [21] tasks, adapters have not yet been applied to multi-
+ple modalities for temporal feature extraction.                  2.1. Deception Detection Datasets
+    Contributions. In this paper, we establish a new decep-          Early works in deception detection research investigated
+tion detection dataset and propose parameter-efficient cross-    the psychological premises of deception [8, 16, 50, 30, 49]
+modal learning for audio-visual deception detection.             and identified potential cues, such as physiological, visual,
+    As our first contribution, we introduce DOLOS, a new         vocal, verbal and behavioral cues. The pioneering work
+gameshow dataset for audio-visual deception detection.           on multimodal deception detection emerged with the intro-
+DOLOS has several merits compared with current public            duction of the Real-Life Trials (RLT) dataset [36] collected
+datasets. First, the gameshow is a reliable source for col-      from courtroom trials. The courtroom setting provides a
+lecting deception detection data because all the participants    valuable and authentic scenario of people lying, but RLT is
+are motivated to cheat and the ground truths are available.      small and its performance bottleneck was quickly reached.
+Second, the proposed dataset is in a conversational setup,       Pérez-Rosas et al. [37] and Kamboj et al. [23] later pro-
+where the deception behaviors are more naturally presented.      posed another two new datasets collected from street in-
+Third, our dataset is the largest in terms of the number of      terviews and political speeches. However, it is difficult to
+subjects and also the largest non-lab based dataset in terms     verify the veracity of the responses of the subjects in these
+of the number of video clips. The dataset has been la-           datasets. Several lab-based multimodal deception detec-
+beled with fine-grained audio-visual annotations. We also        tion datasets were proposed to overcome these shortcom-
+benchmark our dataset on previous deception detection ap-        ings. The settings of these datasets were typically in situa-
+proaches that involve both unimodal and multimodal fea-          tions that speakers were allowed to lie, such as describing an
+tures. In addition, we offer three distinct protocols, namely    object [15], a personality [32], and face-to-face interviews
+train-test, duration, and gender, to explore various factors     with the subjects [43]. However, the incentive to deceive
+that may impact deception detection.                             may be low, leading to fewer deceptive cues captured.
+    Our second contribution is Parameter-Efficient Cross-            Reality TV shows based on truth or lie games provide
+modal Learning (PECL), a method for deception detec-             an avenue to collect examples of conversational deception.
+tion that achieves high performance by fine-tuning a small       They also offer a sweet spot among incentive, veracity, and
+number of extra learnable weights. Specifically, we intro-       sample size requirements. Often, the participants lie to each
+duce a Uniform Temporal Adapter (UT-Adapter) that ex-            other to win the game, and the truth is revealed at the end of
+plores the temporal attention between input embeddings           the round. Large amounts of gameshow footage are avail-
+for both visual and audio modalities without the need for        able online. The first gameshow-based deception detection
+delicate modifications. For multimodal fusion, we pro-           dataset was proposed in [42] and it primarily focused on
+pose Plug-in Audio-Visual Fusion (PAVF), which utilizes          two modalities: text and manually annotated visual features.
+the complementary information between visual and audio           However, directly applying this dataset for multimodal de-
+features to enhance the overall performance. PECL is de-         ception detection by using audio and visual modalities faces
+signed to be parameter efficient, with only the UT-Adapter,      several challenges, which we will describe in Sec. 3.
+                                                                 3. The DOLOS Dataset
+                                                                 3.1. Gameshow Format
+                                                                    We collect data from a British reality comedy gameshow
+                                                                 available on YouTube 2 , where six participants compete as
+                                                                 two teams. In each taking turn, one of their members read
+                                                                 out a statement about their personal life from a card. This
+                                                                 statement could be either true or false, and only the speaker
+                                                                 knows which one it is. The opposing team then asks the
+                                                                 speaker a series of questions, and the speaker must pro-
+                                                                 vide answers in defense of their statement. The goal of the
+                                                                 speaker is to convince the opposing team that their state-
+                                                                 ment is true, while the opposing team tries to determine
+Figure 1. Gameshow format. An example of a deceptive round.      whether the statement is actually true or false based solely
+                                                                 on the speaker’s answers. At the end of each round, the ve-
+2.2. Multimodal Deception Detection                              racity of the statement is revealed, and if the opposing team
+                                                                 correctly predicts whether it was true or false, they win the
+    Previous works on multimodal deception detection in-         round; otherwise, the speaker’s team wins. The game con-
+clude using unimodal and multimodal features and explor-         tinues for several rounds until all participants have played.
+ing effective fusion mechanism [33, 24, 25, 4, 9, 51, 13].       Notably, if the statement is true, then the speaker’s answers
+Gogate et al. [13] proposed a deep model that incorporated       will be considered as truthful video clips and vice versa.
+the audio cues with visual and text modalities to improve        The gameshow format is given in Fig. 1.
+the accuracy of deception prediction. Karimi et al. [24] ex-
+plored deceptive cues from RGB images and raw audio in
+                                                                 3.2. Data Collection and Annotation Procedure
+an end-to-end manner. Wu et al. [51] utilized several types         For each episode of the gameshow videos, the video clips
+of features, including micro-expression and IDT (Improved        that satisfy the following requirements are extracted:
+Dense Trajectory) features from RGB images, MFCC (Mel-
+                                                                   • The participant speaks only the relevant content (i.e.,
+frequency Cepstral Coefficients) features from the audio,
+                                                                     telling the truth or lies) in a clear voice and without
+and transcripts. Avola et al. [4] addressed the deception de-
+                                                                     strong background noise.
+tection issue by directly using AUs (facial action units) from
+video frames and classifying them through an SVM. Ding et          • The face of the participant is clearly visible without
+al. [9] tried to combine facial expressions and body move-           occlusion.
+ments to extract more visual deception cues. They also tried        From a total of 84 episodes, we extracted 1675 video
+to improve the performance by involving audio features and       clips from 213 (141 Male and 72 Female) participants. The
+transcripts. Mathur and Matarić [33] focused on facial ex-      duration of the video clips ranges from 2-19 seconds. The
+pressions for deception detection and studied interpretable      extracted video clips are manually annotated for non-verbal
+features from visual, vocal, and verbal modalities. Karnati      deceptive cues using the popular MUMIN coding scheme
+et al. [25] proposed deep networks that learn audio, visual,     [2], where we particularly focus on the visual (25 facial)
+and EEG representations for deception detection.                 and vocal (5 speech) features. The non-verbal features in
+    Most of the previous works tried to enhance the perfor-      the MUMIN coding scheme and the distributions of video
+mance by involving more modalities, more features, and us-       clips are shown in Fig. 2.
+ing better feature extraction methods. However, they heav-          To eliminate bias among the human annotators, all six
+ily rely on spatial features rather than temporal information    human annotators underwent calibration by annotating the
+within and between the modalities, which may lose poten-         same subset of the dataset, and their performance was evalu-
+tially important cues and lead to sub-optimal results.           ated using Cohen’s Kappa scores [6]. If significant discrep-
+                                                                 ancies are found in visual and audio annotations between
+    In terms of fusion methods, the feature-level fusion         annotators, they reconciled their differences through discus-
+which concatenates multimodal embeddings and uses the            sion and then re-annotated the subset. This iterative process
+linear layers to extract crossmodal information [24, 4, 9, 51,   was repeated until inter-annotator agreement was achieved.
+13] was the most popular approach. Other works implement         Before calibration, the average Cohen’s Kappa scores were
+decision-level fusion, such as score-level fusion [25, 13]. In   0.5 (0.53 for audio and 0.47 for visual annotations). After
+all cases, performance can be boosted by a reliable and ef-
+ficient fusion method.                                             2 Videos are collected from YouTube under the fair use policy
+                                                    467
+
+
+
+                                                          340
+                                              313
+
+
+
+
+                           No. of Clips
+                                                                185
+                                                                      145
+                                                                            96
+                                                                                 62
+                                                                                       39
+                                          2                                                 10   5    2      2   1     1    1     1    1     1      1
+
+                                          2   3     4     5     6     7     8     9    10   11   12   13   14    16    19   22   23    32    41     48
+                                                                                      Duration in Seconds
+                                                                 (a) Distribution of clips (by duration)
+
+                                                                            MUMIN Coding Scheme
+                           Lips​                                Gaze                   Chin                                                 Face​
+                          Corners up                            Towards interlocutor​            Move Upwards                               Smile               (c) Distribution of features
+                          Corners down​                         Up                               Move Downwards                             Laughter
+                          Protruded                             Down                             Eyebrows​                                  Scowl
+                          Retracted                             Sideways                         Frowning​                                                             Deception   Truthful    Total
+                                                                                                 Raising
+                           Eyes​                                Mouth                            Fluency                                    Arousal            Male       746        578        1324
+                          Frequent Blinking                     Exaggerated Opening​    Non-ah-mmh speech disturbances Loudness                               Female      153        198        351
+                          Exaggerated Opening                   Closed (awkward pauses) Word and phrase repetitions    Tension
+                                                                                                                                                               Total      899        776        1675
+                          Exaggerated Closing                                           Silent pauses
+                                                          (b) Annotations - facial and speech features                                                   (d) Distribution of clips (by veracity & gender)
+
+                          Figure 2. DOLOS dataset for multimodal deception detection. Zoom in for a better view.
+
+                                                                                 Hand annotated                                                                 Samples
+                                    Dataset                                                                  #Subjects                                                                                      Scenario
+                                                                                    features                                     Total       Deceptive        Truthful Deception/Truth Ratio
+                       Real Life Trials[36]                                                 ✓                     56             121                61           60                 1.02                 Court-room
+                     Real Life Deception[37]                                                                       -              56                31           25                 1.24               Street interviews
+                     Political Deception[23]                                                                      88             180                 -            -                   -                Political speech
+                         Bag of Lies[15]                                                                          35             325              162            163                0.99                      Lab
+                            MU3D[32]                                                                              80             320              160           160                   1                       Lab
+              Deception Detection and remote PPG[43]                                                              70             1680             630           1050                 0.6                      Lab
+                         Box of Lies[42]                                                    ✓                     26             1049             862            187                4.61                 Gameshows
+                         DOLOS (Ours)                                                       ✓                    213             1675             899            776                1.16                 Gameshows
+                                                              Table 1. Comparison of multimodal deception detection datasets
+calibration, the average scores increased to 0.65 (0.67 for                                                                           research (see Sec. 5.3) than BOL.
+audio and 0.63 for visual annotations).                                                                                                  We also compare DOLOS with other publicly available
+    Based on the statistics in Fig. 2, we organize DOLOS                                                                              datasets. A summary of the comparisons is shown in Table
+dataset into three different protocols. First, we provide a                                                                           1. Briefly, DOLOS offers the following advantages:
+train-test protocol with a 3-fold split to evaluate the perfor-                                                                              • DOLOS is the largest in terms of number of subjects.
+mance of the deception detector for DOLOS dataset. Sec-                                                                                        It is also the largest in terms of video clips in the non-
+ond, to reflect the variability in speaking duration in real-                                                                                  lab scenario.
+world scenarios, we provide a duration protocol with short                                                                                   • Compared to the Box of Lies gameshow dataset, DO-
+clips (2-4s) and long clips (5-10s) based on the statistics                                                                                    LOS contains a larger number of video clips and is
+from our dataset. We also provide a gender (male and fe-                                                                                       more well-balanced in terms of the proportion of de-
+male) protocol to investigate different factors in the decep-                                                                                  ceptive and truthful samples.
+tion detection task.
+                                                                                                                                             • DOLOS provides manually annotated MUMIN fea-
+3.3. Comparison with Box of Lies and Other                                                                                                     tures for all video clips. These annotations can be di-
+     Datasets                                                                                                                                  rectly used for deception detection task. They can also
+                                                                                                                                               be applied for other related tasks (e.g., facial expres-
+   We compare our DOLOS with Box of Lies (BOL) [42],                                                                                           sion prediction) or multi-task learning.
+which was also collected from gameshow videos. In terms
+of quantity, BOL has fewer video clips and fewer subjects.                                                                            4. Methodology
+BOL contains only 26 subjects, which is 17.9% of DOLOS.
+In terms of quality, among 1,049 video clips in BOL, 537                                                                                 To efficiently leverage the prior knowledge from large-
+video clips missed the speaker’s face. In the other video                                                                             scale generic audio and visual tasks, we propose Parameter-
+clips, the speaker and the audio of some video clips do not                                                                           Efficient Crossmodal Learning (PECL) for audio-visual de-
+match. In BOL, the host of the gameshow has more video                                                                                ception detection. PECL’s overall framework is illustrated
+clips than other subjects, which introduces a large bias. In                                                                          in Fig. 3 with the main network architecture (Fig. 3 (a)) and
+comparison, the data collection requirements mentioned in                                                                             several components with detailed structures (Fig. 3 (b)-(e)).
+Sec. 3.2 inherently prevent these problems. Therefore, DO-                                                                               Specifically, in Fig. 3 (a), visual inputs are tokenized
+LOS is more suitable for audio-visual deception detection                                                                             by a 2D-CNN module and audio inputs are tokenized by a
+Figure 3. Parameter-Efficient Crossmodal Learning (PECL) Framework. (a) is the main architecture. (b) is the encoder layer Ai for audio
+features. (c) is the UT-Adapter with a shared structure between audio and visual features. (d) is the encoder layer Vi for visual features. (e)
+is the PAVF module Fi . The trainable modules and layers are marked by “fire”, and the frozen layers are marked by “snowflakes” .
+
+1D-CNN module (See Sec. 5.1) with the same dimensions,                    a single head Hj , j ∈ {1, 2, · · · , N }, the self-attention op-
+which are denoted as Xv ∈ RL×D and Xa ∈ RL×D ,                            eration is formulated as
+where L is the length of sequences and D is the dimen-
+                                                                                                                            !
+                                                                                                                  Qj Kj ⊺
+sion of each sequence embedding. Vi and Ai represent                                        Hj (X) = Sof tmax      √            Vj ,        (2)
+                                                                                                                     D
+transformer-based visual and audio modality encoder lay-
+ers, where we adopt W2V2 [5] as the backbone network for                  and the outputs of all the Hj , j ∈ {1, 2, · · · , N } are then
+audio modality and ViT [10] for visual modality. Fi are fu-               concatenated and projected to a single output H(X).
+sion modules between each pair of unimodal encoder layers                    UT-Adapters are placed in parallel with MHSA and MLP
+and i = 1, 2, 3, 4. C1 , C2 , and C3 are classifiers for audio,           modules. In particular, a UT-Adapter is a stack of linear and
+visual, and fusion networks, respectively. LA , LV , and LF               1D-convolutional layers. As shown in Fig. 3 (c), the output
+are cross-entropy losses for audio, visual, and fused modal-              of a UT-Adapter is operated as
+ities, respectively.
+                                                                              U (X) = L2 (P (C(P (L1 (X; W1 )); WC )); W2 ),                (3)
+4.1. Uniform Temporal Adapter (UT-Adapter)                                where L1 and L2 are Linear 1 and Linear 2 layers in Fig. 3
+   To improve the parameter efficiency and alleviate the                  (c) and P and C are Permutation and Conv-1D, respectively.
+overfitting issue, we insert learnable adapter layers [17, 21]            W1 ∈ RD×128 and W2 ∈ R128×D are trainable weights of
+in the pre-trained visual and audio models. During train-                 L1 and L2 . WC is the 1D-convolutional weight with the
+ing, all the weights, except those in the adapter layers and              kernel size of 3. L1 projects the input X ∈ RL×D to X ∈
+the classification layers are frozen. Unlike NLP-Adapter for              RL×128 , Permutation layer P shifts X ∈ RL×128 to X ∈
+language tasks [17] and Conv-Adapter for vision tasks [21],               R128×L and C is applied along the temporal dimension to
+our adapter layer, named Uniform Temporal Adapter (UT-                    capture the temporal dynamics. P layer and L2 then project
+Adapter), is to explore temporal attention for both visual                X ∈ R128×L to X ∈ RL×D .
+and audio modalities.                                                        To be specific, for FV , the output from MHSA and a UT-
+   Let FV and GA represent the visual and audio encoder                   adapter can be represented as:
+                                                                                           ′′
+layers in Fig. 3. Their outputs are denoted as                                        Xv = AN (Xv + H(LN (Xv )) + U (Xv )),                 (4)
+                ′                      ′                                          ′
+              Xv = FV (Xv ) and Xa = GA (Xa ),                   (1)      and Xv in Eq. 1 is obtained by:
+          ′                      ′                                                    ′           ′′                  ′′               ′′
+where Xv ∈ RL×D and Xa ∈ RL×D . FV and GA are                                     Xv = AN (Xv + M LP (LN (Xv )) + U (Xv )),                 (5)
+formed by a Multi-Head Self-Attention (MHSA) module,                      where AN is a normalization layer introduced after UT-
+UT-Adapters, a Multi-Layer Perception (M LP ) module,                     Adapter, which is trainable.
+and LayerNorm (LN ). To simplify the notations, let X                         GA shares a similar structure with FV . The output Xa
+be one of the input features, i.e, Xv and Xa (in Fig. 3 (b)               is computed by
+and (d)). X is projected to a query Q = XWQ , a key                                   ′′
+
+K = XWK , and a value V = XWV , where WQ , WK ,                                   Xa = AN (Xa + LN (H(Xa )) + U (Xa )),
+                                                                                      ′           ′′                  ′′               ′′
+                                                                                                                                            (6)
+and WV ∈ RD×D are pre-trained projection weights. For                             Xa = AN (Xa + LN (M LP (Xa )) + U (Xa )).
+   The input Xv and Xa are sequence embeddings from                 4.3. Multi-task Learning
+vision and audio. The MHSA module in the transformer en-
+                                                                       Multi-task learning has demonstrated promising perfor-
+coder facilitates global attention, allowing the model to ef-
+                                                                    mance in various audiovisual tasks [19, 45], effectively en-
+fectively learn both spatial and temporal attention from the
+                                                                    hancing the performance of multiple tasks through mutual
+input. However, this may not be optimal for learning local
+                                                                    learning. With DOLOS’ MUMIN features (Fig. 2 (b)), we
+temporal attention and local spatial information. Thus, UT-
+                                                                    enhance performance through multi-task learning, simulta-
+Adapter is proposed to capture the local temporal attention
+                                                                    neously conducting two prediction tasks using fused multi-
+in parallel with MHSA and MLP modules. The 2D-CNN
+                                                                    modal features. More clearly, for K MUMIN features la-
+captures the local spatial information and the 1D-CNN cap-
+                                                                    bels and one deception-truth label, we predict K + 1 la-
+tures temporal information. We empirically show that this
+                                                                    bels. Note that all the labels are binary. We denote the
+adapter-transformer architecture is parameter-efficient tun-
+                                                                    fused audio-visual embedding as X̃va . The classification
+ing and delivers better performance.
+                                                                    layer takes X̃va as input to produce prediction scores S ∈
+4.2. Plug-in Audio-Visual Fusion (PAVF)                             R1×(K+1) . Given the ground-truth label Y ∈ R1×(K+1) ,
+                                                                    we use cross-entropy loss to perform multi-task learning. It
+   To explore the audio-visual interactions, we propose a
+                                                                    can be formulated as
+Plug-in Audio-Visual Fusion (PAVF) module that learns
+crossmodal attention for fusion.                                                K+1
+                                                                                X
+   We denote the output features from Vi and Ai as Xvi ∈               LM = −         (Yk log(Sk ) + (1 − Yk ) log(1 − Sk )) ,   (10)
+  L×D                                                                           k=1
+R       and Xai ∈ RL×D and propose to learn cross-
+modal attention in an embedding space with lower dimen-             where LM is the sum of the cross-entropy losses for each
+sion, which is more efficient and reduces computational             element in S and Y .
+                                                    ′
+costs. Xvi and Xai are first projected to Xvi ∈ RL×D and
+               ′         ′
+Xai ∈ RL×D , D < D, by linear projection layers. Cross-             5. Experimental Results
+modal correlation P i ∈ RL×L is learned to indicate the
+                                                                    5.1. Implementation Details
+importance between visual sequences and audio sequences.
+A specific visual sequence may have a higher correlation            Data pre-processing. For each video clip, we evenly sam-
+to certain audio sequences in a video clip, which offers im-        pled L = 64 images and cropped the face areas using
+portant cues to the deception detection task. To calculate          MTCNN face detector [53]. These images were normal-
+P i , we introduce a trainable crossmodal correlation weight        ized and resized to 160 × 160 pixels. The raw speech audio
+                    ′    ′
+matrix WPi ∈ RD ×D and the calculation of P i is                    was resampled such that the W2V2 feature extractor out-
+                                              ⊺                     puts L = 64 tokens. No data augmentation was applied to
+                             P i = Xai WPi Xvi .              (7)
+                                                                    both modalities.
+We further use the learned crossmodal correlation P i , to          Model details. We used ImageNet pre-trained ViT as the
+perform Xvi → Xai and Xai → Xvi attentions. The at-                 backbone network for visual modality. We tokenized face
+tended features are                                                 images with a 2D-CNN module, which resulted in a feature
+                                                                    with a dimension of 64 × 256. For the audio modality, we
+                       X̃vi = Sof tmax(P i )Xvi + Xvi ,
+                                          ⊺                   (8)   adopted the pre-trained W2V2 model. The raw audio was
+               X̃ai = Sof tmax(P i )Xai + Xai ,                     tokenized by the 1D-CNN module and the feature size was
+          ⊺                                               ′         64 × 512 for each audio sample. Using a linear projection
+where P i is the transpose of P i , X̃vi ∈ RL×D , and
+                   ′                                                layer, visual and audio tokens were projected to 64 × 768
+X̃ai ∈ RL×D . Softmax is conducted column-wise. The                 dimensions. We empirically utilized the first 4 transformer
+attended features are concatenated and inputted into a fu-          encoder layers from ViT and W2V2 models to extract fea-
+sion head. The fusion head consists of a linear projection          tures because deception detection can benefit from the low-
+Lp that further reduces the embedding dimension to D′′ , a          level features [44, 29, 13]. The UT-Adapter and PAVF mod-
+normalization layer LN , and a non-linear activation ReLU .         ules were inserted in these four encoder layers (in Fig. 3
+It can be denoted as                                                (a)). The one-dimensional convolution layer (in Fig 3 (c))
+                i
+              X̃va = ReLU (LN (Lp (X̃vi ⊕ X̃ai ))),           (9)   in the UT-Adapter for both visual and audio encoders had a
+                              ′′
+                                                                    kernel size of 3 and a stride of 1.
+         i
+where X̃va  ∈ RL×D and ⊕ is a concatenation operation.              Training and evaluation. The models were trained with
+   PAVF modules are inserted into each pair of Vi and Ai            cross-entropy loss. We used Adam optimizer and trained
+to perform fusion, in which richer fused information can be         the models for 20 epochs with a learning rate of 3e-4 and
+                       i
+learned. The outputs X̃va from each PAVF module are then            a batch size of 16. We evaluated our method with accuracy
+concatenated and used for prediction.                               (ACC), F1 score (F1), and Area Under Curve (AUC).
+                                                          3-Fold Average            Duration Protocol          Gender Protocol
+                                    Modalities
+                                                        ACC     F1    AUC          ACC     F1     AUC         ACC    F1    AUC
+                                        Visual          61.44   69.42   58.89      61.03    72.01     56.51   59.37   64.19   54.94
+                                        Audio           59.19   73.46   52.54      58.24    71.83     52.38   52.62   63.22   51.08
+                                  Concatenation         61.62   70.2    60.5        60.8    69.63     57.79    58.0   66.22   53.75
+                                  Fusion (PAVF)         64.75    71.2   62.71      62.43    70.04     59.92   58.28   65.41   53.31
+                                PAVF + Multi-task       66.84   73.35   64.58      64.48    71.09     62.44   59.04   66.84    55.1
+              Table 2. Multimodal deception detection on DOLOS dataset. The metrics are ACC (%), F1 (%), and AUC(%).
+
+
+                           Train Data - DOLOS           Train Data - Box of Lies                               Features                 Method        ACC (%)
+          Method
+                         Test BgOL       Test RLT       Test BgOL     Test RLT
+                                                                                                           Open Face [33, 29]            LSTM          56.81
+       RN18+LSTM        55.08 (+4.62)   56.62 (+3.85)      50.46        52.77
+                                                                                                       Action Units (AU) [33, 4]         LSTM          57.47
+  V      3D RN          55.69 (+3.38)   57.87 (+5.53)      52.31        52.34
+       Ours (Vision)    56.92 (+4.30)   55.32 (+2.55)      52.62        52.77              V             Facial Affect [33, 24]          LSTM          57.67
+                                                                                                       MUMIN Features [36, 37]            MLP          58.84
+          RN18 †        55.84 (+4.91)   53.53 (+1.64)      50.93        51.89
+                                                                                                      Face [25, 9, 51, 13, 29, 24]    RN18+LSTM        59.55
+  A    MLP (MFCC)       52.31 (+2.46)   52.34 (+0.42)      49.85        51.92
+       Ours (Audio) ‡   55.39 (+4.00)   59.15 (+4.68)      51.39        54.47                                    Face                 Ours (Vision)    61.44
+                                                                                                              MFCC [51]                  MLP           56.86
+       3D RN+RN18       50.77 (+1.23)   54.47 (+1.70)      49.54        52.77
+                                                                                           A           Open SMILE [33, 13, 52]            MLP          57.49
+ V+A    Ours (PAVF)     57.54 (+4.31)   56.17 (+2.98)      53.23        53.19
+                                                                                                      W2V2 Audio [25, 9, 29, 24]      Ours (Audio)     59.19
+Table 3. Cross-testing on Bag-of-Lies (BgOL) and Real-Life-trials                                    Open Face + Open SMILE [33]      Score-Fusion     59.75
+(RLT) datasets. The metric is ACC (%). RN stands for ResNet.                                        Face + Open SMILE [13, 29, 52]    Score-Fusion     60.00
+All the visual features are from face frames. † is trained on mel-                                   Face + W2V2 Audio [25, 24, 9]    Ours(Concat)     61.62
+spectrogram and ‡ is trained on raw audio.                                                 V+A            Face + W2V2 Audio            Ours(PAVF)      64.75
+                                                                                       Table 4. Benchmarking DOLOS dataset on visual and audio fea-
+5.2. Audio-visual Deception Detection in DOLOS                                         tures. The weighted average is used for score fusion. RN18 stands
+                                                                                       for ResNet-18.
+   The performance of PECL model on DOLOS is pre-
+sented in Table 2. The average results were calculated from                            also showed better test accuracy than that trained on BOL,
+the 3 folds defined in the train-test protocol. Duration and                           (e.g., Fusion (PAVF) improved 4.31% on BgOL and 2.98%
+gender protocol results were cross-tested averages of train-                           on RLT). These results suggest that models trained on DO-
+ing/testing on (long/short + short/long) and (male/female +                            LOS can be more effective in identifying deceptive content
+female/male), respectively. For unimodal results, the visual                           in other scenarios than those trained on BOL.
+modality showed slightly better performance than the au-                               5.4. Benchmarking DOLOS
+dio across all the protocols. To study the performance of
+                                                                                           We benchmark DOLOS in Table 4, following the de-
+a simple feature-level fusion, we concatenated the last out-
+                                                                                       ception detection literature. It is worth noting that the
+put embeddings from visual and audio encoders to perform
+                                                                                       existing literature on deception detection is not standard-
+prediction. The concatenation usually draws the average of
+                                                                                       ized with protocols, data processing, and feature extraction
+unimodal predictors. To overcome this issue, the proposed
+                                                                                       methodologies. To highlight and cover the most represen-
+PAVF module learned the correlation between visual and
+                                                                                       tative works in deception detection literature, we bench-
+audio features from different encoder layers and improved
+                                                                                       marked DOLOS on the popular visual and audio features
+the performance. The multi-task learning further boosted
+                                                                                       used before for deception detection. The OpenFace fea-
+the accuracy across all the protocols. However, by com-
+                                                                                       tures (2D facial landmarks, eye gaze, and head pose) and
+paring the overall performances, we observed that the dura-
+                                                                                       Action Units (AU) features were extracted using the Open-
+tion and gender factors showed an adverse effect on perfor-
+                                                                                       Face toolkit [3]. The facial affect (emotion) features were
+mance. These results pointed out the importance of duration
+                                                                                       extracted using the Affectnet [34] model. For audio, the Mel
+and gender factors in deception detection.
+                                                                                       Cepstral Frequency Coefficients (MFCC) and openSMILE
+5.3. Comparison with Box of Lies                                                       features were extracted by the openSMILE toolkit [11].
+   To compare DOLOS with the current gameshow dataset                                  Performance. For visual modality, the RGB face images
+BOL, we conducted cross-testing, where DOLOS and                                       gave the best performance, since they contained more de-
+BOL were used for training and other deception detection                               ceptive cues. This was followed by manually annotated
+datasets, i.e., Bag of Lies and Real Life Trials, for test-                            MUMIN features, affect features, and AU features, which
+ing. It was challenging because these datasets were col-                               all represented high-level human expressions. The low-
+lected from different deceptive scenarios. As shown in Ta-                             level facial landmark features did not perform well. For au-
+ble 3, we compared several methods for audio, visual, and                              dio modality, raw speech audio with rich deceptive cues per-
+fusion and found that models trained on DOLOS achieved                                 formed the best. The openSMILE features performed better
+higher accuracies overall. PECL model trained on DOLOS                                 than MFCC, since it extracted nearly three times the audio
+                             65                                                                                                                     65                                     64.75
+                                                                                   64.75
+
+
+
+
+                                                                                                                                     Accuracy (%)
+                                            64.75
+                                                                           63.78                                                                    64                             63.48
+                            64.5
+                                                                                                                                                    63
+                                   63.96                                                                                                                              61.89
+                                                                                                                                                    62
+
+
+             Accuracy (%)
+                             64
+                                                                                                                                                    61    60.66
+                            63.5                        63.43                              58.83
+                                                                                                                                                    60
+                                                                62.92                                                                                        1            2           3            4
+                             63
+                                                                                                                                                                 Number of PVAF modules
+                            62.5
+                                      3       4         5       6        Number of Encoders = 4                              Figure 5. Ablation on numbers of PAVF modules.
+                                     Number of Encoders                 NLP UT-A Fine-Tune
+                                                                                                                                                    67                                     66.84
+
+
+
+
+                                                                                                                                     Accuracy (%)
+                                                  (a)                               (b)
+                                                                                                                                                    65            64.75            64.9
+Figure 4. Ablation on (a) encoder depth and (b) type of adapter.                                                                                                          64.05
+                                                                                                                                                    63
+
+                                           Trainable                                                                                                61
+  Method                                                                      Total                Trainable/Total                                       No Multitask         5A     20V      25(A+V)
+                            Adapter          PAVF    Total
+ Fine-Tune                     −             1.982          70.180           70.180                    100%          Figure 6. Results of multi-task learning with different features.
+ NLP [17]                    5.345           1.982          7.327            73.347                    9.99%
+   UT-A                      3.077           1.982          5.059            71.079                    7.12%         low-level crossmodal interactions were captured. The re-
+Table 5. Comparison of the number of trainable parameters and                                                        sults revealed that four PAVF modules are particularly help-
+total parameters (Millions).                                                                                         ful in capturing audio-visual deceptive cues.
+                                                                                                                     Impact of multi-task learning. In Fig. 6, we illustrated the
+  Position             q MHSA q FFN                         q MHSA            q FFN                MHSA △ FFN
+                                                                                                                     ablation study of multi-task learning described in Sec 4.3,
+ ACC (%)                           64.75                     63.88            63.37                     64.39
+                                                                                                                     for different audio-visual features (Refer Fig 2 (b)). The re-
+Table 6. Ablation study on UT-Adapter positions. q indicates “in                                                     sults showed that using 20 visual features (20V) achieved
+parallel with” and △ indicates “between”.
+                                                                                                                     better results than using 5 audio features (5A) and using 25
+                                                                                                                     audio-visual features further boosted accuracy. The results
+features compared with MFCC. Score-level fusion was con-                                                             demonstrated that the manually annotated features in DO-
+ducted for the best-performing features of the two modali-                                                           LOS can benefit deception detection performance.
+ties. The proposed transformer-based detector achieved the
+best in both unimodal and multimodal settings.                                                                       6. Conclusion
+                                                                                                                        In this paper, we introduced DOLOS, the largest
+5.5. Ablation Study
+                                                                                                                     gameshow deception dataset with fine-grained audio-visual
+  The ablation studies were conducted on different com-                                                              feature annotations. We also proposed Parameter-Efficient
+ponents of PECL model based on the train-test protocol.                                                              Crossmodal Learning, where the UT-Adapter learns tempo-
+Impact of encoder depth and adapter types. Fig. 4 (a)                                                                ral attention for both visual and audio modalities, and the
+indicated that the proposed PECL performed best with four                                                            PAVF module captures correlation information between au-
+layers and may overfit when additional layers were added.                                                            dio and visual modalities. We benchmarked our dataset on
+Fig. 4 (b) showed that UT-Adapter outperformed the NLP                                                               the existing deception detection approaches. Extensive ex-
+adapter [17] and full fine-tuning, which may be due to better                                                        periments showed that DOLOS has better quality than the
+temporal modeling with Conv1D layers in UT-Adapter.                                                                  Box of Lies and PECL model achieved better results on DO-
+Comparison of parameter amount. Table 5 demonstrated                                                                 LOS and can be applied to other deceptive content.
+that our proposed method achieved the best performance                                                                  Ethical Consideration. Deception detection research
+while utilizing the least amount of trainable parameters                                                             is crucial in credibility assessment, anti-frauds, border se-
+when compared to both the NLP adapter and full fine-tuning                                                           curity, etc. However, the misuse of deception detection may
+approaches. Note that UT-Adapter performed best with 128                                                             cause potential negative impacts such as privacy invasion,
+dimensions while NLP adapter with 256 dimensions.                                                                    discrimination, and/or harmful surveillance. This work was
+Impact of adapter position. The results in Table 6 showed                                                            completed under an ethics clearance (IRB-2022-901). Data
+that the UT-Adapter worked the best when parallel to both                                                            was collected from YouTube under the fair use policy and
+MHSA and FFN layers [21], as they both captured the tem-                                                             the subjects are public personalities.
+poral attention. The performance dropped when parallel to                                                               Acknowledgments. This work was done at Rapid-
+only either layer. The performance was also close for UT-                                                            Rich Object Search (ROSE) Lab, EEE, Nanyang Techno-
+Adapter placed in-between MHSA and FFN layers.                                                                       logical University. This research is supported in part by
+                                                                                                                     the NTU-PKU Joint Research Institute (a collaboration be-
+Impact of PAVF modules. The number of PAVF modules                                                                   tween the Nanyang Technological University and Peking
+in Fig. 5 corresponds to the last number of audio-visual en-                                                         University that is sponsored by a donation from the Ng
+coders that operate with them. The advantage of fusion in                                                            Teng Fong Charitable Foundation), and the DSO National
+earlier stages [35] can be clearly seen with a substantial in-                                                       Laboratories, Singapore, under the project agreement No.
+crease in performance for four PAVF modules, where the                                                               DSOCL21238.
+References                                                                    detection. In 2017 IEEE symposium series on computational
+                                                                              intelligence (SSCI), pages 1–6. IEEE, 2017. 1, 3, 6, 7
+ [1] Mohamed Abouelenien, Verónica Pérez-Rosas, Rada Mihal-            [14] Martin Graciarena, Elizabeth Shriberg, Andreas Stolcke,
+     cea, and Mihai Burzo. Detecting deceptive behavior via inte-             Frank Enos, Julia Hirschberg, and Sachin Kajarekar. Com-
+     gration of discriminative features from multiple modalities.             bining prosodic lexical and cepstral systems for deceptive
+     IEEE Transactions on Information Forensics and Security,                 speech detection. In 2006 IEEE International Conference on
+     12(5):1042–1055, 2016. 1                                                 Acoustics Speech and Signal Processing Proceedings, vol-
+ [2] Jens Allwood, Loredana Cerrato, Laila Dybkjaer, Kris-                    ume 1, pages 0–7. IEEE, 2006. 1
+     tiina Jokinen, Costanza Navarretta, and Patrizia Paggio.            [15] Viresh Gupta, Mohit Agarwal, Manik Arora, Tanmoy
+     The mumin multimodal coding scheme. NorFA yearbook,                      Chakraborty, Richa Singh, and Mayank Vatsa. Bag-of-lies:
+     2005:129–157, 2005. 3                                                    A multimodal dataset for deception detection. In Proceed-
+ [3] Brandon Amos, Bartosz Ludwiczuk, Mahadev Satya-                          ings of the IEEE/CVF Conference on Computer Vision and
+     narayanan, et al. Openface: A general-purpose face recogni-              Pattern Recognition Workshops, pages 0–7, 2019. 1, 2, 4
+     tion library with mobile applications. CMU School of Com-           [16] Julia Bell Hirschberg, Stefan Benus, Jason M Brenier, Frank
+     puter Science, 6(2):20, 2016. 7                                          Enos, Sarah Friedman, Sarah Gilman, Cynthia Girand, Mar-
+ [4] Danilo Avola, Luigi Cinque, Gian Luca Foresti, and Daniele               tin Graciarena, Andreas Kathol, Laura Michaelis, et al. Dis-
+     Pannone. Automatic deception detection in rgb videos using               tinguishing deceptive from non-deceptive speech. 2005. 2
+     facial action units. In Proceedings of the 13th International       [17] Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, Bruna
+     Conference on Distributed Smart Cameras, pages 1–6, 2019.                Morrone, Quentin De Laroussilhe, Andrea Gesmundo, Mona
+     3, 7                                                                     Attariyan, and Sylvain Gelly. Parameter-efficient transfer
+ [5] Alexei Baevski, Yuhao Zhou, Abdelrahman Mohamed, and                     learning for nlp. In International Conference on Machine
+     Michael Auli. wav2vec 2.0: A framework for self-supervised               Learning, pages 2790–2799. PMLR, 2019. 2, 5, 8
+     learning of speech representations. Advances in Neural In-          [18] Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hubert Tsai,
+     formation Processing Systems, 33:12449–12460, 2020. 1, 2,                Kushal Lakhotia, Ruslan Salakhutdinov, and Abdelrahman
+     5                                                                        Mohamed. Hubert: Self-supervised speech representation
+ [6] Mousumi Banerjee, Michelle Capozzoli, Laura McSweeney,                   learning by masked prediction of hidden units. IEEE/ACM
+     and Debajyoti Sinha. Beyond kappa: A review of inter-                    Transactions on Audio, Speech, and Language Processing,
+     rater agreement measures. Canadian journal of statistics,                29:3451–3460, 2021. 1
+     27(1):3–23, 1999. 3                                                 [19] Ronghang Hu and Amanpreet Singh. Unit: Multimodal mul-
+ [7] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-                       titask learning with a unified transformer. In Proceedings
+     biah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakan-                of the IEEE/CVF International Conference on Computer Vi-
+     tan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Lan-             sion, pages 1439–1449, 2021. 6
+     guage models are few-shot learners. Advances in neural in-          [20] Chao Jia, Yinfei Yang, Ye Xia, Yi-Ting Chen, Zarana Parekh,
+     formation processing systems, 33:1877–1901, 2020. 1                      Hieu Pham, Quoc Le, Yun-Hsuan Sung, Zhen Li, and Tom
+ [8] Bella M DePaulo, James J Lindsay, Brian E Malone, Laura                  Duerig. Scaling up visual and vision-language representa-
+     Muhlenbruck, Kelly Charlton, and Harris Cooper. Cues to                  tion learning with noisy text supervision. In International
+     deception. Psychological bulletin, 129(1):74, 2003. 1, 2                 Conference on Machine Learning, pages 4904–4916. PMLR,
+ [9] Mingyu Ding, An Zhao, Zhiwu Lu, Tao Xiang, and Ji-Rong                   2021. 2
+     Wen. Face-focused cross-stream network for deception de-            [21] Shibo Jie and Zhi-Hong Deng. Convolutional bypasses
+     tection in videos. In Proceedings of the IEEE/CVF Con-                   are better vision transformer adapters. arXiv preprint
+     ference on Computer Vision and Pattern Recognition, pages                arXiv:2207.07039, 2022. 2, 5, 8
+     7802–7811, 2019. 1, 3, 7                                            [22] John Jumper, Richard Evans, Alexander Pritzel, Tim Green,
+[10] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,                   Michael Figurnov, Olaf Ronneberger, Kathryn Tunyasuvu-
+     Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,                      nakool, Russ Bates, Augustin Žı́dek, Anna Potapenko, et al.
+     Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-                 Highly accurate protein structure prediction with alphafold.
+     vain Gelly, Jakob Uszkoreit, and Neil Houlsby. An image                  Nature, 596(7873):583–589, 2021. 1
+     is worth 16x16 words: Transformers for image recognition            [23] Manvi Kamboj, Christian Hessler, Priyanka Asnani, Kais Ri-
+     at scale. International Conference on Learning Representa-               ani, and Mohamed Abouelenien. Multimodal political de-
+     tions, pages 0–7, 2021. 1, 2, 5                                          ception detection. IEEE MultiMedia, 28(1):94–102, 2020.
+[11] Florian Eyben, Martin Wöllmer, and Björn Schuller. Opens-              2, 4
+     mile: the munich versatile and fast open-source audio feature       [24] Hamid Karimi, Jiliang Tang, and Yanen Li. Toward end-
+     extractor. In Proceedings of the 18th ACM international con-             to-end deception detection in videos. In 2018 IEEE Inter-
+     ference on Multimedia, pages 1459–1462, 2010. 7                          national Conference on Big Data (Big Data), pages 1278–
+[12] Tommaso Fornaciari and Massimo Poesio. Automatic de-                     1283. IEEE, 2018. 3, 7
+     ception detection in italian court cases. Artificial intelligence   [25] Mohan Karnati, Ayan Seal, Anis Yazidi, and Ondrej Krejcar.
+     and law, 21(3):303–340, 2013. 1                                          Lienet: a deep convolution neural networks framework for
+[13] Mandar Gogate, Ahsan Adeel, and Amir Hussain. Deep                       detecting deception. IEEE Transactions on Cognitive and
+     learning driven multimodal fusion for automated deception                Developmental Systems, 2021. 3, 7
+[26] Alexander Kolesnikov, Lucas Beyer, Xiaohua Zhai, Joan                 ing transferable visual models from natural language super-
+     Puigcerver, Jessica Yung, Sylvain Gelly, and Neil Houlsby.            vision. In International Conference on Machine Learning,
+     Big transfer (bit): General visual representation learning. In        pages 8748–8763. PMLR, 2021. 1
+     Computer Vision–ECCV 2020: 16th European Conference,             [39] Alec Radford,        Karthik Narasimhan,         Tim Sal-
+     Glasgow, UK, August 23–28, 2020, Proceedings, Part V 16,              imans, Ilya Sutskever, et al.               Improving lan-
+     pages 491–507. Springer, 2020. 2                                      guage understanding by generative pre-training.
+[27] Chenqi Kong, Kexin Zheng, Shiqi Wang, Anderson Rocha,                 https://s3-us-west-2.amazonaws.
+     and Haoliang Li.         Beyond the pixel world: a novel              com/openai-assets/research-covers/
+     acoustic-based face anti-spoofing system for smartphones.             language-unsupervised/language_
+     IEEE Transactions on Information Forensics and Security,              understanding_paper.pdf, 2018. 2
+     17:3238–3253, 2022. 1                                            [40] David Silver, Aja Huang, Chris J Maddison, Arthur Guez,
+[28] Qiuqiang Kong, Yin Cao, Turab Iqbal, Yuxuan Wang,                     Laurent Sifre, George Van Den Driessche, Julian Schrit-
+     Wenwu Wang, and Mark D Plumbley. Panns: Large-scale                   twieser, Ioannis Antonoglou, Veda Panneershelvam, Marc
+     pretrained audio neural networks for audio pattern recogni-           Lanctot, et al. Mastering the game of go with deep neural
+     tion. IEEE/ACM Transactions on Audio, Speech, and Lan-                networks and tree search. nature, 529(7587):484–489, 2016.
+     guage Processing, 28:2880–2894, 2020. 1                               1
+[29] Gangeshwar Krishnamurthy, Navonil Majumder, Soujanya             [41] David Silver, Thomas Hubert, Julian Schrittwieser, Ioan-
+     Poria, and Erik Cambria.          A deep learning approach            nis Antonoglou, Matthew Lai, Arthur Guez, Marc Lanctot,
+     for multimodal deception detection.            arXiv preprint         Laurent Sifre, Dharshan Kumaran, Thore Graepel, et al. A
+     arXiv:1803.00344, 2018. 6, 7                                          general reinforcement learning algorithm that masters chess,
+[30] Timothy R Levine and Steven A McCornack. Theorizing                   shogi, and go through self-play. Science, 362(6419):1140–
+     about deception. Journal of Language and Social Psychol-              1144, 2018. 1
+     ogy, 33(4):431–440, 2014. 2                                      [42] Felix Soldner, Verónica Pérez-Rosas, and Rada Mihalcea.
+[31] Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng                Box of lies: Multimodal deception detection in dialogues. In
+     Zhang, Stephen Lin, and Baining Guo. Swin transformer:                Proceedings of the 2019 Conference of the North American
+     Hierarchical vision transformer using shifted windows. In             Chapter of the Association for Computational Linguistics:
+     Proceedings of the IEEE/CVF International Conference on               Human Language Technologies, Volume 1 (Long and Short
+     Computer Vision, pages 10012–10022, 2021. 1                           Papers), pages 1768–1777, 2019. 1, 2, 4
+[32] E Paige Lloyd, Jason C Deska, Kurt Hugenberg, Allen R Mc-        [43] Jeremy Speth, Nathan Vance, Adam Czajka, Kevin W
+     Connell, Brandon T Humphrey, and Jonathan W Kunstman.                 Bowyer, Diane Wright, and Patrick Flynn. Deception de-
+     Miami university deception detection database. Behavior re-           tection and remote physiological monitoring: A dataset and
+     search methods, 51(1):429–439, 2019. 2, 4                             baseline experimental results. In 2021 IEEE International
+[33] Leena Mathur and Maja J Matarić. Introducing representa-             Joint Conference on Biometrics (IJCB), pages 1–8. IEEE,
+     tions of facial affect in automated multimodal deception de-          2021. 2, 4
+     tection. In Proceedings of the 2020 International Conference     [44] Anastasis Stathopoulos, Ligong Han, Norah Dunbar,
+     on Multimodal Interaction, pages 305–314, 2020. 3, 7                  Judee K Burgoon, and Dimitris Metaxas. Deception de-
+[34] Ali Mollahosseini, Behzad Hasani, and Mohammad H Ma-                  tection in videos using robust facial features. In Proceed-
+     hoor. Affectnet: A database for facial expression, valence,           ings of the Future Technologies Conference, pages 668–682.
+     and arousal computing in the wild. IEEE Transactions on               Springer, 2020. 1, 6
+     Affective Computing, 10(1):18–31, 2017. 7                        [45] Fei Tao and Carlos Busso. End-to-end audiovisual speech
+[35] Arsha Nagrani, Shan Yang, Anurag Arnab, Aren Jansen,                  recognition system with multitask learning. IEEE Transac-
+     Cordelia Schmid, and Chen Sun. Attention bottlenecks for              tions on Multimedia, 23:1–11, 2020. 2, 6
+     multimodal fusion. Advances in Neural Information Pro-           [46] Ilya O Tolstikhin, Neil Houlsby, Alexander Kolesnikov, Lu-
+     cessing Systems, 34:14200–14213, 2021. 8                              cas Beyer, Xiaohua Zhai, Thomas Unterthiner, Jessica Yung,
+[36] Verónica Pérez-Rosas, Mohamed Abouelenien, Rada Mihal-              Andreas Steiner, Daniel Keysers, Jakob Uszkoreit, et al.
+     cea, and Mihai Burzo. Deception detection using real-life             Mlp-mixer: An all-mlp architecture for vision. Advances
+     trial data. In Proceedings of the 2015 ACM on International           in Neural Information Processing Systems, 34:24261–24272,
+     Conference on Multimodal Interaction, pages 59–66, 2015.              2021. 1
+     1, 2, 4, 7                                                       [47] Nik Vaessen and David A Van Leeuwen. Fine-tuning
+[37] Verónica Pérez-Rosas, Mohamed Abouelenien, Rada Mihal-              wav2vec2 for speaker recognition. In ICASSP 2022-2022
+     cea, Yao Xiao, CJ Linton, and Mihai Burzo. Verbal and non-            IEEE International Conference on Acoustics, Speech and
+     verbal clues for real-life deception detection. In Proceedings        Signal Processing (ICASSP), pages 7967–7971. IEEE, 2022.
+     of the 2015 conference on empirical methods in natural lan-           2
+     guage processing, pages 2336–2346, 2015. 2, 4, 7                 [48] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+[38] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya                    reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia
+     Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,                 Polosukhin. Attention is all you need. Advances in neural
+     Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-              information processing systems, 30, 2017. 1
+[49] Aldert Vrij and Pär Anders Granhag. Eliciting cues to decep-
+     tion and truth: What matters are the questions asked. Journal
+     of Applied Research in Memory and Cognition, 1(2):110–
+     117, 2012. 1, 2
+[50] Gemma Warren, Elizabeth Schertler, and Peter Bull. Detect-
+     ing deception from emotional and unemotional cues. Journal
+     of Nonverbal Behavior, 33(1):59–69, 2009. 2
+[51] Zhe Wu, Bharat Singh, Larry Davis, and V Subrahmanian.
+     Deception detection in videos. In Proceedings of the AAAI
+     conference on artificial intelligence, volume 32, 2018. 3, 7
+[52] Jun-Teng Yang, Guei-Ming Liu, and Scott C-H Huang. Mul-
+     timodal deception detection in videos via analyzing emo-
+     tional state-based feature. arXiv preprint arXiv:2104.08373,
+     2021. 7
+[53] Kaipeng Zhang, Zhanpeng Zhang, Zhifeng Li, and Yu Qiao.
+     Joint face detection and alignment using multitask cascaded
+     convolutional networks. IEEE signal processing letters,
+     23(10):1499–1503, 2016. 6
+[54] Zixing Zhang, Bingwen Wu, and Björn Schuller. Attention-
+     augmented end-to-end multi-task learning for emotion pre-
+     diction from speech. In ICASSP 2019-2019 IEEE Interna-
+     tional Conference on Acoustics, Speech and Signal Process-
+     ing (ICASSP), pages 6705–6709. IEEE, 2019. 2
+

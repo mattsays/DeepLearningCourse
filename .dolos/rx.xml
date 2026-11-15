@@ -1,0 +1,1150 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/vTvzgcAxDLH8lE9F9cOuL2UlfRw</id>
+  <title>arXiv Query: search_query=abs:"deception detection"&amp;id_list=&amp;start=0&amp;max_results=40</title>
+  <updated>2026-11-11T11:12:41Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22deception+detection%22&amp;start=0&amp;max_results=40&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>101</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2610.27407v1</id>
+    <title>Looking Into The Past: The Impact of Context on Detecting Deceptive Statements</title>
+    <updated>2026-10-19T23:59:31Z</updated>
+    <link href="https://arxiv.org/abs/2610.27407v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.27407v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection typically considers messages in isolation. Previous works in claim verification and role detection have displayed that additional information such as gameplay history is crucial to successful predictions. In this work, we demonstrate the value of preceding gameplay dialogue when applied to deceptive message detection within the hidden role game of Avalon. The findings show that LLMs can see improvement across a number of metrics, including accuracy by up to 31\% with the addition of gameplay context for the target message.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-19T23:59:31Z</published>
+    <arxiv:comment>Work completed in spring 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Alex Clay</name>
+    </author>
+    <author>
+      <name>Ernesto Jimenez-Ruiz</name>
+    </author>
+    <author>
+      <name>Pranava Madhyastha</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.13626v1</id>
+    <title>SWE-DeceptionBench: Benchmarking Deceptive Behaviors of LLMs Across the Software Development Lifecycle</title>
+    <updated>2026-10-09T14:09:09Z</updated>
+    <link href="https://arxiv.org/abs/2610.13626v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.13626v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large Language Models (LLMs) are increasingly used throughout the software development lifecycle. This growing reliance on LLMs raises concerns about their trustworthiness, with deception posing a particularly important risk. Deceptive behavior takes the form of misleading responses or assistance in fabricating, concealing, or distorting information. To study this behavior, we introduce SWE-DeceptionBench, a benchmark for evaluating LLM deception in software engineering. The benchmark covers six lifecycle stages and two deception triggers: Active Deception, where models recognize infeasible or conflicting requirements but still present them as achievable, and Passive Deception, where models help fulfill explicit user requests to mislead others. We further introduce Neutral, Reward, and Pressure conditions to study the effect of external inducements, resulting in 720 test instances in Chinese and English. Evaluating seven mainstream LLMs, we find substantial deception even under the Neutral condition, with aggregate rates of 49.88% for Active Deception and 64.29% for Passive Deception. Deception rates vary across lifecycle stages, and external inducements affect Active and Passive Deception to different extents. We also evaluate lightweight defenses, finding that guard models miss many deceptive requests, and Self-Reminder reduces but does not eliminate deceptive responses. These findings highlight the need for more effective deception detection and mitigation methods to support trustworthy LLM-based software engineering.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-09T14:09:09Z</published>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Xiting Liu</name>
+    </author>
+    <author>
+      <name>Lin Yang</name>
+    </author>
+    <author>
+      <name>Yitong Zhang</name>
+    </author>
+    <author>
+      <name>Jia Li</name>
+    </author>
+    <author>
+      <name>Shi-Min Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.13363v1</id>
+    <title>Adversarial Attacks Reveal Divergent Deception Competence in Humans and Generative Language Models</title>
+    <updated>2026-10-09T10:38:39Z</updated>
+    <link href="https://arxiv.org/abs/2610.13363v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.13363v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Machine learning models typically outperform humans in deception detection. A threat to machine learning models is their vulnerability to adversarial attacks: subtle yet targeted perturbations of input data that trick a model into misclassification. Yet, this also provides an opportunity: understanding how humans versus machines construct attacks offers new insights into second-order beliefs about deception. In a preregistered experiment (n = 501), we compare the effectiveness, efficiency, and nature of a paraphrasing attack by humans and generative language models on an automated deception classifier. We find that humans were more effective attackers when rewriting truthful statements to be deceptive, while the generative language model was more effective and efficient at making lies sound like truths. Computational text analysis suggests that this is because humans make targeted use of deception cues, while generative language models, instead, apply generic changes that signal truth. The failure to mimic deception is two-sided: while it exposes a blind spot in the machines increasingly used to detect lies, it also means that language models might facilitate successful lying.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-09T10:38:39Z</published>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Lucca Pfründer</name>
+    </author>
+    <author>
+      <name>Riccardo Loconte</name>
+    </author>
+    <author>
+      <name>Bruno Verschuere</name>
+    </author>
+    <author>
+      <name>Bennett Kleinberg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.12445v4</id>
+    <title>Telling FIBS: Probes Effectively Detect Sabotage and Catch Unverbalized Deception</title>
+    <updated>2026-10-20T20:47:13Z</updated>
+    <link href="https://arxiv.org/abs/2610.12445v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.12445v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent incidents have highlighted the challenge of monitoring LLM agents and the danger of models deceiving people. We show that white-box deception detection via probes can be scaled up to frontier monitoring settings by collecting the largest deception dataset to date for training probes and introducing a novel probe architecture which can aggregate information across many layers and tokens. Our probes surpass black-box monitors on agentic coding benchmarks, achieving 98.3% AUROC in SHADE-Arena and 98.0% in BashArena (vs. 97.7%, 97.6% resp. for action-only text monitors), and show improved efficacy as the underlying model is scaled up. We further test probes on several cases where deception cannot be determined from the context alone; in these cases of introspective deception, the ground truth can only be determined through careful elicitation or knowledge of a model's training data. In one such evaluation, we show that probes can distinguish transcripts containing a model's true hidden goal from other goals with an AUROC of up to 99.7%. Our probes also detect deception on prominent open-weight models which lie about politically sensitive topics when put under pressure. We release our training dataset, dubbed FIBS, to help drive frontier deployment of effective probes, and encourage the community to expand upon it with further examples of deception and sabotage.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-08T17:58:13Z</published>
+    <arxiv:comment>10 pages main text, 119 pages total; 26 figures, 28 tables. Code and data: https://github.com/AlignmentResearch/fibs-probes</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Oskar J. Hollinsworth</name>
+    </author>
+    <author>
+      <name>Alex F. Spies</name>
+    </author>
+    <author>
+      <name>Tigist Diriba</name>
+    </author>
+    <author>
+      <name>Adam Gleave</name>
+    </author>
+    <author>
+      <name>Chris Cundy</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.12118v1</id>
+    <title>A persistent accuracy ceiling in automated verbal deception detection</title>
+    <updated>2026-10-08T15:15:32Z</updated>
+    <link href="https://arxiv.org/abs/2610.12118v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.12118v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automated methods have been proposed to overcome the limitations of human verbal deception detection, but evidence remains fragmented across disciplines. We systematically reviewed 25 years of research (289 reports, 6,136 classification models) and meta-analyzed 3,653 models nested within 97 datasets. Pooled accuracy was 74.4% (95% CI: 71.2%-77.4%) with substantial heterogeneity. Accuracy was driven by methodological quality (ground truth, data source, class balance, evaluation procedure) more than by model complexity: the adoption of embeddings and large language models has not translated into improved predictive performance. Only 12.46% of reports used data with verifiable ground-truth, and only 23.96% of models were evaluated on independent data. The pooled accuracy aligns with meta-analyses of manual approaches, suggesting a ceiling of 70-75%, unlikely to be lifted by current research conventions.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-08T15:15:32Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Riccardo Loconte</name>
+    </author>
+    <author>
+      <name>Jonas Festor</name>
+    </author>
+    <author>
+      <name>Zane Fatjanova</name>
+    </author>
+    <author>
+      <name>Mariam Bolkvadze</name>
+    </author>
+    <author>
+      <name>Bennett Kleinberg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.29066v1</id>
+    <title>Semantics of Subterfuge: Benchmarking Legal Deception Detection Against General-domain State-of-the-Art</title>
+    <updated>2026-07-31T06:36:25Z</updated>
+    <link href="https://arxiv.org/abs/2607.29066v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.29066v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection has critical implications for legal proceedings, law enforcement, and online security. Although human judgment is limited in accuracy and scalability, Natural Language Processing (NLP) offers a data-driven alternative. We present a survey and comparative analysis of NLP-based Automatic Deception Detection (ADD) focusing on the legal domain, reviewing the evolution from feature-based machine learning to Large Language Model (LLM) approaches. We conduct a unified empirical evaluation across seven datasets (two legal, five general-domain), comparing six fine-tuned transformer models and seven LLMs under four prompting strategies. The results show strong domain sensitivity, with fine-tuned models excelling in data-rich general domains and few-shot LLMs remaining competitive in low-resource legal settings. Chain-of-Thought prompting often underperforms direct classification. These findings highlight the need for domain adaptation and interpretable systems in high-stakes legal contexts.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-31T06:36:25Z</published>
+    <arxiv:comment>5 pages paper</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>ICAIL 2026</arxiv:journal_ref>
+    <author>
+      <name>Theekshana Samaradiwakara</name>
+    </author>
+    <author>
+      <name>Nisansa de Silva</name>
+    </author>
+    <author>
+      <name>George C. Lobb</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.02893v1</id>
+    <title>Probe Generalization as Subspace Selection for OOD Deception Detection</title>
+    <updated>2026-07-01T08:33:10Z</updated>
+    <link href="https://arxiv.org/abs/2609.02893v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.02893v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Linear probes can be used to detect behaviors and concepts inside language model activations, but may fail to transfer to out-of-distribution examples. When studying the generalization performance of Llama-3.1-8B-Instruct probes over 3 held-out deception detection datasets, we find that projecting inputs onto a small subset of principal components (PCs) from the training distribution of activations enables cross-domain transfer that nearly matches the performance of probes trained directly on the test distribution. Furthermore, we find that PC interpretations can be used to find a subset of those transferable PCs. By using an LLM judge to score each PC on whether its most/ least activating examples imply a transferable deception direction, then probing on the highest-scoring PCs, we close the baseline-to-oracle gap by 78% on Insider Trading Report and by 25% on Sandbagging. The directions a source probe weights heavily appear to encode source-specific surface features, while the directions that actually transfer appear to encode the same contrast more abstractly, in a way natural language descriptions can capture. Broadly, our results suggest that the OOD robustness of probes is largely determined by subspace selection.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-01T08:33:10Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Daniel Yoo</name>
+    </author>
+    <author>
+      <name>Adrians Skapars</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.18988v1</id>
+    <title>ThinkDeception: A Progressive Reinforcement Learning Framework for Interpretable Multimodal Deception Detection</title>
+    <updated>2026-06-17T12:08:20Z</updated>
+    <link href="https://arxiv.org/abs/2606.18988v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.18988v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal deception detection is critical for identifying fraudulent intentions, yet existing approaches predominantly rely on end to end black--box paradigms. These methods suffer from a severe lack of interpretability failing to provide transparent reasoning trajectories and struggling to explicitly capture the subtle, cross modal inconsistencies inherent in deceptive behaviors. To transcend these limitations, we propose ThinkDeception, a novel and interpretable multimodal deception detection framework. As a pioneering effort, it introduces Multimodal Large Language Models (MLLMs) into this domain, transforming deception detection from a traditional binary classification task into an explicit cognitive reasoning process. Facilitated by the first meticulously annotated step--by--step multimodal Chain of Thought (CoT) dataset, we develop a foundational model, ThinkDeception Base, empirically validating the critical role of modal inconsistency in decoding deception. Building upon this foundation, our core innovation lies in proposing Visual-Audio Consistency Group Relative Policy Optimization(VAC--GRPO) equipped with a progressive training strategy. Distinct from standard GRPO, we stratify the training data into four progressive difficulty tiers, guiding the model through a psychologically grounded easy--to--hard cognitive transition. By innovatively coupling this dynamic curriculum scheduler with a multi dimensional, process aware reward mechanism and a reflective learning paradigm, we significantly elevate the model's overall reasoning quality. Extensive experiments on mainstream benchmarks demonstrate that ThinkDeception establishes a new SOTA, significantly outperforming existing methods in both detection accuracy and rationale quality. Ultimately, this work successfully drives the field of deception detection toward interpretable, multimodal cognitive reasoning.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-17T12:08:20Z</published>
+    <arxiv:comment>10pages,4figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Jinhao Song</name>
+    </author>
+    <author>
+      <name>Shan Liang</name>
+    </author>
+    <author>
+      <name>Yiqun Yue</name>
+    </author>
+    <author>
+      <name>Zhuhuayang Zhang</name>
+    </author>
+    <author>
+      <name>Tianqi Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.18424v1</id>
+    <title>A Variational Framework for LLM Generator-Regulator Games</title>
+    <updated>2026-06-16T19:19:22Z</updated>
+    <link href="https://arxiv.org/abs/2606.18424v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.18424v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper develops a variational framework for regulated language generation. Starting from autoregressive token sampling, we derive the induced distribution over complete messages and relate it to an entropy-regularized Gibbs law. Regulation is modeled as an optimal discriminator whose convex-dual value is an f-divergence, and the generator-regulator interaction is formulated as a saddle-point problem. The framework applies to moderation, censorship, AI deception detection, compliance auditing, phishing defense, and manipulation control, where regulation concerns a distribution over possible messages rather than a single output. The equilibrium clarifies the tradeoff among utility, entropy, regulatory alignment, and finite-length detectability. Two finite-vocabulary case studies, censorship filtering and phishing defense, illustrate how the theory can be evaluated through utility, entropy, divergence, receiver-side scores, and detection probability.</summary>
+    <category term="stat.OT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-16T19:19:22Z</published>
+    <arxiv:primary_category term="stat.OT"/>
+    <author>
+      <name>Quanyan Zhu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.11385v2</id>
+    <title>DeceptionX: From Multimodal Evidence to Explainable Deception Detection</title>
+    <updated>2026-07-31T21:56:40Z</updated>
+    <link href="https://arxiv.org/abs/2606.11385v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.11385v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is a critical and highly challenging task within affective computing and behavioral analysis. Existing deep learning methods typically treat this task as a straightforward classification problem; however, this black-box approach lacks interpretability and fails to capture the complex logical deduction processes utilized by human experts when identifying lies. While Multimodal Large Language Models (MLLMs) have shown potential, applying them effectively requires a bridge between low-level audiovisual cues and high-level logical reasoning. In this paper, we propose DeceptionX, a novel MLLM framework that shifts the paradigm of deception detection from black-box classification to an interpretable Observe-Think-Summarize reasoning process. To address the scarcity of high-quality reasoning data, we first constructed DeceptChain, a high-quality dataset developed through a human-in-the-loop process. This dataset synthesizes fine-grained visual and auditory evidence (such as micro-expressions and vocal tremors) into structured chain-of-thought reasoning data. Furthermore, we propose a three-stage training pipeline and a Discrepancy-Aware Redundancy Elimination~(DARE) strategy for DeceptionX to further enhance the model's generalization capabilities. Extensive experiments demonstrate that DeceptionX not only outperforms existing MLLM baselines and state-of-the-art methods on standard real-world benchmarks but also provides transparent, expert-level reasoning paths, bridging the critical gap between accuracy and interpretability in multimodal deception detection.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-09T19:08:00Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Shuo Ye</name>
+    </author>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Yawen Cui</name>
+    </author>
+    <author>
+      <name>Taorui Wang</name>
+    </author>
+    <author>
+      <name>Wei Xia</name>
+    </author>
+    <author>
+      <name>Zeheng Wang</name>
+    </author>
+    <author>
+      <name>Haowen Tang</name>
+    </author>
+    <author>
+      <name>Yelin Wang</name>
+    </author>
+    <author>
+      <name>Hui Ma</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.20479v1</id>
+    <title>Beyond Liars' Bench: The Impact of Lie Typology, Depth, and Sparsity on Deception Detection in LLMs</title>
+    <updated>2026-05-29T12:44:01Z</updated>
+    <link href="https://arxiv.org/abs/2607.20479v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.20479v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Training probes to detect deceptive outputs from large language models is still an open problem. Recent work has demonstrated that detection probes fail especially in out-of-domain scenarios -- training on one type of lie does not transfer well to deception scenarios involving other types of lies. In this work, we conduct a systematic study on how various factors impact detection performance: representation depth, probe expressivity, sparse feature representations, and the lie typology of the training data. To this end, we augment standard benchmark training data with a supplementary dataset containing diverse types of deception, including fabrication, omission, and exaggeration examples. Analyzing these factors across seven probe types, our experimental results show that the optimal representation depth is highly dataset-dependent, more expressive probes provide only selective gains over linear baselines, and sparse autoencoder features perform similarly to dense hidden states. Ultimately, we demonstrate that the choice of training data and lie typology substantially changes detectability, highlighting that deception detection is a highly representation-dependent problem.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-29T12:44:01Z</published>
+    <arxiv:comment>Presented at the AI Transparency Conference 2026, forthcoming in the AI Transparency Journal</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Amr Moustafa</name>
+    </author>
+    <author>
+      <name>Max Feser</name>
+    </author>
+    <author>
+      <name>Florian Mai</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.27958v1</id>
+    <title>Pressure-Testing Deception Probes in LLMs: Scaling, Robustness, and the Geometry of Deceptive Representations</title>
+    <updated>2026-05-27T04:51:55Z</updated>
+    <link href="https://arxiv.org/abs/2605.27958v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.27958v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Linear probes trained on LLM activations are increasingly proposed as deception-detection metrics, yet report AUROC exceeding 0.96 on clean benchmarks while collapsing under distributional shift. This paper systematically pressure-tests probe-based metrics across the Gemma 3 model family (1B-27B parameters), diagnosing why they fail rather than merely documenting that they fail. We test four hypotheses about deception encoding: (1) single linear direction, (2) multi-dimensional subspace, (3) convex conic hull, (4) entropy proxy. Our design includes cross-domain transfer matrices, multi-dimensional probe analysis with permutation null baselines, entropy-residualization tests, and distractor evaluations across 8 stylistic shifts. We find that: (a) probes achieve near-perfect AUROC (&gt;=0.998) on clean data but collapse under stylistic shifts; style-augmented probes recover near-perfect detection (mean AUROC 0.979-0.983) on unseen styles; (b) the single-direction hypothesis is rejected (k=1 captures only 0.61-0.80 AUROC), with cross-domain transfer failure confirmed as geometric rather than layer-mismatch-driven; (c) the entropy-proxy hypothesis is rejected (max |rho|=0.454, max Delta-AUROC after residualization=0.004); and (d) deception does not form a significant linear subspace (per-domain k*=0), yet multi-dimensional probes (k&gt;=5) recover the signal through distributed sub-threshold features. Probe fragility reflects distributional narrowness rather than an architectural limitation: style-augmented probes recover near-perfect detection at both 4B and 27B, establishing that the inverse scaling pattern is a training-distribution artifact rather than a genuine scale-dependent phenomenon.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-27T04:51:55Z</published>
+    <arxiv:comment>Accepted at the GEM Workshop @ ACL 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Sachin Kumar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.19270v1</id>
+    <title>DECOR: Auditing LLM Deception via Information Manipulation Theory</title>
+    <updated>2026-05-19T02:33:21Z</updated>
+    <link href="https://arxiv.org/abs/2605.19270v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.19270v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models can deceive by subtly manipulating truthful information -- omitting key facts, shifting focus, or obscuring meaning -- making such behavior difficult to detect. Existing black-box methods rely on coarse-grained judgments, offering limited interpretability and failing to pinpoint which facts were distorted and how. We introduce DECOR, a multi-agent framework grounded in Information Manipulation Theory for fine-grained auditing of strategic deception in LLM responses. DECOR decomposes input contexts into atomic informational units and scores each unit against the response across four dimensions of manipulation, producing interpretable manipulation profiles that are aggregated into a global deception index. We comprehensively evaluate DECOR on both single-turn and multi-turn deception detection benchmarks spanning real-world domains, and show that DECOR achieves state-of-the-art performance on both, outperforming competitive baselines. The framework generalizes across 15 frontier models, and ablation studies confirm the contribution of each key design component. Our findings demonstrate that fine-grained, theory-grounded auditing of information manipulation offers an effective and interpretable path for LLM deception detection.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-19T02:33:21Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Linyue Cai</name>
+    </author>
+    <author>
+      <name>Samuel Yeh</name>
+    </author>
+    <author>
+      <name>Jwala Dhamala</name>
+    </author>
+    <author>
+      <name>Rahul Gupta</name>
+    </author>
+    <author>
+      <name>Sharon Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.17037v1</id>
+    <title>Dynamic Emotion and Personality Profiling for Multimodal Deception Detection</title>
+    <updated>2026-04-18T15:38:36Z</updated>
+    <link href="https://arxiv.org/abs/2604.17037v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.17037v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is of great significance for ensuring information security and conducting public opinion analysis, with personality factors and emotion cues playing a critical role. However, existing methods lack sample-level dynamic annotations for emotions and personality.In this paper, we propose an innovative multi-model multi-prompt annotation scheme and a strict label quality evaluation standard, and establish a multimodal joint detection dataset DDEP for deception, emotion, and personality. Meanwhile, we propose Rel-DDEP, an adaptive reliability-weighted fusion framework. Our framework quantifies uncertainty by mapping modal features to a high-dimensional Gaussian distribution space. It then performs reliability-weighted fusion and incorporates an alignment module and a sorting constraint module to achieve joint detection of deception, emotion, and personality. Experimental results on the MDPE and DDEP datasets show that our Rel-DDEP significantly outperforms the existing state-of-the-art baseline models in three tasks. The F1 score of the deception detection increases by 2.53%, that of the emotion detection increases by 2.66%, and that of the personality detection increases by 9.30%. The experiments fully verify the necessity of annotating dynamic emotion and personality labels for each sample and the effectiveness of reliability-weighted fusion.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-18T15:38:36Z</published>
+    <arxiv:comment>Accepted by ACL 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Li Zheng</name>
+    </author>
+    <author>
+      <name>Yanyi Luo</name>
+    </author>
+    <author>
+      <name>Hao Fei</name>
+    </author>
+    <author>
+      <name>Yuzhe Ding</name>
+    </author>
+    <author>
+      <name>Yujie Huang</name>
+    </author>
+    <author>
+      <name>Fei Li</name>
+    </author>
+    <author>
+      <name>Chong Teng</name>
+    </author>
+    <author>
+      <name>Donghong Ji</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.04070v1</id>
+    <title>Toward Human-AI Complementarity Across Diverse Tasks</title>
+    <updated>2026-04-13T07:24:18Z</updated>
+    <link href="https://arxiv.org/abs/2605.04070v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.04070v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human-AI complementarity, the idea that combining human and AI judgments can outperform either alone, offers a promising pathway toward robust oversight of advanced AI systems. However, whether human-AI complementarity can be achieved on realistic tasks remains an open question. We investigate this through two approaches: hybridization and two AI assistance methods (top-2 assistance and subtask delegation), evaluated on a multi-domain dataset of 1,886 samples spanning knowledge, factuality, long-context reasoning, and deception detection. We find only modest complementarity gains. Baseline hybridization yields just +0.4 percentage points (pp) over AI alone (69.3\% vs 68.9\%), limited both by a small complementarity region (only 8.9\% of items where AI errs but humans do not) and the inability of confidence-based routing to identify it, since the model's confidence is similarly distributed across correct and incorrect predictions. Applied when AI has low confidence, top-2 assistance increases human accuracy from 28.4\% to 38.3\%, surpassing AI alone (37.7\%) -- but primarily because humans adopt correct AI suggestions, not because they successfully override AI errors. These findings suggest that the primary bottleneck is not human task accuracy per se, but the ability to route decisions to humans when it matters and to design assistance methods that enable humans to catch AI mistakes. Our quantitative and qualitative analyses pinpoint where and why each method succeeds or fails, offering concrete targets for future work. We will release our dataset and code upon request to support progress toward more effective human-AI collaboration for AI oversight.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-13T07:24:18Z</published>
+    <arxiv:comment>10 pages main text, 37 pages total with appendices</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Yuzheng Xu</name>
+    </author>
+    <author>
+      <name>Annya Dahmani</name>
+    </author>
+    <author>
+      <name>Matthew D. Blanchard</name>
+    </author>
+    <author>
+      <name>Niclas Dern</name>
+    </author>
+    <author>
+      <name>Edy Nastase</name>
+    </author>
+    <author>
+      <name>Francesca Bianco</name>
+    </author>
+    <author>
+      <name>Maja Pavlovic</name>
+    </author>
+    <author>
+      <name>Sukanya Krishna</name>
+    </author>
+    <author>
+      <name>Eric Modesitt</name>
+    </author>
+    <author>
+      <name>Miranda Anna Christ</name>
+    </author>
+    <author>
+      <name>Arth Singh</name>
+    </author>
+    <author>
+      <name>Gaia Molinaro</name>
+    </author>
+    <author>
+      <name>Sikata Bela Sengupta</name>
+    </author>
+    <author>
+      <name>Jaji Pamarthi</name>
+    </author>
+    <author>
+      <name>Arjun Menon</name>
+    </author>
+    <author>
+      <name>Rishub Jain</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.05748v1</id>
+    <title>SVC 2026: the Second Multimodal Deception Detection Challenge and the First Domain Generalized Remote Physiological Measurement Challenge</title>
+    <updated>2026-04-07T11:47:31Z</updated>
+    <link href="https://arxiv.org/abs/2604.05748v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.05748v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Subtle visual signals, although difficult to perceive with the naked eye, contain important information that can reveal hidden patterns in visual data. These signals play a key role in many applications, including biometric security, multimedia forensics, medical diagnosis, industrial inspection, and affective computing. With the rapid development of computer vision and representation learning techniques, detecting and interpreting such subtle signals has become an emerging research direction. However, existing studies often focus on specific tasks or modalities, and models still face challenges in robustness, representation ability, and generalization when handling subtle and weak signals in real-world environments. To promote research in this area, we organize the Subtle visual Challenge, which aims to learn robust representations for subtle visual signals. The challenge includes two tasks: cross-domain multimodal deception detection and remote photoplethysmography (rPPG) estimation. We hope that this challenge will encourage the development of more robust and generalizable models for subtle visual understanding, and further advance research in computer vision and multimodal learning. A total of 22 teams submitted their final results to this workshop competition, and the corresponding baseline models have been released on the \href{https://sites.google.com/view/svc-cvpr26}{MMDD2026 platform}\footnote{https://sites.google.com/view/svc-cvpr26}</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-07T11:47:31Z</published>
+    <arxiv:comment>Accepted by the SVC workshop @ CVPR 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Dongliang Zhu</name>
+    </author>
+    <author>
+      <name>Zhiyi Niu</name>
+    </author>
+    <author>
+      <name>Bo Zhao</name>
+    </author>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Shuo Ye</name>
+    </author>
+    <author>
+      <name>Xun Lin</name>
+    </author>
+    <author>
+      <name>Hui Ma</name>
+    </author>
+    <author>
+      <name>Taorui Wang</name>
+    </author>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Chunmei Zhu</name>
+    </author>
+    <author>
+      <name>Junzhe Cao</name>
+    </author>
+    <author>
+      <name>Yingjie Ma</name>
+    </author>
+    <author>
+      <name>Rencheng Song</name>
+    </author>
+    <author>
+      <name>Albert Clapés</name>
+    </author>
+    <author>
+      <name>Sergio Escalera</name>
+    </author>
+    <author>
+      <name>Dan Guo</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.19792v2</id>
+    <title>OpenCLAW-P2P v7.0-P2PCLAW: Resilient Multi-Layer Persistence, Live Reference Verification, and Production-Scale Evaluation of Decentralized AI Peer Review v7.0 -- Mathematical Corrections &amp; Ecosystem Developments Edition</title>
+    <updated>2026-05-11T15:53:14Z</updated>
+    <link href="https://arxiv.org/abs/2604.19792v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.19792v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents OpenCLAW-P2P v7.0, a comprehensive evolution of the decentralized collective-intelligence platform in which autonomous AI agents publish, peer-review, score, and iteratively improve scientific research papers without any human gatekeeper. Building on the v6.0 foundations -- multi-layer persistence, live reference verification, multi-LLM granular scoring, calibrated deception detection, the Silicon Chess-Grid FSM, and the AETHER containerized inference engine -- this release introduces mathematical corrections to the theoretical framework, ensuring dimensional consistency, proper range constraints, and unambiguous notation throughout. Additionally, this edition documents significant ecosystem expansions including the CAJAL family of open-source language models (4B and 9B parameters) fine-tuned for scientific paper generation.
+  The four major subsystems introduced in v6.0 are retained: (i) a Multi-Layer Paper Persistence Architecture with four storage tiers ensuring zero paper loss; (ii) a Multi-Layer Retrieval Cascade reducing latency from &gt;3s to &lt;50ms; (iii) a Live Reference Verification system detecting fabricated citations with &gt;85% accuracy; and (iv) a Scientific API Proxy providing access to seven public scientific databases.
+  Mathematical corrections in v7.0 include: corrected fixed-point condition in the Sufficient Reason theorem; dimensionally consistent progress-rate indicator; fully specified reputation update formula incorporating quality terms q0 and q-bar; clarified attention-logit bound in the AETHER pruning theorem; explicit range documentation for the calibration mapping; non-negativity guarantee for the depth score; discrete-time notation for the PD Governor; and explicit parameter definitions for the HSR weight formula.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-06T09:08:24Z</published>
+    <arxiv:comment>v7.0: Mathematical corrections (fixed-point condition Eq.4, dimensionally consistent tau-indicator Eq.7, fully specified reputation formula Eq.8 with quality terms q0 and q-bar, discrete-time PD Governor Eq.15, HSR parameter definitions Eq.16); ecosystem developments: CAJAL-4B/9B models, BenchClaw platform, 14 integrations. 36 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Francisco Angulo de Lafuente</name>
+    </author>
+    <author>
+      <name>Teerth Sharma</name>
+    </author>
+    <author>
+      <name>Vladimir Veselov</name>
+    </author>
+    <author>
+      <name>Seid Mohammed Abdu</name>
+    </author>
+    <author>
+      <name>Nirmal Tej Kumar</name>
+    </author>
+    <author>
+      <name>Guillermo Perry</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.26064v2</id>
+    <title>MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection</title>
+    <updated>2026-04-05T15:20:21Z</updated>
+    <link href="https://arxiv.org/abs/2603.26064v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.26064v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Non-contact automatic deception detection remains challenging because visual and auditory deception cues often lack stable cross-subject patterns. In contrast, galvanic skin response (GSR) provides more reliable physiological cues and has been widely used in contact-based deception detection. In this work, we leverage stable deception-related knowledge in GSR to guide representation learning in non-contact modalities through cross-modal knowledge distillation. A key obstacle, however, is the lack of a suitable dataset for this setting. To address this, we introduce MuDD, a large-scale Multimodal Deception Detection dataset containing recordings from 130 participants over 690 minutes. In addition to video, audio, and GSR, MuDD also provides Photoplethysmography, heart rate, and personality traits, supporting broader scientific studies of deception. Based on this dataset, we propose GSR-guided Progressive Distillation (GPD), a cross-modal distillation framework for mitigating the negative transfer caused by the large modality mismatch between GSR and non-contact signals. The core innovation of GPD is the integration of progressive feature-level and digit-level distillation with dynamic routing, which allows the model to adaptively determine how teacher knowledge should be transferred during training, leading to more stable cross-modal knowledge transfer. Extensive experiments and visualizations show that GPD outperforms existing methods and achieves state-of-the-art performance on both deception detection and concealed-digit identification.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-27T04:11:02Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Peiyuan Jiang</name>
+    </author>
+    <author>
+      <name>Yao Liu</name>
+    </author>
+    <author>
+      <name>Yanglei Gan</name>
+    </author>
+    <author>
+      <name>Jiaye Yang</name>
+    </author>
+    <author>
+      <name>Lu Liu</name>
+    </author>
+    <author>
+      <name>Daibing Yao</name>
+    </author>
+    <author>
+      <name>Qiao Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.23916v4</id>
+    <title>DecepGPT: Schema-Driven Deception Detection with Multicultural Datasets and Robust Multimodal Learning</title>
+    <updated>2026-07-07T12:17:42Z</updated>
+    <link href="https://arxiv.org/abs/2603.23916v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.23916v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal deception detection aims to identify deceptive behavior by analyzing audiovisual cues for forensics and security. In these high-stakes settings, investigators need verifiable evidence connecting audiovisual cues to final decisions, along with reliable generalization across domains and cultural contexts. However, existing benchmarks provide only binary labels without intermediate reasoning cues. Datasets are also small with limited scenario coverage, leading to shortcut learning. We address these issues through three contributions. First, we construct reasoning datasets by augmenting existing benchmarks with structured cue-level descriptions and reasoning chains, enabling models to output auditable reports. Second, we release T4-Deception, a multicultural dataset based on the unified ``To Tell the Truth'' television format implemented across four countries. With 1695 samples, it is the largest non-laboratory deception detection dataset. Third, we propose two modules for robust learning under small-data conditions. Stabilized Individuality-Commonality Synergy (SICS) refines multimodal representations by combining learnable global priors with sample-adaptive residuals and applying polarity-aware recalibration. Distilled Modality Consistency (DMC) aligns modality-specific predictions with the fused multimodal predictions via knowledge distillation to prevent unimodal shortcut learning. Experiments on three established benchmarks and our novel dataset demonstrate that our method achieves state-of-the-art performance in both in-domain and cross-domain scenarios, while exhibiting superior transferability across diverse cultural contexts. The datasets and code are available at this link.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-25T04:06:36Z</published>
+    <arxiv:comment>Accepted by ECCV 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Dongliang Zhu</name>
+    </author>
+    <author>
+      <name>Zitong YU</name>
+    </author>
+    <author>
+      <name>Hui Ma</name>
+    </author>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Chunmei Zhu</name>
+    </author>
+    <author>
+      <name>Xiaochun Cao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.22453v2</id>
+    <title>XNote: Benchmarking Automated Community Notes Generation for Image-based Contextual Deception</title>
+    <updated>2026-05-18T20:04:23Z</updated>
+    <link href="https://arxiv.org/abs/2603.22453v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.22453v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Community Notes have emerged as an effective crowd-sourced mechanism for combating online deception on social media platforms. However, its reliance on human contributors limits both the timeliness and scalability. In this work, we study the automated Community Notes generation task for image-based contextual deception, where an authentic image is paired with misleading context (e.g., time, entity, and event). Unlike prior work that primarily focuses on deception detection (i.e., judging whether a post is true or false in a binary manner), automated Community Notes generation requires producing concise and grounded notes that help users recover the missing or corrected context. This problem remains underexplored due to the scarcity of datasets that support this task. To address this gap, we curate a real-world dataset, XNote, comprising X posts with associated Community Notes and external contexts, along with annotations of topics and deceptive factors. We further benchmark a range of frontier large vision language models (LVLMs) on XNote, evaluating their performance on both deception detection and note generation tasks. We also compare against an end-to-end approach, SNIFFER, and a commercial tool, GPT-5. Our results highlight the challenges in automated Community Notes generation, underscoring the need for improved methods and metrics tailored for this task.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-23T18:21:23Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Jin Ma</name>
+    </author>
+    <author>
+      <name>Jingwen Yan</name>
+    </author>
+    <author>
+      <name>Mohammed Aldeen</name>
+    </author>
+    <author>
+      <name>Ethan Anderson</name>
+    </author>
+    <author>
+      <name>Taran Kavuru</name>
+    </author>
+    <author>
+      <name>Jinkyung Katie Park</name>
+    </author>
+    <author>
+      <name>Feng Luo</name>
+    </author>
+    <author>
+      <name>Long Cheng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.22250v1</id>
+    <title>A Lightweight Defense Mechanism against Next Generation of Phishing Emails using Distilled Attention-Augmented BiLSTM</title>
+    <updated>2026-02-24T20:06:45Z</updated>
+    <link href="https://arxiv.org/abs/2602.22250v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.22250v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The current generation of large language models produces sophisticated social-engineering content that bypasses standard text screening systems in business communication platforms. Our proposed solution for mail gateway and endpoint deception detection operates in a privacy-protective manner while handling the performance requirements of network and mobile security systems. The MobileBERT teacher receives fine-tuning before its transformation into a BiLSTM model with multi-head attention which maintains semantic discrimination only with 4.5 million parameters. The hybrid dataset contains human-written messages together with LLM-generated paraphrases that use masking techniques and personalization methods to enhance modern attack resistance. The evaluation system uses five testing protocols which include human-only and LLM-only tests and two cross-distribution transfer tests and a production-like mixed traffic test to assess performance in native environments and across different distribution types and combined traffic scenarios. The distilled model maintains a weighted-F1 score difference of 1-2.5 points compared to the mixture split results of strong transformer baselines including ModernBERT, DeBERTaV3-base, T5-base, DeepSeek-R1 Distill Qwen-1.5B and Phi-4 mini while achieving 80-95\% faster inference times and 95-99\% smaller model sizes. The system demonstrates excellent performance in terms of accuracy and latency while maintaining a compact size which enables real-time filtering without acceleration hardware and supports policy-based management. The paper examines system performance under high traffic conditions and security measures for privacy protection and implementation methods for operational deployment.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-24T20:06:45Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Morteza Eskandarian</name>
+    </author>
+    <author>
+      <name>Mahdi Rabbani</name>
+    </author>
+    <author>
+      <name>Arun Kaniyamattam</name>
+    </author>
+    <author>
+      <name>Fatemeh Nejati</name>
+    </author>
+    <author>
+      <name>Mansur Mirani</name>
+    </author>
+    <author>
+      <name>Gunjan Piya</name>
+    </author>
+    <author>
+      <name>Igor Opushnyev</name>
+    </author>
+    <author>
+      <name>Ali A. Ghorbani</name>
+    </author>
+    <author>
+      <name>Sajjad Dadkhah</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.16558v1</id>
+    <title>Illustration of Barren Plateaus in Quantum Computing</title>
+    <updated>2026-02-18T15:56:54Z</updated>
+    <link href="https://arxiv.org/abs/2602.16558v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.16558v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Variational Quantum Circuits (VQCs) have emerged as a promising paradigm for quantum machine learning in the NISQ era. While parameter sharing in VQCs can reduce the parameter space dimensionality and potentially mitigate the barren plateau phenomenon, it introduces a complex trade-off that has been largely overlooked. This paper investigates how parameter sharing, despite creating better global optima with fewer parameters, fundamentally alters the optimization landscape through deceptive gradients -- regions where gradient information exists but systematically misleads optimizers away from global optima. Through systematic experimental analysis, we demonstrate that increasing degrees of parameter sharing generate more complex solution landscapes with heightened gradient magnitudes and measurably higher deceptiveness ratios. Our findings reveal that traditional gradient-based optimizers (Adam, SGD) show progressively degraded convergence as parameter sharing increases, with performance heavily dependent on hyperparameter selection. We introduce a novel gradient deceptiveness detection algorithm and a quantitative framework for measuring optimization difficulty in quantum circuits, establishing that while parameter sharing can improve circuit expressivity by orders of magnitude, this comes at the cost of significantly increased landscape deceptiveness. These insights provide important considerations for quantum circuit design in practical applications, highlighting the fundamental mismatch between classical optimization strategies and quantum parameter landscapes shaped by parameter sharing.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-18T15:56:54Z</published>
+    <arxiv:comment>Extended version of a short paper to be published at ICAART-QAIO 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Gerhard Stenzel</name>
+    </author>
+    <author>
+      <name>Tobias Rohe</name>
+    </author>
+    <author>
+      <name>Michael Kölle</name>
+    </author>
+    <author>
+      <name>Leo Sünkel</name>
+    </author>
+    <author>
+      <name>Jonas Stein</name>
+    </author>
+    <author>
+      <name>Claudia Linnhoff-Popien</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.10003v2</id>
+    <title>Probing the Limits of the Lie Detector Approach to LLM Deception</title>
+    <updated>2026-11-02T16:39:23Z</updated>
+    <link href="https://arxiv.org/abs/2603.10003v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.10003v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A strand of mechanistic approaches to deception in large language models (LLMs) relies on "lie detectors" - truth probes aimed to identify model outputs that are internally represented as false. This lie detector approach to LLM deception implicitly assumes that deception is coextensive with lying. This paper challenges that assumption by experimentally investigating whether LLMs can produce deceptive statements that are not false and whether truth probes (if naively applied as deception detectors) fail to detect such behavior. In doing so, we make four core contributions: First, we provide a dataset of manually written examples of deceptive non-falsities grounded in linguistic theory. Second, we show across six open-source LLMs of different sizes and families that some models can select these deceptive non-falsities in a forced-choice task. Third, we demonstrate that while truth probes trained on a standard true-false dataset perform well at detecting false outputs, they perform significantly worse at detecting deceptive non-falsities. We view this as substantiating the worry that naive applications of truth probes as deception detectors suffer from a critical blind spot. Fourth, we explore whether training deception probes in dialogical contexts or including misleading non-false statements in the training improves the deception detection rate.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-16T19:01:55Z</published>
+    <arxiv:comment>The dataset has been reworked and validated, experiments have been reconducted, and a broader selection of models than in the first version has been investigated</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Tom-Felix Thormann</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.11136v2</id>
+    <title>FormalJudge: A Neuro-Symbolic Paradigm for Agentic Oversight</title>
+    <updated>2026-02-12T10:45:21Z</updated>
+    <link href="https://arxiv.org/abs/2602.11136v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.11136v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As LLM-based agents increasingly operate in high-stakes domains with real-world consequences, ensuring their behavioral safety becomes paramount. The dominant oversight paradigm, LLM-as-a-Judge, faces a fundamental dilemma: how can probabilistic systems reliably supervise other probabilistic systems without inheriting their failure modes? We argue that formal verification offers a principled escape from this dilemma, yet its adoption has been hindered by a critical bottleneck: the translation from natural language requirements to formal specifications. This paper bridges this gap by proposing , a neuro-symbolic framework that employs a bidirectional Formal-of-Thought architecture: LLMs serve as specification compilers that top-down decompose high-level human intent into atomic, verifiable constraints, then bottom-up prove compliance using Dafny specifications and Z3 Satisfiability modulo theories solving, which produces mathematical guarantees rather than probabilistic scores. We validate across three benchmarks spanning behavioral safety, multi-domain constraint adherence, and agentic upward deception detection. Experiments on 7 agent models demonstrate that achieves an average improvement of 16.6% over LLM-as-a-Judge baselines, enables weak-to-strong generalization where a 7B judge achieves over 90% accuracy detecting deception from 72B agents, and provides near-linear safety improvement through iterative refinement.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-11T18:48:11Z</published>
+    <arxiv:comment>27 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Jiayi Zhou</name>
+    </author>
+    <author>
+      <name>Yang Sheng</name>
+    </author>
+    <author>
+      <name>Hantao Lou</name>
+    </author>
+    <author>
+      <name>Yaodong Yang</name>
+    </author>
+    <author>
+      <name>Jie Fu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.01425v2</id>
+    <title>One Probe Won't Catch Them All: Towards Targeted Deception Detection</title>
+    <updated>2026-06-18T02:36:56Z</updated>
+    <link href="https://arxiv.org/abs/2602.01425v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.01425v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Linear probes are a promising approach for monitoring AI systems for deceptive behaviour. Previous work has shown that a linear classifier trained on a contrastive instruction pair and a simple dataset can achieve good performance. However, these probes exhibit notable failures even in straightforward scenarios, including spurious correlations and false positives on non-deceptive responses. In this paper, we demonstrate that deception detection is inherently heterogeneous: while a single universal probe achieves modest improvements (+0.032 AUC), post-hoc oracle analysis reveals substantially higher potential (+0.108 AUC) when probes are matched to specific deception types, and synthetic validation experiments suggest this ceiling is achievable a priori when the deception type is known in advance. Our findings reveal that instruction pairs capture deceptive intent rather than content-specific patterns, explaining why prompt choice dominates probe performance (70.6% of variance). Given this heterogeneity, we conclude that organizations should define their specific threat models and deploy appropriately matched probes rather than seeking a universal deception detector.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-01T20:18:11Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>Proceedings of the 43rd International Conference on Machine Learning, PMLR 306, 2026</arxiv:journal_ref>
+    <author>
+      <name>Vikram Natarajan</name>
+    </author>
+    <author>
+      <name>Devina Jain</name>
+    </author>
+    <author>
+      <name>Shivam Arora</name>
+    </author>
+    <author>
+      <name>Satvik Golechha</name>
+    </author>
+    <author>
+      <name>Joseph Bloom</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.02848v1</id>
+    <title>Humans incorrectly reject confident accusatory AI judgments</title>
+    <updated>2025-12-02T15:00:09Z</updated>
+    <link href="https://arxiv.org/abs/2512.02848v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.02848v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automated verbal deception detection using methods from Artificial Intelligence (AI) has been shown to outperform humans in disentangling lies from truths. Research suggests that transparency and interpretability of computational methods tend to increase human acceptance of using AI to support decisions. However, the extent to which humans accept AI judgments for deception detection remains unclear. We experimentally examined how an AI model's accuracy (i.e., its overall performance in deception detection) and confidence (i.e., the model's uncertainty in single-statements predictions) influence human adoption of the model's judgments. Participants (n=373) were presented with veracity judgments of an AI model with high or low overall accuracy and various degrees of prediction confidence. The results showed that humans followed predictions from a highly accurate model more than from a less accurate one. Interestingly, the more confident the model, the more people deviated from it, especially if the model predicted deception. We also found that human interaction with algorithmic predictions either worsened the machine's performance or was ineffective. While this human aversion to accept highly confident algorithmic predictions was partly explained by participants' tendency to overestimate humans' deception detection abilities, we also discuss how truth-default theory and the social costs of accusing someone of lying help explain the findings.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-02T15:00:09Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Riccardo Loconte</name>
+    </author>
+    <author>
+      <name>Merylin Monaro</name>
+    </author>
+    <author>
+      <name>Pietro Pietrini</name>
+    </author>
+    <author>
+      <name>Bruno Verschuere</name>
+    </author>
+    <author>
+      <name>Bennett Kleinberg</name>
+    </author>
+    <arxiv:doi>10.1016/j.chb.2026.109019</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.chb.2026.109019" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.22662v2</id>
+    <title>Difficulties with Evaluating a Deception Detector for AIs</title>
+    <updated>2025-12-16T11:55:31Z</updated>
+    <link href="https://arxiv.org/abs/2511.22662v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.22662v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Building reliable deception detectors for AI systems -- methods that could predict when an AI system is being strategically deceptive without necessarily requiring behavioural evidence -- would be valuable in mitigating risks from advanced AI systems. But evaluating the reliability and efficacy of a proposed deception detector requires examples that we can confidently label as either deceptive or honest. We argue that we currently lack the necessary examples and further identify several concrete obstacles in collecting them. We provide evidence from conceptual arguments, analysis of existing empirical works, and analysis of novel illustrative case studies. We also discuss the potential of several proposed empirical workarounds to these problems and argue that while they seem valuable, they also seem insufficient alone. Progress on deception detection likely requires further consideration of these problems.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-27T17:53:46Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Lewis Smith</name>
+    </author>
+    <author>
+      <name>Bilal Chughtai</name>
+    </author>
+    <author>
+      <name>Neel Nanda</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.13658v2</id>
+    <title>Why is "Chicago" Predictive of Deceptive Reviews? Using LLMs to Discover Language Phenomena from Lexical Cues</title>
+    <updated>2026-05-13T03:24:54Z</updated>
+    <link href="https://arxiv.org/abs/2511.13658v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.13658v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deceptive reviews mislead consumers, harm businesses, and undermine trust in online marketplaces. Machine learning classifiers can learn from large amounts of data to distinguish deceptive reviews from genuine ones. However, the distinguishing features learned by these classifiers are often subtle, fragmented, and difficult for humans to interpret, which can hinder user understanding and trust. In this work, we study whether large language models (LLMs) can translate such unintuitive lexical cues into human-understandable language phenomena. We propose a conjecture-then-validate framework, and show that language phenomena obtained in this manner are empirically grounded in data, generalizable across similar domains, and more predictive than phenomena derived from LLMs' prior knowledge or in-context learning. Such phenomena can aid people in critically assessing the credibility of online reviews in environments where deception detection classifiers are unavailable.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-17T18:15:13Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Jiaming Qu</name>
+    </author>
+    <author>
+      <name>Mengtian Guo</name>
+    </author>
+    <author>
+      <name>Yue Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.27195v2</id>
+    <title>Can MLLMs Read the Room? A Multimodal Benchmark for Verifying Truthfulness in Multi-Party Social Interactions</title>
+    <updated>2025-11-04T14:30:50Z</updated>
+    <link href="https://arxiv.org/abs/2510.27195v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.27195v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As AI systems become increasingly integrated into human lives, endowing them with robust social intelligence has emerged as a critical frontier. A key aspect of this intelligence is discerning truth from deception, a ubiquitous element of human interaction that is conveyed through a complex interplay of verbal language and non-verbal visual cues. However, automatic deception detection in dynamic, multi-party conversations remains a significant challenge. The recent rise of powerful Multimodal Large Language Models (MLLMs), with their impressive abilities in visual and textual understanding, makes them natural candidates for this task. Consequently, their capabilities in this crucial domain are mostly unquantified. To address this gap, we introduce a new task, Multimodal Interactive Veracity Assessment (MIVA), and present a novel multimodal dataset derived from the social deduction game Werewolf. This dataset provides synchronized video, text, with verifiable ground-truth labels for every statement. We establish a comprehensive benchmark evaluating state-of-the-art MLLMs, revealing a significant performance gap: even powerful models like GPT-4o struggle to distinguish truth from falsehood reliably. Our analysis of failure modes indicates that these models fail to ground language in visual social cues effectively and may be overly conservative in their alignment, highlighting the urgent need for novel approaches to building more perceptive and trustworthy AI systems.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-31T05:36:36Z</published>
+    <arxiv:comment>ICCV2025 Workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Caixin Kang</name>
+    </author>
+    <author>
+      <name>Yifei Huang</name>
+    </author>
+    <author>
+      <name>Liangyang Ouyang</name>
+    </author>
+    <author>
+      <name>Mingfang Zhang</name>
+    </author>
+    <author>
+      <name>Yoichi Sato</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.14318v1</id>
+    <title>Evaluating &amp; Reducing Deceptive Dialogue From Language Models with Multi-turn RL</title>
+    <updated>2025-10-16T05:29:36Z</updated>
+    <link href="https://arxiv.org/abs/2510.14318v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.14318v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large Language Models (LLMs) interact with millions of people worldwide in applications such as customer support, education and healthcare. However, their ability to produce deceptive outputs, whether intentionally or inadvertently, poses significant safety concerns. The unpredictable nature of LLM behavior, combined with insufficient safeguards against hallucination, misinformation, and user manipulation, makes their misuse a serious, real-world risk. In this paper, we investigate the extent to which LLMs engage in deception within dialogue, and propose the belief misalignment metric to quantify deception. We evaluate deception across four distinct dialogue scenarios, using five established deception detection metrics and our proposed metric. Our findings reveal this novel deception measure correlates more closely with human judgments than any existing metrics we test. Additionally, our benchmarking of eight state-of-the-art models indicates that LLMs naturally exhibit deceptive behavior in approximately 26% of dialogue turns, even when prompted with seemingly benign objectives. When prompted to deceive, LLMs are capable of increasing deceptiveness by as much as 31% relative to baselines. Unexpectedly, models trained with RLHF, the predominant approach for ensuring the safety of widely-deployed LLMs, still exhibit deception at a rate of 43% on average. Given that deception in dialogue is a behavior that develops over an interaction history, its effective evaluation and mitigation necessitates moving beyond single-utterance analyses. We introduce a multi-turn reinforcement learning methodology to fine-tune LLMs to reduce deceptive behaviors, leading to a 77.6% reduction compared to other instruction-tuned models.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-16T05:29:36Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Marwa Abdulhai</name>
+    </author>
+    <author>
+      <name>Ryan Cheng</name>
+    </author>
+    <author>
+      <name>Aryansh Shrivastava</name>
+    </author>
+    <author>
+      <name>Natasha Jaques</name>
+    </author>
+    <author>
+      <name>Yarin Gal</name>
+    </author>
+    <author>
+      <name>Sergey Levine</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.23580v2</id>
+    <title>LLM Hallucination Detection: HSAD</title>
+    <updated>2025-10-08T03:34:42Z</updated>
+    <link href="https://arxiv.org/abs/2509.23580v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.23580v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Although Large Language Models have demonstrated powerful capabilities in a wide range of tasks such as language understanding and code generation, the frequent occurrence of hallucinations during the generation process has become a significant impediment to their deployment in critical application scenarios. Current mainstream hallucination detection methods rely on factual consistency verification or static hidden layer features. The former is constrained by the scope of knowledge coverage, while the latter struggles to capture reasoning biases during the inference process. To address these issues, and inspired by signal analysis methods in cognitive neuroscience, this paper proposes a hallucination detection method based on the frequency-domain analysis of hidden layer temporal signals, named HSAD (\textbf{H}idden \textbf{S}ignal \textbf{A}nalysis-based \textbf{D}etection). First, by treating the LLM's reasoning process as a cognitive journey that unfolds over time, we propose modeling and simulating the human process of signal perception and discrimination in a deception-detection scenario through hidden layer temporal signals. Next, The Fast Fourier Transform is applied to map these temporal signals into the frequency domain to construct spectral features, which are used to capture anomalies that arise during the reasoning process; analysis experiments on these spectral features have proven the effectiveness of this approach. Finally, a hallucination detection algorithm is designed based on these spectral features to identify hallucinations in the generated content. By effectively combining the modeling of the reasoning process with frequency-domain feature extraction, the HSAD method overcomes the limitations of existing approaches in terms of knowledge coverage and the detection of reasoning biases, demonstrating higher detection accuracy and robustness.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-28T02:25:34Z</published>
+    <arxiv:comment>in Chinese language</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>JinXin Li</name>
+    </author>
+    <author>
+      <name>Gang Tu</name>
+    </author>
+    <author>
+      <name>JunJie Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.02234v1</id>
+    <title>Improving Electroencephalogram-Based Deception Detection in Concealed Information Test under Low Stimulus Heterogeneity</title>
+    <updated>2025-09-02T12:01:35Z</updated>
+    <link href="https://arxiv.org/abs/2509.02234v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.02234v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The concealed information test (CIT) is widely used for detecting deception in criminal investigations, primarily leveraging the P300 component of electroencephalogram (EEG) signals. However, the traditional bootstrapped amplitude difference (BAD) method struggles to accurately differentiate deceptive individuals from innocent ones when irrelevant stimuli carry familiarity or inherent meaning, thus limiting its practical applicability in real-world investigations. This study aimed to enhance the deception detection capability of the P300-based CIT, particularly under conditions of low stimulus heterogeneity. To closely simulate realistic investigative scenarios, we designed a realistic mock-crime setup in which participants were familiarized with all CIT stimuli except the target stimulus. EEG data acquired during CIT sessions were analyzed using the BAD method, machine learning algorithms, and deep learning (DL) methods (ShallowNet and EEGNet). Among these techniques, EEGNet demonstrated the highest deception detection accuracy at 86.67%, when employing our proposed data augmentation approach. Overall, DL methods could significantly improve the accuracy of deception detection under challenging conditions of low stimulus heterogeneity by effectively capturing subtle cognitive responses not accessible through handcrafted features. To the best of our knowledge, this is the first study that employed DL approaches for subject-independent deception classification using the CIT paradigm.</summary>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-02T12:01:35Z</published>
+    <arxiv:comment>11 pages, 6 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="q-bio.NC"/>
+    <author>
+      <name>Suhye Kim</name>
+    </author>
+    <author>
+      <name>Jaehoon Cheon</name>
+    </author>
+    <author>
+      <name>Taehee Kim</name>
+    </author>
+    <author>
+      <name>Seok Chan Kim</name>
+    </author>
+    <author>
+      <name>Chang-Hwan Im</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.12842v1</id>
+    <title>Multi-source Multimodal Progressive Domain Adaption for Audio-Visual Deception Detection</title>
+    <updated>2025-08-18T11:30:08Z</updated>
+    <link href="https://arxiv.org/abs/2508.12842v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.12842v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents the winning approach for the 1st MultiModal Deception Detection (MMDD) Challenge at the 1st Workshop on Subtle Visual Computing (SVC). Aiming at the domain shift issue across source and target domains, we propose a Multi-source Multimodal Progressive Domain Adaptation (MMPDA) framework that transfers the audio-visual knowledge from diverse source domains to the target domain. By gradually aligning source and the target domain at both feature and decision levels, our method bridges domain shifts across diverse multimodal datasets. Extensive experiments demonstrate the effectiveness of our approach securing Top-2 place. Our approach reaches 60.43% on accuracy and 56.99\% on F1-score on competition stage 2, surpassing the 1st place team by 5.59% on F1-score and the 3rd place teams by 6.75% on accuracy. Our code is available at https://github.com/RH-Lin/MMPDA.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-18T11:30:08Z</published>
+    <arxiv:comment>Accepted at ACM MM 2025 SVC Workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ronghao Lin</name>
+    </author>
+    <author>
+      <name>Sijie Mai</name>
+    </author>
+    <author>
+      <name>Ying Zeng</name>
+    </author>
+    <author>
+      <name>Qiaolin He</name>
+    </author>
+    <author>
+      <name>Aolin Xiong</name>
+    </author>
+    <author>
+      <name>Haifeng Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.04129v1</id>
+    <title>SVC 2025: the First Multimodal Deception Detection Challenge</title>
+    <updated>2025-08-06T06:56:39Z</updated>
+    <link href="https://arxiv.org/abs/2508.04129v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.04129v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is a critical task in real-world applications such as security screening, fraud prevention, and credibility assessment. While deep learning methods have shown promise in surpassing human-level performance, their effectiveness often depends on the availability of high-quality and diverse deception samples. Existing research predominantly focuses on single-domain scenarios, overlooking the significant performance degradation caused by domain shifts. To address this gap, we present the SVC 2025 Multimodal Deception Detection Challenge, a new benchmark designed to evaluate cross-domain generalization in audio-visual deception detection. Participants are required to develop models that not only perform well within individual domains but also generalize across multiple heterogeneous datasets. By leveraging multimodal data, including audio, video, and text, this challenge encourages the design of models capable of capturing subtle and implicit deceptive cues. Through this benchmark, we aim to foster the development of more adaptable, explainable, and practically deployable deception detection systems, advancing the broader field of multimodal learning. By the conclusion of the workshop competition, a total of 21 teams had submitted their final results. https://sites.google.com/view/svc-mm25 for more information.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-06T06:56:39Z</published>
+    <arxiv:comment>Accepted by Workshop SVC of ACM MM 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Xun Lin</name>
+    </author>
+    <author>
+      <name>Xiaobao Guo</name>
+    </author>
+    <author>
+      <name>Taorui Wang</name>
+    </author>
+    <author>
+      <name>Yingjie Ma</name>
+    </author>
+    <author>
+      <name>Jiajian Huang</name>
+    </author>
+    <author>
+      <name>Jiayu Zhang</name>
+    </author>
+    <author>
+      <name>Junzhe Cao</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2507.13718v1</id>
+    <title>Bi-GRU Based Deception Detection using EEG Signals</title>
+    <updated>2025-07-18T07:59:23Z</updated>
+    <link href="https://arxiv.org/abs/2507.13718v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2507.13718v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Deception detection is a significant challenge in fields such as security, psychology, and forensics. This study presents a deep learning approach for classifying deceptive and truthful behavior using ElectroEncephaloGram (EEG) signals from the Bag-of-Lies dataset, a multimodal corpus designed for naturalistic, casual deception scenarios. A Bidirectional Gated Recurrent Unit (Bi-GRU) neural network was trained to perform binary classification of EEG samples. The model achieved a test accuracy of 97\%, along with high precision, recall, and F1-scores across both classes. These results demonstrate the effectiveness of using bidirectional temporal modeling for EEG-based deception detection and suggest potential for real-time applications and future exploration of advanced neural architectures.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-07-18T07:59:23Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Danilo Avola</name>
+    </author>
+    <author>
+      <name>Muhammad Yasir Bilal</name>
+    </author>
+    <author>
+      <name>Emad Emam</name>
+    </author>
+    <author>
+      <name>Cristina Lakasz</name>
+    </author>
+    <author>
+      <name>Daniele Pannone</name>
+    </author>
+    <author>
+      <name>Amedeo Ranaldi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2507.09157v1</id>
+    <title>PU-Lie: Lightweight Deception Detection in Imbalanced Diplomatic Dialogues via Positive-Unlabeled Learning</title>
+    <updated>2025-07-12T06:27:46Z</updated>
+    <link href="https://arxiv.org/abs/2507.09157v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2507.09157v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Detecting deception in strategic dialogues is a complex and high-stakes task due to the subtlety of language and extreme class imbalance between deceptive and truthful communications. In this work, we revisit deception detection in the Diplomacy dataset, where less than 5% of messages are labeled deceptive. We introduce a lightweight yet effective model combining frozen BERT embeddings, interpretable linguistic and game-specific features, and a Positive-Unlabeled (PU) learning objective. Unlike traditional binary classifiers, PU-Lie is tailored for situations where only a small portion of deceptive messages are labeled, and the majority are unlabeled. Our model achieves a new best macro F1 of 0.60 while reducing trainable parameters by over 650x. Through comprehensive evaluations and ablation studies across seven models, we demonstrate the value of PU learning, linguistic interpretability, and speaker-aware representations. Notably, we emphasize that in this problem setting, accurately detecting deception is more critical than identifying truthful messages. This priority guides our choice of PU learning, which explicitly models the rare but vital deceptive class.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-07-12T06:27:46Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Bhavinkumar Vinodbhai Kuwar</name>
+    </author>
+    <author>
+      <name>Bikrant Bikram Pratap Maurya</name>
+    </author>
+    <author>
+      <name>Priyanshu Gupta</name>
+    </author>
+    <author>
+      <name>Nitin Choudhury</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.21429v2</id>
+    <title>Deception Detection in Dyadic Exchanges Using Multimodal Machine Learning: A Study on a Swedish Cohort</title>
+    <updated>2025-12-11T17:00:44Z</updated>
+    <link href="https://arxiv.org/abs/2506.21429v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.21429v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study investigates the efficacy of using multimodal machine learning techniques to detect deception in dyadic interactions, focusing on the integration of data from both the deceiver and the deceived. We compare early and late fusion approaches, utilizing audio and video data - specifically, Action Units and gaze information - across all possible combinations of modalities and participants. Our dataset, newly collected from Swedish native speakers engaged in truth or lie scenarios on emotionally relevant topics, serves as the basis for our analysis. The results demonstrate that incorporating both speech and facial information yields superior performance compared to single-modality approaches. Moreover, including data from both participants significantly enhances deception detection accuracy, with the best performance (71%) achieved using a late fusion strategy applied to both modalities and participants. These findings align with psychological theories suggesting differential control of facial and vocal expressions during initial interactions. As the first study of its kind on a Scandinavian cohort, this research lays the groundwork for future investigations into dyadic interactions, particularly within psychotherapy settings.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-26T16:11:42Z</published>
+    <arxiv:comment>40 pages, 2 figures, 2 tables. To be submitted in Behavior Research Methods</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Thomas Jack Samuels</name>
+    </author>
+    <author>
+      <name>Franco Rugolon</name>
+    </author>
+    <author>
+      <name>Stephan Hau</name>
+    </author>
+    <author>
+      <name>Lennart Högman</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.09424v1</id>
+    <title>Hidden in Plain Sight: Evaluation of the Deception Detection Capabilities of LLMs in Multimodal Settings</title>
+    <updated>2025-06-11T06:12:50Z</updated>
+    <link href="https://arxiv.org/abs/2506.09424v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.09424v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Detecting deception in an increasingly digital world is both a critical and challenging task. In this study, we present a comprehensive evaluation of the automated deception detection capabilities of Large Language Models (LLMs) and Large Multimodal Models (LMMs) across diverse domains. We assess the performance of both open-source and commercial LLMs on three distinct datasets: real life trial interviews (RLTD), instructed deception in interpersonal scenarios (MU3D), and deceptive reviews (OpSpam). We systematically analyze the effectiveness of different experimental setups for deception detection, including zero-shot and few-shot approaches with random or similarity-based in-context example selection. Our results show that fine-tuned LLMs achieve state-of-the-art performance on textual deception detection tasks, while LMMs struggle to fully leverage cross-modal cues. Additionally, we analyze the impact of auxiliary features, such as non-verbal gestures and video summaries, and examine the effectiveness of different prompting strategies, including direct label generation and chain-of-thought reasoning. Our findings provide key insights into how LLMs process and interpret deceptive cues across modalities, highlighting their potential and limitations in real-world deception detection applications.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-11T06:12:50Z</published>
+    <arxiv:comment>Accepted to ACL 2025 Main Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Md Messal Monem Miah</name>
+    </author>
+    <author>
+      <name>Adrita Anika</name>
+    </author>
+    <author>
+      <name>Xi Shi</name>
+    </author>
+    <author>
+      <name>Ruihong Huang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.13147v3</id>
+    <title>What if Deception Cannot be Detected? A Cross-Linguistic Study on the Limits of Deception Detection from Text</title>
+    <updated>2026-02-17T11:39:23Z</updated>
+    <link href="https://arxiv.org/abs/2505.13147v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.13147v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Can deception be detected solely from written text? Cues of deceptive communication are inherently subtle, even more so in text-only communication. Yet, prior studies have reported considerable success in automatic deception detection. We hypothesize that such findings are largely driven by artifacts introduced during data collection and do not generalize beyond specific datasets. We revisit this assumption by introducing a belief-based deception framework, which defines deception as a misalignment between an author's claims and true beliefs, irrespective of factual accuracy, allowing deception cues to be studied in isolation. Based on this framework, we construct three corpora, collectively referred to as DeFaBel, including a German-language corpus of deceptive and non-deceptive arguments and a multilingual version in German and English, each collected under varying conditions to account for belief change and enable cross-linguistic analysis. Using these corpora, we evaluate commonly reported linguistic cues of deception. Across all three DeFaBel variants, these cues show negligible, statistically insignificant correlations with deception labels, contrary to prior work that treats such cues as reliable indicators. We further benchmark against other English deception datasets following similar data collection protocols. While some show statistically significant correlations, effect sizes remain low and, critically, the set of predictive cues is inconsistent across datasets. We also evaluate deception detection using feature-based models, pretrained language models, and instruction-tuned large language models. While some models perform well on established deception datasets, they consistently perform near chance on DeFaBel. Our findings challenge the assumption that deception can be reliably inferred from linguistic cues and call for rethinking how deception is studied and modeled in NLP.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-19T14:12:05Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Aswathy Velutharambath</name>
+    </author>
+    <author>
+      <name>Kai Sassenberg</name>
+    </author>
+    <author>
+      <name>Roman Klinger</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2504.04072v3</id>
+    <title>Among Us: A Sandbox for Measuring and Detecting Agentic Deception</title>
+    <updated>2026-02-10T17:00:02Z</updated>
+    <link href="https://arxiv.org/abs/2504.04072v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2504.04072v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Prior studies on deception in language-based AI agents typically assess whether the agent produces a false statement about a topic, or makes a binary choice prompted by a goal, rather than allowing open-ended deceptive behavior to emerge in pursuit of a longer-term goal. To fix this, we introduce Among Us, a sandbox social deception game where LLM-agents exhibit long-term, open-ended deception as a consequence of the game objectives. While most benchmarks saturate quickly, Among Us can be expected to last much longer, because it is a multi-player game far from equilibrium. Using the sandbox, we evaluate 18 proprietary and open-weight LLMs and uncover a general trend: models trained with RL are comparatively much better at producing deception than detecting it. We evaluate the effectiveness of methods to detect lying and deception: logistic regression on the activations and sparse autoencoders (SAEs). We find that probes trained on a dataset of "pretend you're a dishonest model:.." generalize extremely well out-of-distribution, consistently obtaining AUROCs over 95% even when evaluated just on the deceptive statement, without the chain of thought. We also find two SAE features that work well at deception detection but are unable to steer the model to lie less. We hope our open-sourced sandbox, game logs, and probes serve to anticipate and mitigate deceptive behavior and capabilities in language-based agents.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-04-05T06:09:32Z</published>
+    <arxiv:comment>21 pages, preprint</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>NeurIPS 2025 (Spotlight)</arxiv:journal_ref>
+    <author>
+      <name>Satvik Golechha</name>
+    </author>
+    <author>
+      <name>Adrià Garriga-Alonso</name>
+    </author>
+  </entry>
+</feed>

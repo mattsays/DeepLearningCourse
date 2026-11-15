@@ -1,0 +1,6 @@
+[submodule "lie-detector/vendor/AV-Data-Processing"]
+	path = lie-detector/vendor/AV-Data-Processing
+	url = https://github.com/NMS05/AV-Data-Processing.git
+[submodule "lie-detector/vendor/DOLOS-PECL"]
+	path = lie-detector/vendor/DOLOS-PECL
+	url = https://github.com/NMS05/Audio-Visual-Deception-Detection-DOLOS-Dataset-and-Parameter-Efficient-Crossmodal-Learning.git
