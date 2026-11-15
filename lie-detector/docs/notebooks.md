@@ -1,6 +1,7 @@
 # Notebooks and the `lib/` API
 
 What a notebook reads, which files it may touch, and the two notebooks that exist.
+Read this if you are about to write or change a direction notebook.
 
 ## Loading in a notebook (`lib/dataset.py`)
 
@@ -18,6 +19,12 @@ dl = make_loader(ds, batch_size=16)
 
 The module hands out **paths** (`clips.paths(ids)`) or **cached arrays** (`CachedFeatures`), never a
 fixed tensor pipeline: decoding a clip, picking frames, resizing, normalising is each direction's job.
+
+The two modes differ in what the loader yields, and that reaches into your training loop:
+`CachedFeatures` gives `(x, y)` pairs, `clips.paths(ids)` gives one dict per clip
+(`{clip_id, y, video, audio}`). `make_loader` picks the right collate on its own, but a loop written for
+`for x, y in dl` needs a branch to read the dict — the template implements the tensor path only, so a
+direction that decodes video replaces the loop, not just the model.
 
 Two helpers that prevent the usual mistakes:
 
@@ -37,10 +44,10 @@ Either pass `pos_weight`, or pick the decision threshold on `val` instead of usi
 | `notebooks/preprocessing.ipynb` | **one member, once** | runs both scripts with explicit paths, so clips, audio, splits and `dataset.csv` are written straight into the shared folder |
 | `notebooks/architecture_template.ipynb` | everybody | skeleton to copy into `architectures/<direction>/` |
 
-The template does the plumbing once: mount Drive, point at the shared folder, load the frozen splits, five
-folds with early stopping on `val`, metrics from `lib/metrics.py`, per-gender breakdown, and predictions
-saved to `preds/cv_<direction>.csv`. Members replace only the model and the feature loader, then paste the
-results row it prints.
+The template does the plumbing once: mount Drive, point at the shared folder, load the frozen splits, seed
+everything, five folds with early stopping on `val`, metrics from `lib/metrics.py`, per-gender breakdown,
+predictions saved to `preds/cv_<direction>.csv`, and the board row printed by
+`lib/metrics.py::format_row`. Members replace only the model and the feature loader, then paste that row.
 
 ## Individual notebooks (one per direction)
 

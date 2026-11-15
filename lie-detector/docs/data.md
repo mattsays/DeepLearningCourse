@@ -3,6 +3,7 @@
 From the DOLOS spreadsheets to the folder every notebook reads. Written by
 [`scripts/build_dataset.py`](../scripts/build_dataset.py) and driven by
 [`notebooks/preprocessing.ipynb`](../notebooks/preprocessing.ipynb).
+Read this if you are running the preprocessing, changing an artifact, or wondering where a file lives.
 
 ## Overview
 
@@ -39,6 +40,11 @@ features, caching embeddings — already encodes a modelling choice, and this pr
 letting four different choices compete. Each member does that inside their own notebook and caches
 whatever they like under `data/processed/<direction>/`. Two members who happen to want the same
 intermediate representation can share it privately; the shared pipeline does not pick one.
+
+The one exception is the **shared feature cache**: anything another member may reuse goes to
+`cached_features/<encoder>/` in the Drive folder, which is where `cache_dir` and the template write
+(`DATA/cached_features/<ENCODER>/<clip_id>.npy`). `data/processed/` is local scratch and is never the
+place for something the group depends on.
 
 Rules:
 

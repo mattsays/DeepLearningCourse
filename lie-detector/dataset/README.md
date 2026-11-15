@@ -7,6 +7,27 @@
 
 ---
 
+**Read this if** you are about to touch a DOLOS file, write a loader, or quote a number about the
+dataset. It is a reference, not a tutorial: every number below is measured on the shipped files, and
+§10 lists the pitfalls that actually break a pipeline.
+
+## Contents
+
+1. [What DOLOS is](#1-what-dolos-is)
+2. [Where the label comes from](#2-where-the-label-comes-from)
+3. [What is in `DOLOS/`](#3-what-is-in-dolos)
+4. [File formats](#4-file-formats)
+5. [File naming convention](#5-file-naming-convention)
+6. [Actual statistics (measured on these files)](#6-actual-statistics-measured-on-these-files)
+7. [The 41 MUMIN annotations](#7-the-41-mumin-annotations)
+8. [Loading in Python](#8-loading-in-python)
+9. [Typical pipeline](#9-typical-pipeline)
+10. [Dataset pitfalls (verified on these files)](#10-dataset-pitfalls-verified-on-these-files)
+11. [Notes for a lie detection project](#11-notes-for-a-lie-detection-project)
+12. [Licence and citation](#12-licence-and-citation)
+
+---
+
 ## 1. What DOLOS is
 
 DOLOS is the largest **non-laboratory** deception detection dataset by number of clips and subjects
@@ -204,7 +225,7 @@ exactly: this copy contains a few extra rows and some dirty metadata.
 |---|---:|---:|
 | Clips | 1,675 | **1,678 rows** (1,677 unique names) |
 | `deception` / `truth` | 899 / 776 | **901 / 777** (53.7% / 46.3%) |
-| Subjects | 213 (141 M / 72 F) | **196 names** → 131 M / 65 F (194 after alias merge) |
+| Subjects | 213 (141 M / 72 F) | **196 names** → 131 M / 65 F → **180** after the alias rule |
 | TV episodes | 84 | **75** distinct YouTube IDs |
 | Duration | 2–19 s, median 5 s | **2–48 s**, median **5 s**, mean ≈5 s |
 | Clips per gender | 1,324 M / 351 F | **1,327 M / 351 F** (79.1% / 20.9%) |
@@ -461,7 +482,8 @@ All of these break a hastily written pipeline. Handle them once, in a single `da
 2. **Unnormalised gender**: `male`, `Male`, `male `, `female`, `Female`, `female `. Same as above.
 3. **Show name** in 2 spellings (`Would I Lie To You` / `Would I Lie to You`).
 4. **Free-text subject names** with aliases and spaces: `Lee` vs `Lee Mack`, `David` vs `David Mitchell`,
-   `Alex` vs `Alex `. Counting subjects requires manual normalisation, otherwise you get 196 instead of ~194.
+   `Alex` vs `Alex `. Counting subjects requires the alias rule in `scripts/build_dataset.py`
+   (`canonical_subject`), otherwise you get 196 names instead of 180 subjects.
 5. **Duplicated row**: `YW_WILTY_EP46_truth1` appears twice → 1,678 rows but 1,677 clips.
 6. **33 file names outside the pattern**: `BRI_WILTY_EP59_deception_20`, `LS_WILTY_EP73_ true1` (space),
    `..._lie_22` with an underscore. Do not parse the label from the file name: the token disagrees with

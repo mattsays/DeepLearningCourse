@@ -11,7 +11,7 @@ It reads only the artifacts produced by the two scripts:
 
 Typical use in a notebook::
 
-    import sys; sys.path.insert(0, "/content/lie-detector")
+    import sys; sys.path.insert(0, "/content/DeepLearningCourse/lie-detector")
     from lib.dataset import Protocol, Clips, CachedFeatures, make_loader
 
     folds = Protocol.load()                      # verifies the manifest hashes

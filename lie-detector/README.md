@@ -12,8 +12,16 @@ Four people, four directions, one frozen evaluation protocol.
 | **Deadline** | **26 November** |
 | **Dataset** | [`dataset/README.md`](dataset/README.md) — read it before writing any code |
 
-Repository-wide rules (language, dataset handling, submodules) are in [`../AGENTS.md`](../AGENTS.md);
-project-level ones (data, notebooks, shared files, reproducibility) in [`AGENTS.md`](AGENTS.md).
+Repository-wide rules (language, dataset handling, submodules) are in [`../AGENTS.md`](../AGENTS.md),
+and §3 there is the routing map for the whole repository. Project-level rules (data, notebooks, shared
+files, reproducibility) are in [`AGENTS.md`](AGENTS.md).
+
+## State
+
+No generated artifact is in the repository. `data/processed/` does not exist; `dataset.csv`, `clips/`,
+`audio/` and `splits/` live only in the shared Drive folder (see [`docs/data.md`](docs/data.md)). One
+draft direction notebook exists, `notebooks/architectures/pecl.ipynb`; the results board below is empty.
+Anything that reads `data/processed/` fails until the preprocessing has run — that is expected.
 
 ## What the model does
 
@@ -31,7 +39,9 @@ clip ────►│   model    │────►  lie / not lie
   time**. A model that needs a human annotation to make a prediction is not a deception detector: the 41
   MUMIN columns in `train_dolos.xlsx` are annotations, not inputs.
 
-Metrics: **accuracy, F1, AUC** — the same three the paper reports, so our numbers stay comparable.
+Metrics: **accuracy, F1, AUC** — the same three the paper reports, so our numbers stay comparable. What
+we add on top (balanced accuracy, the majority baseline, per-gender accuracy) and how each is computed is
+[`docs/evaluation.md`](docs/evaluation.md).
 
 **How the clip is turned into a prediction is each member's own research decision.** This document fixes
 the problem, the data and the evaluation, and deliberately says nothing about models.
@@ -48,40 +58,61 @@ the problem, the data and the evaluation, and deliberately says nothing about mo
 
 **Everybody else** — for each direction:
 
-1. copy [`notebooks/architecture_template.ipynb`](notebooks/architecture_template.ipynb) into
-   `notebooks/architectures/<direction>/train_<x>.ipynb`;
+1. copy [`notebooks/architecture_template.ipynb`](notebooks/architecture_template.ipynb) to
+   `notebooks/architectures/<direction>/train_<direction>.ipynb`;
 2. add a Drive shortcut named `dolos`, set `DIRECTION` and `ENCODER`, produce your features into
    `cached_features/<ENCODER>/`;
-3. run the five folds, paste the results row into the board below.
+3. run the five folds and paste the row printed by `lib/metrics.py::format_row` into the board below.
 
 ## Layout
 
 ```
 lie-detector/
 ├── README.md                  # this file
+├── AGENTS.md                  # project rules
 ├── docs/                      # the long version of every section below
 ├── dataset/                   # DOLOS annotations (not in git) + their documentation
 ├── notebooks/
 │   ├── preprocessing.ipynb    # splits + download + publish, one member once
 │   ├── architecture_template.ipynb
-│   └── architectures/<direction>/
+│   └── architectures/<direction>/train_<direction>.ipynb
 ├── scripts/                   # build_dataset.py, make_splits.py
 ├── lib/                       # dataset.py, metrics.py — imported by the notebooks
-├── data/processed/            # local scratch copy of the shared folder
+├── data/processed/            # written by the scripts — absent until you run them
 └── vendor/, baselines/        # submodules: tooling and the paper's code
 ```
 
-## Documentation
+## Read this, not everything
 
-| Page | What it answers |
-|---|---|
-| [`docs/data.md`](docs/data.md) | how the clips, the audio and `dataset.csv` are produced, and where they live on Drive |
-| [`docs/splits.md`](docs/splits.md) | how the test set and the five folds are built, step by step |
-| [`docs/notebooks.md`](docs/notebooks.md) | what a notebook reads, the `lib/` API, the rules per direction |
-| [`docs/evaluation.md`](docs/evaluation.md) | what to measure, the baselines, the precision you can claim |
-| [`docs/colab.md`](docs/colab.md) | Colab limits, session setup, the two things that bite |
-| [`docs/architectures.md`](docs/architectures.md) | the three architectural paradigms the team is exploring |
-| [`dataset/README.md`](dataset/README.md) | the DOLOS dataset itself: formats, statistics, 16 pitfalls |
+Each row names the document that owns the answer. Do not read the dataset README for a question about
+metrics, and do not restate a number that one of these files owns.
+
+| If you are… | Read | Section |
+|---|---|---|
+| writing a loader, or touching a DOLOS column | [`dataset/README.md`](dataset/README.md) | §4, §8, §10 |
+| running the preprocessing | [`docs/data.md`](docs/data.md), [`docs/colab.md`](docs/colab.md) | all |
+| touching splits, seeds or leakage | [`docs/splits.md`](docs/splits.md) | all |
+| reporting a number | [`docs/evaluation.md`](docs/evaluation.md) | all |
+| writing a direction notebook | [`docs/notebooks.md`](docs/notebooks.md) | all |
+| choosing an architecture | [`docs/architectures.md`](docs/architectures.md) | all (report material, not a spec) |
+| asking what the dataset actually contains | [`dataset/README.md`](dataset/README.md) | §5, §6 |
+
+## Directions
+
+The short name is what goes in `DIRECTION` and in the notebook folder. Backbones are listed for
+orientation; the shared feature cache is named after the encoder that produced it
+(`cached_features/<ENCODER>/`, one folder per encoding model).
+
+| Direction | Paradigm | Backbones | Owner | Notebook (target) |
+|---|---|---|---|---|
+| `tia` | 1 — frozen backbones + cross-modal fusion | `dinov2-small` / `siglip-base`, `wavlm-base-plus` | — | `tia/train_tia.ipynb` |
+| `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | — | `lore/train_lore.ipynb` |
+| `fab` | 3 — 3D CNN + temporal head | `x3d_m` / `swin3d_t`, mel-spectrogram | — | `fab/train_fab.ipynb` |
+
+Only three paradigms are documented so far ([`docs/architectures.md`](docs/architectures.md)); add the
+fourth row here when it is assigned. Fill the Owner column in the same commit. `notebooks/architectures/pecl.ipynb`
+is an early draft of paradigm 1 that predates this naming: its owner moves it to `tia/train_tia.ipynb`
+before the next run, rather than starting a second notebook for the same direction.
 
 ## Results board
 
@@ -100,8 +131,9 @@ configuration; the best per direction in bold.
 clips** (52.4% on the working set — not the 53.7% of the whole dataset): if a row does not beat it, the
 model is worse than guessing the most frequent class.
 
-The official 3-fold split is not run by the template. It stays available (`official_fold*.json`) for a
-single reproduction of the paper's protocol, reported separately if someone does it.
+The official 3-fold split is not run by the template and is **not** part of this board. It stays
+available (`official_fold*.json`, `Protocol.official(fold)`) for a single reproduction of the paper's
+protocol, reported separately if someone does it — see [`docs/evaluation.md`](docs/evaluation.md).
 
 ---
 

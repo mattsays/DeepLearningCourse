@@ -8,7 +8,7 @@ Two things are produced, and they answer two different questions:
 2. **Our subject-level protocol** — one virgin test set plus a k-fold
    cross-validation over the rest:
 
-      194 subjects
+      180 subjects (196 distinct names)
       ├── test           15% of the non-captain subjects, frozen
       └── working set    everyone else
           ├── k folds   train / val / holdout, split by subject

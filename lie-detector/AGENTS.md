@@ -13,7 +13,7 @@ evaluation protocol, plan) live in [`README.md`](README.md).
    privately inside the group. It cannot travel through this repository: redistribution is not allowed,
    and git history is forever.
 
-2. **One notebook per direction**, named `train_<track>.ipynb`, inside its own folder, plus a short
+2. **One notebook per direction**, named `train_<direction>.ipynb`, inside its own folder, plus a short
    `README.md` next to it with the final table row and a paragraph of interpretation.
 
 3. **Never edit shared files alone.** `preprocessing.ipynb` and this README change through a pull

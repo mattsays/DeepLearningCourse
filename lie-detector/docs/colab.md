@@ -2,6 +2,7 @@
 
 Google Colab is the only GPU available to the team. These are the limits and the habits that make
 the difference between a session that produces a result and one that produces a crash.
+Read this if you are about to run any notebook on Colab.
 
 ## The budget
 

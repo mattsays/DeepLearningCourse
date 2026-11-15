@@ -3,6 +3,7 @@
 The evaluation protocol: which clips are used for what, and why. Produced once by
 [`scripts/make_splits.py`](../scripts/make_splits.py); consumed by every notebook through
 `Protocol.load(DATA / "splits")`.
+Read this if you are touching the splits, the seeds, or anything that could leak.
 
 ## The command
 
@@ -41,7 +42,9 @@ works in four steps, all deterministic given `--seed`.
 4. **Inside each fold, 15% of the training subjects are moved to `val`**, with the same matching rule. The
    folds are `train` (fit) / `val` (early stopping) / `holdout` (the score of that fold).
 
-On the shipped annotations — 180 distinct subjects after merging the name aliases:
+On the shipped annotations — 196 distinct names, and 180 subjects once the alias rule in
+`scripts/build_dataset.py` (`canonical_subject`: the two recurring captains plus 14 unambiguous first
+names) has merged them:
 
 | Block | Subjects | Clips | Deception | Role |
 |---|---:|---:|---:|---|

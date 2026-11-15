@@ -69,7 +69,26 @@ def best_threshold(y_true, y_prob) -> float:
     return best
 
 
-def format_row(name: str, results: dict) -> str:
-    """One markdown row for the results board."""
-    return (f"| {name} | {results['acc'] * 100:.1f} | {results['f1'] * 100:.1f} | "
-            f"{results['auc'] * 100:.1f} | {results['balanced_acc'] * 100:.1f} |")
+def format_row(direction: str, results: dict, *, owner: str = "—", method: str = "—",
+               params: int | str = "—", majority: float | None = None,
+               runtime: str = "—") -> str:
+    """One markdown row for the results board, in the board's column order.
+
+    The board lives in ``README.md``, section ``## Results board``. ``results`` holds the
+    cross-validation summary in 0-1: ``acc`` (mean), optional ``acc_std`` (spread over the
+    folds), ``f1``, ``auc`` and ``balanced_acc``. ``majority`` is the baseline computed on
+    the same clips, also 0-1.
+
+    >>> format_row("tia", {"acc": .61, "acc_std": .03, "f1": .62, "auc": .65,
+    ...                    "balanced_acc": .60}, owner="A", method="PECL",
+    ...            params=1200000, majority=.524, runtime="9 min")
+    '| tia | A | PECL | 1,200,000 | 61.0 ± 3.0 | 62.0 | 65.0 | 60.0 | 52.4 | 9 min |'
+    """
+    spread = results.get("acc_std")
+    acc = f"{results['acc'] * 100:.1f}"
+    if spread is not None:
+        acc += f" ± {spread * 100:.1f}"
+    maj = "—" if majority is None else f"{majority * 100:.1f}"
+    shown = f"{params:,}" if isinstance(params, int) else str(params)
+    return (f"| {direction} | {owner} | {method} | {shown} | {acc} | {results['f1'] * 100:.1f} "
+            f"| {results['auc'] * 100:.1f} | {results['balanced_acc'] * 100:.1f} | {maj} | {runtime} |")

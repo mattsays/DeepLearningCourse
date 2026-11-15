@@ -2,83 +2,76 @@
 
 Operating notes for AI agents (and humans) working in this repository.
 
----
-
 ## 1. What this repository is
 
-A Deep Learning course project, split in two independent parts:
+A Deep Learning course project in two independent parts:
 
 | Path | Content |
 |---|---|
 | `presentation/` | HTML slide deck + the `pmaker.html` tool that renders and exports it to PDF |
-| `lie-detector/` | Multimodal **deception detection** project built on the DOLOS dataset — project README: [`lie-detector/README.md`](lie-detector/README.md) |
+| `lie-detector/` | Multimodal **deception detection** project on the DOLOS dataset |
 
-Everything under `lie-detector/` belongs to the same goal: train and evaluate a detector that
-classifies a video clip as `truth` or `deception`.
-
----
+Everything under `lie-detector/` serves one goal: train and evaluate a detector that classifies a video
+clip as `truth` or `deception`. Start from [`lie-detector/README.md`](lie-detector/README.md); the rules
+for that subtree are in [`lie-detector/AGENTS.md`](lie-detector/AGENTS.md).
 
 ## 2. Hard rules
 
 1. **Language: English.** All documentation, code, comments, commit messages, file names, agent
    summaries and dataset notes are written in English. No exceptions — do not mirror the user's
    language into repository files.
-2. **Never commit the dataset or any video.** `lie-detector/dataset/DOLOS/` is git-ignored on purpose
-   (see `.gitignore`). It contains ROSE Lab annotations released *for academic use only* and
-   `youtube`-hosted footage whose copyright is not ours. Redistribution and derived datasets are
-   prohibited without explicit permission. If a task seems to require committing data, stop and ask.
-3. **Numbers must be measured, not remembered.** Any statistic quoted in a README or report is
+2. **Never commit the dataset or any video.** `lie-detector/dataset/DOLOS/` is git-ignored on purpose:
+   it holds ROSE Lab annotations released *for academic use only*, and the footage is hosted on YouTube
+   under someone else's copyright. Redistribution and derived datasets are prohibited without explicit
+   permission. If a task seems to require committing data, stop and ask.
+3. **One fact, one owner.** Every number, path and rule is stated in exactly one document; the others
+   link to it. §3 says which document owns what. If you find the same fact stated twice, delete one
+   copy instead of updating both.
+4. **Numbers must be measured, not remembered.** Any statistic quoted in a README or report is
    recomputed from the files in `lie-detector/dataset/DOLOS/`. If a number comes from the paper or the
    website, label it as such and say when the local data diverges.
-4. **Do not invent dataset facts.** If something cannot be verified from the files, write that it is
+5. **Do not invent dataset facts.** If something cannot be verified from the files, write that it is
    unverified instead of filling the gap.
-5. **Keep third-party code in submodules**, never copy-paste it into the tree. Submodules live under
-   `lie-detector/vendor/` (tooling) and `lie-detector/baselines/` (reference implementations) — see §4.
+6. **Keep third-party code in submodules**, never copy-paste it into the tree. Submodules live under
+   `lie-detector/vendor/` (tooling) and `lie-detector/baselines/` (reference implementation) — see §5.
 
----
+## 3. Where the truth lives
 
-## 3. Repository layout
+Read only the row your task needs. Each entry is the single owner of what it describes.
+
+| If the task is… | Read | Section |
+|---|---|---|
+| what the project is, how to run it | [`lie-detector/README.md`](lie-detector/README.md) | all |
+| rules for the lie-detector subtree | [`lie-detector/AGENTS.md`](lie-detector/AGENTS.md) | all |
+| DOLOS files, columns, statistics, pitfalls | [`lie-detector/dataset/README.md`](lie-detector/dataset/README.md) | §4, §6, §8, §10 |
+| clips, audio, `dataset.csv`, Drive folder | [`lie-detector/docs/data.md`](lie-detector/docs/data.md) | all |
+| splits, seeds, leakage, protocol files | [`lie-detector/docs/splits.md`](lie-detector/docs/splits.md) | all |
+| metrics, baselines, how to report | [`lie-detector/docs/evaluation.md`](lie-detector/docs/evaluation.md) | all |
+| notebook contract, `lib/` API | [`lie-detector/docs/notebooks.md`](lie-detector/docs/notebooks.md) | all |
+| Colab limits and session setup | [`lie-detector/docs/colab.md`](lie-detector/docs/colab.md) | all |
+| research paradigms (report material) | [`lie-detector/docs/architectures.md`](lie-detector/docs/architectures.md) | all |
+| slides and PDF export | [`presentation/README.md`](presentation/README.md) | all |
+
+## 4. Layout
 
 ```
 DeepLearningCourse/
-├── AGENTS.md                      # this file
+├── AGENTS.md                      # this file: rules and routing
 ├── .gitignore                     # .venv, dist, DOLOS and every generated artifact
 ├── presentation/                  # slide deck + pmaker tool (not related to lie-detector)
-└── lie-detector/
-    ├── README.md                  # hub: goal, quick start, layout, docs index, results board
-    ├── docs/                      # data.md, splits.md, notebooks.md, evaluation.md, colab.md
-    ├── AGENTS.md                  # project-level rules (data, notebooks, shared files, results)
-    ├── dataset/
-    │   ├── README.md              # dataset documentation — the reference for everything DOLOS
-    │   └── DOLOS/                 # DATASET, NOT TRACKED, NO VIDEOS (annotations only)
-    ├── notebooks/
-    │   ├── preprocessing.ipynb    # SHARED: splits + download + publish to Drive
-    │   ├── architecture_template.ipynb   # skeleton to copy per direction
-    │   └── architectures/         # one sub-folder per research direction
-    ├── scripts/
-    │   ├── build_dataset.py       # clips + dataset.csv (docs/data.md)
-    │   └── make_splits.py         # frozen splits      (docs/splits.md)
-    ├── lib/
-    │   ├── dataset.py             # splits + loaders imported by notebooks (docs/notebooks.md)
-    │   └── metrics.py             # ACC / F1 / AUC, identical for every direction
-    ├── data/processed/
-    │   ├── clips/                 # downloaded .mp4 — NOT TRACKED
-    │   ├── audio/                 # 16 kHz wav — NOT TRACKED
-    │   ├── dataset.csv            # clip table + MUMIN — NOT TRACKED
-    │   └── splits/                # frozen protocol — published on Drive, NOT TRACKED
-    ├── vendor/                    # submodule: third-party tooling
-    │   └── AV-Data-Processing/    # YouTube downloader + face/audio extraction
-    └── baselines/                 # submodule: reference implementations
-        └── DOLOS-PECL/            # official training code (PECL architecture)
+└── lie-detector/                  # deception detection: README.md, AGENTS.md, docs/, notebooks/, scripts/, lib/
 ```
 
----
+The subtree has its own map in [`lie-detector/README.md`](lie-detector/README.md) §Layout — this file
+does not repeat it.
 
-## 4. Submodules
+`lie-detector/dataset/DOLOS/` holds the annotations only (~1 MB of spreadsheets, no video). How to get
+access, and under which licence, is §12 of the dataset README; what is inside each file is §3–§4.
+
+## 5. Submodules
 
 Two official NTU/NMS05 repositories are registered as git submodules — one as tooling, one as the
-reference implementation. Both are useful for the full pipeline and are pinned to `main` at the commits
-recorded in the index.
+reference implementation. Both are pinned to `main` at the commits recorded in the index.
 
 | Path | Upstream | Purpose |
 |---|---|---|
@@ -92,71 +85,9 @@ git submodule update --init --recursive
 ```
 
 Do not edit files inside a submodule: changes there are lost and break pinning. If a patch is genuinely
-needed, copy the file into our tree (with attribution) or open a PR upstream.
-
----
-
-## 5. The DOLOS dataset
-
-**Documentation:** [`lie-detector/dataset/README.md`](lie-detector/dataset/README.md) — file formats,
-column schemas, naming convention, measured statistics, per-feature table, pitfalls. Read it before
-writing any loader; it is the single source of truth for this project.
-
-**What is on disk** (local only, ~1 MB of spreadsheets):
-
-| File | Content |
-|---|---|
-| `DOLOS/Dolos.xlsx` | primary annotations: URL, timestamps, label, subject, 41 MUMIN features as time intervals |
-| `DOLOS/train_dolos.xlsx` | the same 41 features binarised to 0/1, row-aligned with the above — merged into `dataset.csv` as `mumin_*` |
-| `DOLOS/dolos_timestamps.csv` | `YT_Video_ID, file_name, start_time, end_time, label` — input for the downloader |
-| `DOLOS/Training_Protocols/*.csv` | `train_fold1..3`, `test_fold1..3`, `short`, `long`, `male`, `female` |
-
-**What is *not* on disk:** any `.mp4`. Videos are fetched with `scripts/build_dataset.py` (preferred — it
-cuts, extracts audio and writes `data/processed/dataset.csv`, see `lie-detector/docs/data.md`), and availability
-is not guaranteed. The upstream script below is kept for reference only.
-
-⚠️ `YT_video_downloader.py` does **not** accept `dolos_timestamps.csv` as-is. It expects
-`yt_id,file_name,start_seconds,end_seconds` with **no header**, while the shipped CSV has a header
-(plus a UTF-8 BOM) and `mm:ss` times — `float("2:06")` raises and the run dies on the first row.
-The conversion script that produces the headerless seconds CSV is in
-[`lie-detector/dataset/README.md` §9.1](lie-detector/dataset/README.md); run it once, then:
-
-```bash
-python "lie-detector/vendor/AV-Data-Processing/AV Data Processing/YT_video_downloader.py" \
-       lie-detector/clips lie-detector/dataset/DOLOS/dolos_timestamps_seconds.csv
-#                 ^ output folder (created by the script)   ^ CSV in seconds, headerless
-```
-
-It requires `yt_dlp`, `ffmpeg-python` and an `ffmpeg` binary on `PATH`, and writes
-`bad_files_<output folder>.txt` listing every ID that failed (deleted/geo-blocked videos).
-
-### Facts that are easy to get wrong
-
-| Topic | Reality |
-|---|---|
-| Size | 1,678 rows, 1,677 unique clip names (one duplicated row) |
-| Labels | 901 `deception` / 777 `truth`, stored with inconsistent casing and `lie` as a synonym |
-| Timestamps | Excel stored `mm:ss` as `hh:mm` — cells mix `time`, `timedelta`, `float` and `str` |
-| Features | 41 columns, but only 40 distinct names (`Exaggerated Opening` ×2) |
-| Official stats | paper: 1,675 clips / 213 subjects / 84 episodes; local files differ (75 episodes, 196 names) |
-
-The full list of 16 verified pitfalls is §10 of the dataset README. Do not write a loader without it.
-
-### Evaluation caveat
-
-The official 3-fold split is **clip-level**, not speaker-level: `train_fold1` and `test_fold1` share 147
-subjects out of 182/159 and all 75 episodes, plus 1–2 clips leak across the boundary. A model can learn
-the person instead of the behaviour. If a task asks for generalisation claims, build a subject-level or
-episode-level split and report both. Population: 79% male clips, 53.7% deception.
-
-### Access and licence
-
-Annotations are for academic, non-commercial use; redistribution and derived datasets require permission
-from NTU ROSE Lab. Access is granted through the request form at
-<https://rose1.ntu.edu.sg/dataset/DOLOS/>. Keep the local copy inside this workspace only. Cite the ICCV
-2023 paper (BibTeX in the dataset README).
-
----
+needed, copy the file into our tree (with attribution) or open a PR upstream. Their code is not ours —
+when you search the repository, a hit under `vendor/` or `baselines/` describes upstream behaviour, not
+this project's.
 
 ## 6. Environment
 
@@ -165,10 +96,10 @@ from NTU ROSE Lab. Access is granted through the request form at
   `Dolos.xlsx`). `ffmpeg`/`ffprobe` are on `PATH` via Homebrew.
 - The `presentation/` tool is pure HTML/JS: open `presentation/pmaker.html` in a browser, keep the
   bundled `presentation/vendor/` folder beside it for PDF export. There is no build step and no server.
+- Training runs on Google Colab, not locally: limits and session setup are in
+  [`lie-detector/docs/colab.md`](lie-detector/docs/colab.md).
 - Paths in docs and scripts are written relative to the repository root. Do not hardcode absolute
   paths in committed files.
-
----
 
 ## 7. Working conventions
 
@@ -181,3 +112,10 @@ from NTU ROSE Lab. Access is granted through the request form at
 4. **Self-contained deliverables.** A new document states where its inputs live, which file it analyses
    and how to reproduce its numbers.
 5. **Small, focused diffs.** Do not reformat files you are not otherwise changing.
+
+## 8. Current state
+
+Nothing generated is in the repository: `data/processed/` does not exist and the clips, `dataset.csv`
+and the splits live only in the shared Drive folder, so `python -m lib.dataset` fails until it is
+mounted or copied — expected, not a broken checkout. Everything that changes weekly (which notebooks
+and board rows exist) is in the README's `## State`.

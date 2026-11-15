@@ -1,6 +1,11 @@
 # Lie Detection on DOLOS: Experimental Protocol and Architectures
 ## Part 2: The 3 Architectural Paradigms
 
+> **Reference material for the final report**, not an operating spec: these are Part 2 and Part 3 of a
+> longer document. What a notebook must actually do is in [notebooks.md](notebooks.md); how a result is
+> measured is in [evaluation.md](evaluation.md). The direction names below (`--TIA`, `--LORE`, `--FAB`)
+> are the `DIRECTION` values in the README's Directions table.
+
 Training from scratch, or fully fine-tuning large audio-video models on DOLOS, leads to fast overfitting
 and saturates VRAM. The three paradigms below avoid the problem by exploiting *pre-trained* models through
 three distinct principles from the recent literature.
