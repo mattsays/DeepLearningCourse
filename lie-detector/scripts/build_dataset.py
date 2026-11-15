@@ -311,7 +311,10 @@ def ytdlp_prefix() -> list[str] | None:
 
 
 def run(cmd: list[str], timeout: int | None = None) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    # ``errors="replace"`` matters: ffmpeg and yt-dlp occasionally emit bytes that are
+    # not valid UTF-8, and a strict decode would kill the whole run on one clip.
+    return subprocess.run(cmd, capture_output=True, text=True, errors="replace",
+                          timeout=timeout)
 
 
 def probe(path: Path) -> dict:
@@ -485,6 +488,20 @@ def main() -> int:
           f" | invalid annotations: {counts.get('invalid_range', 0)}")
 
     def process(clip: Clip) -> dict:
+        try:
+            return _process(clip)
+        except Exception as exc:                      # noqa: BLE001 - one clip must not kill the run
+            return {
+                "clip_id": clip.clip_id, "source_name": clip.source_name, "yt_id": clip.yt_id,
+                "start_s": clip.start_s, "end_s": clip.end_s, "duration_expected": clip.duration,
+                "duration_actual": "", "label": clip.label, "y": clip.y,
+                "gender": clip.gender, "subject": clip.subject,
+                "test_fold": clip.test_fold, "protocols": clip.protocols,
+                "video_path": "", "audio_path": "", "status": "error",
+                "error": f"{type(exc).__name__}: {exc}"[:300],
+            }
+
+    def _process(clip: Clip) -> dict:
         status, error = download(clip, args.out_dir, args.format, args.retries)
         video = args.out_dir / f"{clip.clip_id}.mp4"
         audio = args.audio_dir / f"{clip.clip_id}.wav"
@@ -553,7 +570,9 @@ def main() -> int:
     total = {k: v for k, v in counts.items() if v}
     print(f"\ndataset table: {args.csv}")
     print("status:", ", ".join(f"{k}={v}" for k, v in sorted(total.items())))
-    return 0 if not counts["error"] else 1
+    if counts.get("ok", 0) == 0 and counts.get("error", 0) == 0:
+        return 2                                     # nothing downloaded and nothing failed: setup problem
+    return 0                                          # a completed pass, even with some failed clips
 
 
 if __name__ == "__main__":

@@ -79,6 +79,21 @@ python scripts/build_dataset.py --limit 20                 # smoke test
 python scripts/build_dataset.py --workers 4                # full run
 ```
 
+**If a run stops before the end.** Just run the same command again: it resumes from what is on Drive.
+Every clip ends up with a `status` in `dataset.csv`, so nothing is lost silently:
+
+| status | what it means | what to do |
+|---|---|---|
+| `ok` | video + audio, usable | nothing |
+| `error` | yt-dlp or ffprobe failed | re-run; if they all look the same, lower `--workers` |
+| `no_audio` | video fine, no audio track | re-run, or drop the clip |
+| `duration_mismatch` | cut is off by more than 2 s | inspect it, usually a YouTube segment shift |
+| `invalid_range` | `end <= start` in the annotations | nothing, there are 7 of them |
+| `planned` | never attempted | run the download |
+
+A single broken clip can no longer abort the job: exceptions are caught per clip and recorded. The
+script exits 0 when the pass completes, whatever the counts; read the `status:` line, not the exit code.
+
 The script is idempotent (valid existing clips are skipped), resumable, and marks broken annotations
 (`end ≤ start`, 7 rows) as `invalid_range` instead of downloading them. Budget roughly 15 s per clip:
 a full run is a couple of hours with 4 workers.
