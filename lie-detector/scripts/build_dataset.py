@@ -43,6 +43,12 @@ import shutil
 import subprocess
 import sys
 import threading
+
+try:
+    from tqdm import tqdm
+except ImportError:                      # keep the script usable without tqdm
+    def tqdm(iterable=None, **kwargs):
+        return iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -402,6 +408,8 @@ def main() -> int:
     parser.add_argument("--force", action="store_true", help="re-download clips that already exist")
     parser.add_argument("--no-audio", action="store_true", help="skip the 16 kHz wav extraction")
     parser.add_argument("--retries", type=int, default=3)
+    parser.add_argument("--quiet", action="store_true",
+                        help="do not print a line per clip (the progress bar stays)")
     parser.add_argument("--dry-run", action="store_true", help="write the table, download nothing")
     parser.add_argument(
         "--format", default="bv*[height<=720]+ba/b[height<=720]/bv*+ba/b",
@@ -497,15 +505,25 @@ def main() -> int:
         }
 
     if todo and not args.dry_run:
+        bar = tqdm(total=len(todo), unit="clip", desc="download", dynamic_ncols=True,
+                   mininterval=1.0, file=sys.stderr)
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
             futures = {pool.submit(process, clip): clip for clip in todo}
-            for done, future in enumerate(as_completed(futures), start=1):
+            for future in as_completed(futures):
                 row = future.result()
                 with lock:
                     rows[row["clip_id"]] = row
                     counts[row["status"]] = counts.get(row["status"], 0) + 1
-                flag = "" if row["status"] == "ok" else f"  <- {row['status']}: {row['error'][:80]}"
-                print(f"[{done}/{len(todo)}] {row['clip_id']}{flag}")
+                bar.update(1)
+                bar.set_postfix(ok=counts.get("ok", 0),
+                                err=counts.get("error", 0) + counts.get("no_audio", 0)
+                                + counts.get("duration_mismatch", 0),
+                                refresh=False)
+                if row["status"] != "ok":
+                    bar.write(f"{row['clip_id']}: {row['status']} — {row['error'][:80]}")
+                elif not args.quiet:
+                    bar.write(f"{row['clip_id']}: ok")
+        bar.close()
     elif args.dry_run:
         counts["planned"] = len(todo)
         for clip in todo:
