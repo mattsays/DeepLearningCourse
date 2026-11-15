@@ -19,7 +19,7 @@ Two things are produced, and they answer two different questions:
 
 Why the two recurring captains are pinned to the training side: with 472 clips
 between them they are 28% of the dataset, and a single one of them would be ~70%
-of a fold's holdout. Details in `README.md` §5 of the project README.
+of a fold's holdout. Details in `docs/splits.md`.
 
 The output is deterministic: same annotations + same `--seed` = same files. The
 manifest records a sha256 per file so a notebook can refuse a mismatched split.

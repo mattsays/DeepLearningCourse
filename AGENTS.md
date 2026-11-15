@@ -45,7 +45,8 @@ DeepLearningCourse/
 ├── .gitignore                     # .venv, dist, DOLOS and every generated artifact
 ├── presentation/                  # slide deck + pmaker tool (not related to lie-detector)
 └── lie-detector/
-    ├── README.md                  # project README: goal, layout, preprocessing, evaluation, plan
+    ├── README.md                  # hub: goal, quick start, layout, docs index, results board
+    ├── docs/                      # data.md, splits.md, notebooks.md, evaluation.md, colab.md
     ├── AGENTS.md                  # project-level rules (data, notebooks, shared files, results)
     ├── dataset/
     │   ├── README.md              # dataset documentation — the reference for everything DOLOS
@@ -55,10 +56,10 @@ DeepLearningCourse/
     │   ├── architecture_template.ipynb   # skeleton to copy per direction
     │   └── architectures/         # one sub-folder per research direction
     ├── scripts/
-    │   ├── build_dataset.py       # clips + dataset.csv (project README §3.1)
-    │   └── make_splits.py         # frozen splits      (project README §3.2)
+    │   ├── build_dataset.py       # clips + dataset.csv (docs/data.md)
+    │   └── make_splits.py         # frozen splits      (docs/splits.md)
     ├── lib/
-    │   ├── dataset.py             # splits + loaders imported by notebooks (§3.3)
+    │   ├── dataset.py             # splits + loaders imported by notebooks (docs/notebooks.md)
     │   └── metrics.py             # ACC / F1 / AUC, identical for every direction
     ├── data/processed/
     │   ├── clips/                 # downloaded .mp4 — NOT TRACKED
@@ -111,7 +112,7 @@ writing any loader; it is the single source of truth for this project.
 | `DOLOS/Training_Protocols/*.csv` | `train_fold1..3`, `test_fold1..3`, `short`, `long`, `male`, `female` |
 
 **What is *not* on disk:** any `.mp4`. Videos are fetched with `scripts/build_dataset.py` (preferred — it
-cuts, extracts audio and writes `data/processed/dataset.csv`, see project README §3.1), and availability
+cuts, extracts audio and writes `data/processed/dataset.csv`, see `lie-detector/docs/data.md`), and availability
 is not guaranteed. The upstream script below is kept for reference only.
 
 ⚠️ `YT_video_downloader.py` does **not** accept `dolos_timestamps.csv` as-is. It expects
