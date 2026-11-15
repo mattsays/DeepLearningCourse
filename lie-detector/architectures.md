@@ -1,37 +1,4 @@
 # Progetto Lie Detection su Dataset DOLOS: Protocollo Sperimentale e Architetture
-
-Questo documento definisce le linee guida ufficiali per lo sviluppo parallelo del progetto di *Deception Detection* sul dataset **DOLOS**. L'obiettivo è garantire il massimo rigore statistico (evitando *speaker leakage* e *selection bias*) e permettere l'addestramento di architetture allo stato dell'arte utilizzando risorse computazionali limitate (singola GPU / Google Colab).
-
----
-
-## Parte 1: Il Protocollo Sperimentale ("Strada B": Hold-Out + Group K-Fold)
-
-Il dataset DOLOS contiene 1.675 clip estratte da 213 soggetti. Poiché il numero di partecipanti è ridotto, uno split casuale porterebbe i modelli a memorizzare i tratti somatici e il timbro vocale dei singoli individui anziché apprendere i pattern comportamentali legati alla menzogna. 
-
-Per garantire un confronto equo tra i membri del team senza incorrere in tempi di calcolo proibitivi, adottiamo un protocollo ibrido **Cross-Validation + Hold-Out**.
-
-### 1.1 Creazione degli Split (Centralizzata)
-Un solo membro del gruppo esegue lo script di divisione dei dati all'inizio del progetto usando `StratifiedGroupKFold` di `scikit-learn` (dove `groups = subject_id` e `y = label`). Nessun soggetto deve mai trovarsi contemporaneamente in due set diversi.
-
-1. **Isolamento del Test Set (15% dei soggetti):** Viene estratto subito e messo "in cassaforte" (`test.csv`). Nessuno deve utilizzarlo durante lo sviluppo o per fare tuning degli iperparametri.
-2. **Creazione del Development Set (85% dei soggetti):** Questo blocco viene diviso in **5 Fold** bilanciati per classe e raggruppati per soggetto (`fold_1.csv`, `fold_2.csv`, ..., `fold_5.csv`).
-
-### 1.2 Workflow Operativo per il Team
-* **Fase 1: Sviluppo e Tuning Rapido (Solo Fold 1):** 
-  Durante le settimane di sviluppo, tutti i membri addestrano i propri modelli usando i Fold 2, 3, 4, 5 come *Training Set* e il **Fold 1** come *Validation Set*. Tutte le scelte architetturali (learning rate, dimensioni dei layer, numero di frame) vengono prese massimizzando le performance sul Fold 1.
-* **Fase 2: Validazione Statistica K-Fold (Tutti i 5 Fold):** 
-  Una volta che ogni membro ha "congelato" la propria architettura ottimale e i relativi iperparametri, si esegue il training completo su tutti i 5 split della Cross-Validation. Si calcolano media e deviazione standard delle metriche ($\mu \pm \sigma$) sui 5 fold di validazione per ogni paradigma.
-* **Fase 3: Elezione del Vincitore e Valutazione Finale:** 
-  Si confrontano i modelli sulla base della media dei 5 fold (a parità di metrica, si applica il Rasoio di Occam valutando minor numero di parametri e velocità di inferenza). Per la tabella del paper finale, i modelli congelati vengono ri-addestrati sull'intero *Development Set* (85%) e testati **una sola volta** sul *Test Set* (15%).
-
-### 1.3 Standardizzazione dell'Input e Metriche
-Per rendere confrontabili i modelli, tutti devono utilizzare lo stesso pre-processing di base:
-* **Video:** Estrazione uniforme di $N$ frame per clip (consigliato $N=16$), ridimensionati a $224 \times 224$ pixel.
-* **Audio:** Ricampionamento a $16\text{ kHz}$ mono, lunghezza standardizzata (es. troncamento o *zero-padding* a 10 secondi).
-* **Metriche Ufficiali:** Accuracy, **Macro F1-Score** (metrica primaria per la selezione), ROC-AUC.
-
----
-
 ## Parte 2: I 3 Paradigmi Architetturali
 
 L'addestramento da zero (*from scratch*) o il *full fine-tuning* di grandi modelli audio-video su DOLOS porta a un rapido overfitting e satura la VRAM. I tre paradigmi seguenti aggirano il problema sfruttando modelli *pre-trained* tramite tre principi distinti della letteratura recente.
