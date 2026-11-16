@@ -234,7 +234,15 @@ def load_clips(dataset_dir: Path) -> list[Clip]:
     """Read dolos_timestamps.csv, enrich it with Dolos.xlsx, and assign ids."""
     import pandas as pd
 
-    stamps = pd.read_csv(dataset_dir / "dolos_timestamps.csv", encoding="utf-8-sig", dtype=str)
+    stamps_path = dataset_dir / "dolos_timestamps.csv"
+    if not stamps_path.exists():
+        raise FileNotFoundError(
+            f"{stamps_path} not found. Either the DOLOS annotations are missing "
+            f"({dataset_dir} should contain Dolos.xlsx, dolos_timestamps.csv, "
+            f"train_dolos.xlsx, Training_Protocols/) or the working directory is not "
+            f"lie-detector/ (currently: {Path.cwd()})."
+        )
+    stamps = pd.read_csv(stamps_path, encoding="utf-8-sig", dtype=str)
 
     # metadata from the primary workbook: subject name, gender, free-text details
     extra: dict[str, tuple[str, str]] = {}
