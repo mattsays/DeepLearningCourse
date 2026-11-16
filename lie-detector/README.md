@@ -52,7 +52,7 @@ the problem, the data and the evaluation, and deliberately says nothing about mo
 
 1. `zip -r dolos_annotations.zip DOLOS` from `dataset/`, upload it to the shared Drive folder;
 2. open [`notebooks/preprocessing.ipynb`](notebooks/preprocessing.ipynb) on Colab (CPU runtime),
-   run it top to bottom: splits, 1,671 clips, audio, `dataset.csv`, all written into that folder;
+   run it top to bottom: clips, audio, `dataset.csv`, then the splits — all into that folder;
 3. share the folder **view-only** with the other three, plus write access on `cached_features/`;
 4. post in the chat how many clips are `ok` and the sha256 of `dataset.csv`.
 

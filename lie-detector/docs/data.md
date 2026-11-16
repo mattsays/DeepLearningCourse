@@ -100,6 +100,9 @@ Every clip ends up with a `status` in `dataset.csv`, so nothing is lost silently
 A single broken clip can no longer abort the job: exceptions are caught per clip and recorded. The
 script exits 0 when the pass completes, whatever the counts; read the `status:` line, not the exit code.
 
+Those statuses are not just diagnostics: the splits are built from the clips marked `ok`
+([splits.md](splits.md)), so the dataset you managed to download is the dataset you evaluate on.
+
 The script is idempotent (valid existing clips are skipped), resumable, and marks broken annotations
 (`end ≤ start`, 7 rows) as `invalid_range` instead of downloading them. Budget roughly 15 s per clip:
 a full run is a couple of hours with 4 workers.

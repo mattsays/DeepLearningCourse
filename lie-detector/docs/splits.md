@@ -8,8 +8,15 @@ Read this if you are touching the splits, the seeds, or anything that could leak
 ## The command
 
 ```bash
-python scripts/make_splits.py --test-fraction 0.15 --folds 5 --val-fraction 0.15
+python scripts/make_splits.py \
+    --available-from <shared folder>/dataset.csv \
+    --test-fraction 0.15 --folds 5 --val-fraction 0.15
 ```
+
+It runs **after** the download, on the clips that exist. `--available-from` keeps only the clips whose
+status is `ok` in `dataset.csv`: without it the protocol references clips nobody has, every fold shrinks
+by a different amount, and two members end up training on different subsets. The preprocessing notebook
+passes it for you.
 
 ```
 <shared folder>/splits/
@@ -41,6 +48,10 @@ works in four steps, all deterministic given `--seed`.
    a naive split gives folds from 42% to 66% deception, this one gives 47.3–48.0%.
 4. **Inside each fold, 15% of the training subjects are moved to `val`**, with the same matching rule. The
    folds are `train` (fit) / `val` (early stopping) / `holdout` (the score of that fold).
+
+Numbers below are measured on the **complete** annotation set (1,671 usable clips); your own run
+prints its own. Every clip that fails to download removes one from these totals, and a subject who loses
+all of theirs disappears from the protocol.
 
 On the shipped annotations — 196 distinct names, and 180 subjects once the alias rule in
 `scripts/build_dataset.py` (`canonical_subject`: the two recurring captains plus 14 unambiguous first
