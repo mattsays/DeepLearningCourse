@@ -157,6 +157,11 @@ def main() -> int:
     parser.add_argument("--folds", type=int, default=5)
     parser.add_argument("--val-fraction", type=float, default=0.15)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--available-from", type=Path, default=None,
+                        help="dataset.csv produced by build_dataset.py: only clips with a usable "
+                             "status enter the protocol (default: all annotations)")
+    parser.add_argument("--statuses", default="ok",
+                        help="statuses considered usable in --available-from (default: ok)")
     parser.add_argument("--captains", default=None,
                         help="comma-separated subjects pinned to training "
                              f"(default: every subject with >= {CAPTAIN_MIN_CLIPS} clips)")
@@ -166,6 +171,23 @@ def main() -> int:
     broken = [c for c in clips if c.duration <= 0]
     clips = [c for c in clips if c.duration > 0 and c.subject]
     print(f"annotations: {len(clips)} usable clips ({len(broken)} dropped: end <= start)")
+
+    # A split that references a clip we do not have silently shrinks every fold, and
+    # different members would end up training on different subsets.
+    available = None
+    if args.available_from is not None:
+        if args.available_from.exists():
+            status = pd.read_csv(args.available_from, dtype=str)[["clip_id", "status"]]
+            allowed = {s.strip() for s in args.statuses.split(",") if s.strip()}
+            available = set(status.loc[status.status.isin(allowed), "clip_id"])
+            before = len(clips)
+            clips = [c for c in clips if c.clip_id in available]
+            print(f"dataset.csv: {len(available)} clips with status in {sorted(allowed)} "
+                  f"-> {len(clips)} of {before} annotations kept")
+        else:
+            print(f"[warn] {args.available_from} not found: the protocol will reference clips "
+                  f"that may not exist. Run build_dataset.py first, then re-run this script.")
+
     if not clips:
         print("[error] no usable clips")
         return 2
@@ -259,6 +281,8 @@ def main() -> int:
         "val_fraction": args.val_fraction,
         "captains": captains,
         "dropped_invalid_clips": [c.clip_id for c in broken],
+        "available_from": str(args.available_from) if args.available_from else None,
+        "statuses": args.statuses,
         "counts": {
             "clips_total": len(clips),
             "test_subjects": len(test_subjects), "test_clips": test_payload["n_clips"],
