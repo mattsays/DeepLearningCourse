@@ -3,6 +3,9 @@ tools/pptx_export/.cache/
 __pycache__/
 .venv/
 
+
+lie-detector/docs/notes.typ
+lie-detector/docs/notes.html
 # DOLOS deception dataset (NTU ROSE Lab) — annotations and videos are not
 # redistributable and must stay local. See lie-detector/dataset/README.md.
 lie-detector/dataset/DOLOS/
