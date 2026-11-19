@@ -131,8 +131,18 @@ land in the same folder for free, and a third can see what already exists before
 
 The rule for reading it: **anything read once per epoch must come from RAM or local disk**. `dataset.csv`
 and the feature caches are fine over the mount — `CachedFeatures` preloads a cache into RAM when it is
-under 1 GB, so features cost nothing per epoch. The 1,671 `mp4`/`wav` files do not: decoding video from the
-mount pays a network round-trip per file, so a video direction should copy `clips/` to local disk first.
+under 1 GB, so features cost nothing per epoch. The 1,671 `mp4`/`wav` files do not: opening them over the
+mount pays a network round-trip per file. Any notebook that decodes a clip, or opens one `.wav` per clip,
+stages them once with
+
+```python
+from lib.dataset import Clips, stage_media
+
+clips = Clips.load(stage_media(DATA))        # copies clips/ + audio/ to /content/dolos-local
+```
+
+`stage_media` records sizes, so it is resumable, and it copies `dataset.csv` too, so the fingerprint printed
+by `describe_source()` is the shared one. `DATA` keeps serving the splits and the caches.
 
 Since nothing is versioned, the loader prints the identity of the table it is reading:
 

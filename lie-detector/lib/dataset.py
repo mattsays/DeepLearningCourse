@@ -32,7 +32,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
+import stat
 import sys
+import time
 import warnings
 from dataclasses import dataclass
 from pathlib import Path
@@ -67,6 +70,66 @@ def cache_dir(encoder: str, data_dir: Path | str | None = None) -> Path:
     """
     base = Path(data_dir) if data_dir is not None else ROOT / "data" / "processed"
     return base / CACHE_ROOT / encoder
+
+
+def stage_media(data_dir: Path | str, destination: Path | str | None = None,
+                parts: tuple[str, ...] = ("clips", "audio"), verbose: bool = True) -> Path:
+    """Copy the media off the Drive mount onto local disk, and return a folder ``Clips`` reads.
+
+    ``Clips.load`` works on any folder that holds ``dataset.csv`` next to ``clips/`` and
+    ``audio/``. Decoding a video, or opening one ``.wav`` per clip, straight from the mount
+    pays a network round trip per file, so every notebook that touches the media should stage
+    it first::
+
+        DATA  = Path("/content/drive/MyDrive/dolos")   # dataset.csv, splits/, cached_features/
+        clips = Clips.load(stage_media(DATA))          # /content, local disk
+
+    ``dataset.csv`` is copied too, so ``describe_source()`` prints the same fingerprint as the
+    shared folder. Idempotent and resumable: a file already there at the same size is skipped,
+    so a reconnect that wipes ``/content`` costs the copy again and nothing else.
+
+    Keep ``DATA`` for everything that is read once per session (splits, caches) — this helper
+    is about the files read once per clip.
+    """
+    source = Path(data_dir)
+    table = source / "dataset.csv"
+    if not table.exists():
+        raise RuntimeError(f"{source} has no dataset.csv — point data_dir at the dataset folder")
+
+    target = Path(destination) if destination is not None else Path("/content") / "dolos-local"
+    planned: list[tuple[Path, Path, int]] = [(table, target / table.name, table.stat().st_size)]
+    for part in parts:
+        folder = source / part
+        if not folder.is_dir():
+            raise RuntimeError(f"{folder} is missing: cannot stage it")
+        for path in sorted(folder.iterdir()):
+            info = path.stat()
+            if stat.S_ISREG(info.st_mode):
+                planned.append((path, target / part / path.name, info.st_size))
+
+    todo = [(src, dst, size) for src, dst, size in planned
+            if not (dst.exists() and dst.stat().st_size == size)]
+    needed = sum(size for _, _, size in todo)
+    target.mkdir(parents=True, exist_ok=True)
+    free = shutil.disk_usage(target).free
+    if needed > free * 0.95:
+        raise RuntimeError(f"staging needs {needed / 1e9:.1f} GB but {target} has "
+                           f"{free / 1e9:.1f} GB free — free space or pass destination=")
+
+    started, copied = time.perf_counter(), 0
+    for src, dst, _ in todo:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, dst)
+        copied += 1
+        if verbose and copied % 250 == 0:
+            print(f"  {copied}/{len(todo)} files  ...", flush=True)
+
+    if verbose:
+        skipped = len(planned) - len(todo)
+        elapsed = time.perf_counter() - started
+        print(f"staged {copied} files ({needed / 1e6:.0f} MB) into {target} "
+              f"in {elapsed:.0f} s; {skipped} already there")
+    return target
 
 
 def _require_torch() -> None:
