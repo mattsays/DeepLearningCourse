@@ -37,6 +37,7 @@ import stat
 import sys
 import time
 import warnings
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -73,7 +74,8 @@ def cache_dir(encoder: str, data_dir: Path | str | None = None) -> Path:
 
 
 def stage_media(data_dir: Path | str, destination: Path | str | None = None,
-                parts: tuple[str, ...] = ("clips", "audio"), verbose: bool = True) -> Path:
+                parts: tuple[str, ...] = ("clips", "audio"), workers: int = 8,
+                verbose: bool = True) -> Path:
     """Copy the media off the Drive mount onto local disk, and return a folder ``Clips`` reads.
 
     ``Clips.load`` works on any folder that holds ``dataset.csv`` next to ``clips/`` and
@@ -87,6 +89,13 @@ def stage_media(data_dir: Path | str, destination: Path | str | None = None,
     ``dataset.csv`` is copied too, so ``describe_source()`` prints the same fingerprint as the
     shared folder. Idempotent and resumable: a file already there at the same size is skipped,
     so a reconnect that wipes ``/content`` costs the copy again and nothing else.
+
+    ``workers`` copies that many files at once. The cost here is latency, not bandwidth — a
+    FUSE mount answers roughly one file at a time, and each copy blocks in ``read``/``write``
+    with the GIL released — so threads are what help, and more of them stop helping once the
+    link is saturated. Drive rate-limits bursts of file operations, so the default stays
+    modest: if a run fails with ``OSError: [Errno 5]``, call it again with ``workers=1``. The
+    copy is resumable, so lowering it mid-way loses nothing.
 
     Keep ``DATA`` for everything that is read once per session (splits, caches) — this helper
     is about the files read once per clip.
@@ -111,6 +120,8 @@ def stage_media(data_dir: Path | str, destination: Path | str | None = None,
             if not (dst.exists() and dst.stat().st_size == size)]
     needed = sum(size for _, _, size in todo)
     target.mkdir(parents=True, exist_ok=True)
+    for part in parts:                                    # once, not once per file
+        (target / part).mkdir(parents=True, exist_ok=True)
     free = shutil.disk_usage(target).free
     if needed > free * 0.95:
         raise RuntimeError(f"staging needs {needed / 1e9:.1f} GB but {target} has "
@@ -126,25 +137,54 @@ def stage_media(data_dir: Path | str, destination: Path | str | None = None,
             progress = tqdm(total=len(todo), desc="staging media", unit="file",
                             dynamic_ncols=True)
 
-    started, copied, moved = time.perf_counter(), 0, 0
-    for src, dst, size in todo:
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(src, dst)
-        copied += 1
-        moved += size
+    def copy(entry):
+        shutil.copyfile(entry[0], entry[1])
+        return entry
+
+    def results():
+        """Yield ``(entry, error)`` as each file finishes, in whatever order that is."""
+        if workers > 1 and len(todo) > 1:
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futures = {pool.submit(copy, entry): entry for entry in todo}
+                for future in as_completed(futures):
+                    try:
+                        yield future.result(), None
+                    except Exception as error:            # noqa: BLE001 - reported per file
+                        yield futures[future], error
+        else:
+            for entry in todo:
+                try:
+                    yield copy(entry), None
+                except Exception as error:                # noqa: BLE001
+                    yield entry, error
+
+    started, copied, moved, failures = time.perf_counter(), 0, 0, []
+    for entry, error in results():
+        if error is not None:
+            failures.append((entry[0].name, str(error)[:120]))
+        else:
+            copied += 1
+            moved += entry[2]
         if progress is not None:
             progress.update(1)
             progress.set_postfix_str(f"{moved / 1e6:.0f} MB")
-        elif verbose and copied % 250 == 0:
-            print(f"  {copied}/{len(todo)} files  ...", flush=True)
+        elif verbose and (copied + len(failures)) % 250 == 0:
+            print(f"  {copied + len(failures)}/{len(todo)} files  ...", flush=True)
     if progress is not None:
         progress.close()
+
+    if failures:
+        first = ", ".join(f"{name}: {error}" for name, error in failures[:3])
+        raise RuntimeError(f"{len(failures)} of {len(todo)} files did not copy ({first}). "
+                           f"Drive rate-limits bursts of file operations: retry with "
+                           f"workers=1 — the copy resumes where it stopped")
 
     if verbose:
         skipped = len(planned) - len(todo)
         elapsed = time.perf_counter() - started
         print(f"staged {copied} files ({needed / 1e6:.0f} MB) into {target} "
-              f"in {elapsed:.0f} s; {skipped} already there")
+              f"in {elapsed:.0f} s on {min(workers, max(len(todo), 1))} thread(s); "
+              f"{skipped} already there")
     return target
 
 
