@@ -116,13 +116,29 @@ def stage_media(data_dir: Path | str, destination: Path | str | None = None,
         raise RuntimeError(f"staging needs {needed / 1e9:.1f} GB but {target} has "
                            f"{free / 1e9:.1f} GB free — free space or pass destination=")
 
-    started, copied = time.perf_counter(), 0
-    for src, dst, _ in todo:
+    progress = None
+    if verbose:
+        try:                                  # a dependency of the notebooks, not of lib/
+            from tqdm import tqdm             # the console bar: it renders in Colab even when
+        except ImportError:                   # the notebook widget does not (docs/colab.md)
+            tqdm = None
+        if tqdm is not None and todo:
+            progress = tqdm(total=len(todo), desc="staging media", unit="file",
+                            dynamic_ncols=True)
+
+    started, copied, moved = time.perf_counter(), 0, 0
+    for src, dst, size in todo:
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(src, dst)
         copied += 1
-        if verbose and copied % 250 == 0:
+        moved += size
+        if progress is not None:
+            progress.update(1)
+            progress.set_postfix_str(f"{moved / 1e6:.0f} MB")
+        elif verbose and copied % 250 == 0:
             print(f"  {copied}/{len(todo)} files  ...", flush=True)
+    if progress is not None:
+        progress.close()
 
     if verbose:
         skipped = len(planned) - len(todo)
