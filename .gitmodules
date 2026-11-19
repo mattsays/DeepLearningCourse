@@ -4,3 +4,6 @@
 [submodule "lie-detector/baselines/DOLOS-PECL"]
 	path = lie-detector/baselines/DOLOS-PECL
 	url = https://github.com/NMS05/Audio-Visual-Deception-Detection-DOLOS-Dataset-and-Parameter-Efficient-Crossmodal-Learning.git
+[submodule "lie-detector/vendor/av_hubert"]
+	path = lie-detector/vendor/av_hubert
+	url = https://github.com/facebookresearch/av_hubert.git
