@@ -66,6 +66,26 @@ names) has merged them:
 Per fold: `train` ≈ 102 subjects / 1,160 clips (captains included), `val` ≈ 18 / 124,
 `holdout` ≈ 30 / 204. Every working subject lands in exactly one `holdout` and in no `val`.
 
+### The official 3-fold is not subject-disjoint
+
+The paper's protocol (`Training_Protocols/*.csv`, shipped with the annotations) is a random split over
+**clips**, so the same speaker lands on both sides. Measured on the shipped files by joining `file_name`
+to the `Participants name` column of `Dolos.xlsx`:
+
+| Fold | train / test clips | test speakers | also in train | test clips with a train speaker |
+|---|---:|---:|---:|---:|
+| 1 | 1,099 / 549 | 168 | 153 | 95.3% |
+| 2 | 1,095 / 553 | 162 | 150 | 95.7% |
+| 3 | 1,100 / 548 | 163 | 160 | 98.7% |
+
+One clip is in both `train_fold1` and `test_fold1`, and one in both sides of fold 3. The deception rate
+per test fold (45.2 / 46.3 / 46.9%) matches the corpus (46.7%), which is what a random split over clips
+looks like.
+
+Consequence: `official_fold*` exists for one purpose — reproducing a number that is comparable with the
+paper — and must be reported separately from the five subject folds. A model that recognises *who is
+speaking* scores well on it without detecting anything.
+
 ### What a fold file contains
 
 ```json
