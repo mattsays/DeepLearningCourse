@@ -343,7 +343,8 @@ def main():
     for clip_id, v_path, a_path, out_file in pbar:
         try:
             feat_arr = extractor.extract_clip(v_path, a_path)
-            # Save atomic numpy array
+            # Ensure parent directory exists and save atomic numpy array
+            out_file.parent.mkdir(parents=True, exist_ok=True)
             np.save(out_file, feat_arr)
             success_count += 1
         except Exception as e:
