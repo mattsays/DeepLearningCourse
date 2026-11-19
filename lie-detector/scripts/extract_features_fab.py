@@ -239,50 +239,64 @@ class FabFeatureExtractor:
 
         print("Models successfully loaded and ready.")
 
-    def extract_clip(self, video_path: Path, audio_path: Path) -> np.ndarray:
+    def extract_clip(self, video_path: Path | None, audio_path: Path | None) -> np.ndarray:
         import torch
         import torch.nn.functional as F
 
-        # 1. Process Video
-        vid_arr = sample_video_frames(video_path, num_frames=16)
-        vid_tensor = torch.from_numpy(vid_arr).unsqueeze(0).to(self.device)  # (1, 3, 16, 224, 224)
+        has_video = video_path is not None and video_path.exists()
+        has_audio = audio_path is not None and audio_path.exists()
 
-        with torch.no_grad():
-            # Swin3D feature stages preserving time axis
-            x = self.video_model.patch_embed(vid_tensor)
-            x = self.video_model.pos_drop(x)
-            x = self.video_model.features(x)
-            x = self.video_model.norm(x)
-            # x shape: (1, T_out=8, H_out=7, W_out=7, C=768)
-            # Spatial pooling across H and W only
-            v_seq = x.mean(dim=[2, 3])  # (1, T_v=8, 768)
+        if not has_video and not has_audio:
+            # Impute zeros for clips completely missing media
+            return np.zeros((8, 1536), dtype=np.float32)
+
+        # 1. Process Video
+        if has_video:
+            vid_arr = sample_video_frames(video_path, num_frames=16)
+            vid_tensor = torch.from_numpy(vid_arr).unsqueeze(0).to(self.device)  # (1, 3, 16, 224, 224)
+
+            with torch.no_grad():
+                # Swin3D feature stages preserving time axis
+                x = self.video_model.patch_embed(vid_tensor)
+                x = self.video_model.pos_drop(x)
+                x = self.video_model.features(x)
+                x = self.video_model.norm(x)
+                # x shape: (1, T_out=8, H_out=7, W_out=7, C=768)
+                # Spatial pooling across H and W only
+                v_seq = x.mean(dim=[2, 3])  # (1, T_v=8, 768)
+        else:
+            v_seq = torch.zeros((1, 8, 768), device=self.device)
 
         # 2. Process Audio
-        aud_arr = load_audio_waveform(audio_path, target_sr=16000)
-        aud_tensor = torch.from_numpy(aud_arr).unsqueeze(0).to(self.device)  # (1, Samples)
+        if has_audio:
+            aud_arr = load_audio_waveform(audio_path, target_sr=16000)
+            aud_tensor = torch.from_numpy(aud_arr).unsqueeze(0).to(self.device)  # (1, Samples)
 
+            with torch.no_grad():
+                spec = self.mel_spec(aud_tensor)       # (1, n_mels=128, T_audio)
+                spec_db = self.amp_to_db(spec)
+                delta1 = self.compute_deltas(spec_db)
+                delta2 = self.compute_deltas(delta1)
+                # Stack into 3-channel pseudo-RGB spectrogram
+                spec_3ch = torch.stack([spec_db, delta1, delta2], dim=1)  # (1, 3, 128, T_audio)
+
+                # Pass into ConvNeXt-Tiny
+                feat = self.audio_model.forward_features(spec_3ch)  # (1, 768, H_freq, W_time)
+                # Pool frequency axis only, preserve time axis
+                a_seq = feat.mean(dim=2).permute(0, 2, 1)  # (1, W_time, 768)
+
+                # 3. Align temporal lengths (interpolate audio time to match video time T_v=8)
+                a_aligned = F.interpolate(
+                    a_seq.permute(0, 2, 1),
+                    size=8,
+                    mode="linear",
+                    align_corners=False,
+                ).permute(0, 2, 1)  # (1, T_v=8, 768)
+        else:
+            a_aligned = torch.zeros((1, 8, 768), device=self.device)
+
+        # 4. Concatenate multimodal descriptors: (1, 8, 1536)
         with torch.no_grad():
-            spec = self.mel_spec(aud_tensor)       # (1, n_mels=128, T_audio)
-            spec_db = self.amp_to_db(spec)
-            delta1 = self.compute_deltas(spec_db)
-            delta2 = self.compute_deltas(delta1)
-            # Stack into 3-channel pseudo-RGB spectrogram
-            spec_3ch = torch.stack([spec_db, delta1, delta2], dim=1)  # (1, 3, 128, T_audio)
-
-            # Pass into ConvNeXt-Tiny
-            feat = self.audio_model.forward_features(spec_3ch)  # (1, 768, H_freq, W_time)
-            # Pool frequency axis only, preserve time axis
-            a_seq = feat.mean(dim=2).permute(0, 2, 1)  # (1, W_time, 768)
-
-            # 3. Align temporal lengths (interpolate audio time to match video time T_v=8)
-            a_aligned = F.interpolate(
-                a_seq.permute(0, 2, 1),
-                size=v_seq.size(1),
-                mode="linear",
-                align_corners=False,
-            ).permute(0, 2, 1)  # (1, T_v=8, 768)
-
-            # 4. Concatenate multimodal descriptors: (1, 8, 1536)
             fused = torch.cat([v_seq, a_aligned], dim=-1)
             output = fused.squeeze(0).cpu().numpy().astype(np.float32)
 
@@ -310,19 +324,17 @@ def main():
     cache_dir.mkdir(parents=True, exist_ok=True)
     print(f"Target feature cache: {cache_dir}")
 
-    # Filter to available clips with both video and audio
+    # Filter to clips needing cache (every annotated clip must have an entry for CachedFeatures)
     valid_clips = []
     for _, row in table.iterrows():
         clip_id = str(row["clip_id"])
-        v_path = data_dir / str(row["video_path"]) if pd.notna(row.get("video_path")) else None
-        a_path = data_dir / str(row["audio_path"]) if pd.notna(row.get("audio_path")) else None
+        out_file = cache_dir / f"{clip_id}.npy"
+        if args.force or not out_file.exists():
+            v_path = data_dir / str(row["video_path"]) if pd.notna(row.get("video_path")) else None
+            a_path = data_dir / str(row["audio_path"]) if pd.notna(row.get("audio_path")) else None
+            valid_clips.append((clip_id, v_path, a_path, out_file))
 
-        if v_path and a_path and v_path.exists() and a_path.exists():
-            out_file = cache_dir / f"{clip_id}.npy"
-            if args.force or not out_file.exists():
-                valid_clips.append((clip_id, v_path, a_path, out_file))
-
-    print(f"Clips to process: {len(valid_clips)} (skipped {len(table) - len(valid_clips)} already cached or missing media)")
+    print(f"Clips to process: {len(valid_clips)} (skipped {len(table) - len(valid_clips)} already cached)")
 
     if args.limit:
         valid_clips = valid_clips[:args.limit]
