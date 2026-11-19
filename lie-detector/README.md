@@ -108,16 +108,11 @@ orientation; the shared feature cache is named after the encoder that produced i
 | `tia` | 1 — frozen backbones + cross-modal fusion | `dinov2-small` / `siglip-base`, `wavlm-base-plus` | — | `tia/train_tia.ipynb` |
 | `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | — | `lore/train_lore.ipynb` |
 | `fab` | 3 — 3D CNN + temporal head | `x3d_m` / `swin3d_t`, mel-spectrogram | — | `fab/train_fab.ipynb` |
-| `avh` | 1 — frozen backbones + cross-modal fusion, speech-conditioned encoder | `AV-HuBERT` (mouth ROI) + `wavlm-base-plus` | — | `avhubert/train.ipynb` |
 
 Only three paradigms are documented so far ([`docs/architectures.md`](docs/architectures.md)); add the
-fourth row here when it is assigned. Fill the Owner column in the same commit. `avh` is not a fourth
-paradigm: it is paradigm 1 with an encoder trained on mouth motion and speech, so it competes with `tia`
-on the same folds. It is written but not yet run, and its licence is a group decision —
-[`notebooks/architectures/avhubert/docs/plan.md`](notebooks/architectures/avhubert/docs/plan.md).
-`notebooks/architectures/pecl.ipynb` is an early draft of paradigm 1 that predates this naming: its owner
-moves it to `tia/train_tia.ipynb` before the next run, rather than starting a second notebook for the
-same direction.
+fourth row here when it is assigned. Fill the Owner column in the same commit. `notebooks/architectures/pecl.ipynb`
+is an early draft of paradigm 1 that predates this naming: its owner moves it to `tia/train_tia.ipynb`
+before the next run, rather than starting a second notebook for the same direction.
 
 ## Results board
 
