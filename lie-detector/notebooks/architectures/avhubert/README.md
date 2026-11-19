@@ -36,8 +36,14 @@ Reference points from the same folds, `tia` direction: audio-only 58.9 AUC, vide
 
 ```bash
 git submodule update --init --recursive --depth 1 lie-detector/vendor/av_hubert
-export AVHUBERT_CKPT=/content/drive/MyDrive/dolos/checkpoints/base_vox_iter5.pt
+# weights and landmarks, both on the shared folder
+#   checkpoints/base_vox_iter5.pt
+#   checkpoints/shape_predictor_68_face_landmarks.dat
 ```
+
+The encoder runs in a **Python 3.8 environment** (`/content/avh8`) that the notebook builds with
+micromamba, because fairseq has no wheel past cp38; the notebook kernel never imports it. See
+[`docs/encoder-contract.md`](docs/encoder-contract.md) §How it runs.
 
 Weights: [base_vox_iter5.pt](https://dl.fbaipublicfiles.com/avhubert/model/lrs3_vox/clean-pretrain/base_vox_iter5.pt)
 (LRS3 + VoxCeleb2, ~1.2 GB).

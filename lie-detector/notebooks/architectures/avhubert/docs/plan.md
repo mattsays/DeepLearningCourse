@@ -3,12 +3,13 @@
 ## Status
 
 The pipeline is written end to end: mouth ROI → 25 fps → AV-HuBERT → `(64, 768)` cache →
-probe → five folds. It has **not been run**, and three things have to be true before it can be.
+probe → five folds. The fairseq blocker is gone — see below — so what is left is one licence
+decision and one session.
 
 | Blocker | Severity | What it means |
 |---|---|---|
 | AV-HuBERT licence | **decision for the group** | non-commercial research only; explicitly forbids biometric processing and surveillance |
-| fairseq on a modern Python | **session risk** | the official code targets Python 3.8; the bundled fork may not build on a current Colab image |
+| fairseq on a modern Python | **solved** | fairseq stops at cp38, so the encoder runs in its own 3.8 environment (`/content/avh8`), built once by micromamba |
 | simplified mouth alignment | quality risk | no mean-face stabilisation, so head rotation stays in the crop |
 
 ## The licence is not a formality
@@ -31,12 +32,31 @@ before the group commits. Two honest ways forward:
 Either is defensible; silently using it is not. The MJEPA path, for the record, would have
 been MIT.
 
-## What runs today
+## How the Python version problem was solved
 
-Nothing has been executed. The parts that can be checked without a GPU or the weights are
-checked: the probe variants on both widths, `pool_avhubert` on a 475-frame sequence, the cache
-writer, the training loop on synthetic data (both protocols), and the notebook passes
-`nbformat`. See the notes in the folder README.
+fairseq 0.12.2 is the last release that loads the checkpoint, and its wheels stop at cp38.
+Colab runs 3.13, so `pip install fairseq` cannot work there and the source build cannot either
+(the generated Cython is from 2022).
+
+The environment is therefore split:
+
+| Where | Python | What runs |
+|---|---|---|
+| kernel | 3.13 | notebook, verification, probe training |
+| `/content/avh8` | 3.8 | `scripts/extract_avhubert.py`: crop, filterbank, encoder |
+
+`micromamba` builds the second one without touching the kernel; `fairseq==0.12.2` installs
+there **from its cp38 wheel**, so nothing is compiled; `torch==2.4.1` is the last release with
+cp38 wheels and its cu121 build runs on a T4; `dlib` comes from conda-forge because `dlib-bin`
+has no cp38 wheel. The notebook cell is idempotent, and verification stays in the 3.13 kernel
+because it only reads `.npy` files.
+
+## What has been checked
+
+The preprocessing runs: on a synthetic 2-second clip the script produces `(1, 50, 1, 96, 96)`
+and `(1, 50, 104)`, aligned, and a PNG grid of the crops. The probe variants, the pooling, the
+cache writer and the training loop were exercised on synthetic data earlier. What has **not**
+run is the encoder itself: that needs the checkpoint and a GPU session.
 
 ## The ladder
 
@@ -66,7 +86,8 @@ then the face is a weak channel for this task and no visual backbone will fix it
 
 | Risk | Why it bites | Mitigation |
 |---|---|---|
-| Python/fairseq | the fork predates current torch and Python | environment cell fails fast with instructions; V-JEPA 2 as the fallback |
+| Python/fairseq | solved by the 3.8 environment | if the wheel ever disappears, build the bundled fork inside the same env |
+| Two environments | a bug can hide in either | `--self-test` runs the preprocessing inside the 3.8 env before any encoder time is spent |
 | 25 fps preprocessing | ~200k dlib landmark predictions for the protocol | detect faces once per second, landmarks every frame; resumable cache |
 | Mouth crop drift | laughter, head turns, hand gestures | re-detect every second; frame-grid check before the full run |
 | No stabilisation | the checkpoint expects mean-face warped crops | recorded in the manifest; if results are flat, implement the warp before blaming the model |

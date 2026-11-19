@@ -68,6 +68,19 @@ No design decision here: this reproduces `hubert_dataset.py`, including the odd 
 layer norm over the 104 stacked bins. A different fbank (torchaudio's Kaldi frontend, say)
 produces different numbers and a silently different model input.
 
+## How it runs
+
+Two interpreters, one artefact:
+
+| Step | Interpreter | Command |
+|---|---|---|
+| crop + filterbank + encoder | `/content/avh8/bin/python` (3.8) | `scripts/extract_avhubert.py` |
+| verification, probe training | the Colab kernel (3.13) | `train.ipynb` |
+
+The split exists because fairseq has no wheel past cp38. The script imports `model.py` and
+`preprocess.py` from this folder, so there is still one implementation of the crop and one of
+the forward pass; only the interpreter differs.
+
 ## Checkpoint
 
 | Model | URL |
