@@ -1,0 +1,87 @@
+{
+  "fold": 3,
+  "run": "audio-lora-r8-official",
+  "modality": "audio",
+  "best_epoch": 8,
+  "epochs_run": 12,
+  "best_val_auc": 0.7258,
+  "threshold": 0.3533,
+  "holdout": {
+    "acc": 0.6182212581344902,
+    "f1": 0.6776556776556777,
+    "auc": 0.6502705361534677,
+    "balanced_acc": 0.6081387869385901,
+    "precision": 0.6187290969899666,
+    "recall": 0.7489878542510121,
+    "threshold": 0.3533,
+    "n": 461,
+    "confusion": {
+      "tn": 100,
+      "fp": 114,
+      "fn": 62,
+      "tp": 185
+    }
+  },
+  "holdout_at_0.5": {
+    "acc": 0.5986984815618221,
+    "f1": 0.6021505376344086,
+    "auc": 0.6502705361534677,
+    "balanced_acc": 0.6011578190623936,
+    "precision": 0.6422018348623854,
+    "recall": 0.5668016194331984,
+    "threshold": 0.5,
+    "n": 461,
+    "confusion": {
+      "tn": 136,
+      "fp": 78,
+      "fn": 107,
+      "tp": 140
+    }
+  },
+  "val": {
+    "acc": 0.678082191780822,
+    "f1": 0.7151515151515152,
+    "auc": 0.7257730015082956,
+    "balanced_acc": 0.6723227752639518,
+    "precision": 0.6781609195402298,
+    "recall": 0.7564102564102564,
+    "threshold": 0.3533,
+    "n": 146,
+    "confusion": {
+      "tn": 40,
+      "fp": 28,
+      "fn": 19,
+      "tp": 59
+    }
+  },
+  "majority_holdout": 0.5357917570498916,
+  "sizes": {
+    "train": 819,
+    "val": 146,
+    "holdout": 461
+  },
+  "pos_weight": 0.8784,
+  "parameters": {
+    "total": 94668929,
+    "trainable": 297217,
+    "adapters": 294912,
+    "trainable_pct": 0.314
+  },
+  "lora_check": {
+    "lora_matrices": 24,
+    "max_logit_change_with_random_B": 0.025522
+  },
+  "seconds": {
+    "train_total": 191.7,
+    "train_per_epoch": 16.0,
+    "val_per_epoch": 5.0
+  },
+  "peak_gpu_gb": 3.27,
+  "paper_style": {
+    "note": "best epoch picked ON THE TEST FOLD at threshold 0.5, as the paper's train_test.py does: optimistic, only for comparison with the paper",
+    "test_acc_at_05": 0.6247,
+    "test_f1_at_05": 0.6705,
+    "test_auc": 0.6432,
+    "epoch": 6
+  }
+}

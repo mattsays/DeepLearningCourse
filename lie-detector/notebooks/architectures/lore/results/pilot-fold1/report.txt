@@ -1,0 +1,45 @@
+=== sanity checks ===
+audio-lora-r8 fold 1: PASS
+    epochs 8 (best 4)  val AUC 0.656  holdout AUC 0.727  holdout ACC 65.5 (majority 52.0)  peak GPU 3.23 GB  fold time 0.05 h
+video-lora-r8 fold 1: PASS
+    epochs 8 (best 5)  val AUC 0.501  holdout AUC 0.610  holdout ACC 57.1 (majority 52.0)  peak GPU 0.79 GB  fold time 0.26 h
+estimate for the other 4 folds of these runs on 2 GPU(s): ~0.6 h
+PILOT PASSED: review the performance, then start folds 2-5 by hand
+
+=== fold 1 performance ===
+audio-lora-r8 — fold 1  (train 1011, val 109, holdout 177 clips; positive = deception)
+  best epoch 4 of 8, threshold 0.280 (chosen on val)
+  val @ threshold          ACC  64.2  F1  68.3  AUC  65.6  bal  64.9  P  59.2  R  80.8  [tn 28 fp 29 fn 10 tp 42]
+  holdout @ threshold      ACC  65.5  F1  70.5  AUC  72.7  bal  66.3  P  59.8  R  85.9  [tn 43 fp 49 fn 12 tp 73]
+  holdout @ 0.5            ACC  58.8  F1  31.8  AUC  72.7  bal  57.3  P  77.3  R  20.0  [tn 87 fp 5 fn 68 tp 17]
+  majority baseline on holdout: ACC 52.0
+  learning curve:
+     epoch  train_loss  val_loss  val_auc  train_s best
+         1      0.6347    0.7123   0.5207     18.9     
+         2      0.6242    0.6785   0.6226     18.6     
+         3      0.5908    0.6621   0.6336     19.0     
+         4      0.5719    0.7052   0.6557     19.7    *
+         5      0.5573    0.6646   0.6194     20.6     
+         6      0.5418    0.6740   0.6096     21.1     
+         7      0.5192    0.6905   0.6215     20.9     
+         8      0.5073    0.7335   0.5921     20.9     
+  holdout ACC by gender: female 68.0 (n=50), male 64.6 (n=127)
+
+video-lora-r8 — fold 1  (train 1011, val 109, holdout 177 clips; positive = deception)
+  best epoch 5 of 8, threshold 0.304 (chosen on val)
+  val @ threshold          ACC  54.1  F1  60.9  AUC  50.1  bal  55.0  P  51.3  R  75.0  [tn 20 fp 37 fn 13 tp 39]
+  holdout @ threshold      ACC  57.1  F1  63.5  AUC  61.0  bal  57.8  P  53.7  R  77.6  [tn 35 fp 57 fn 19 tp 66]
+  holdout @ 0.5            ACC  61.6  F1  57.0  AUC  61.0  bal  61.3  P  61.6  R  52.9  [tn 64 fp 28 fn 40 tp 45]
+  majority baseline on holdout: ACC 52.0
+  learning curve:
+     epoch  train_loss  val_loss  val_auc  train_s best
+         1      0.6201    0.7041   0.4342    103.3     
+         2      0.5919    0.7339   0.4632    114.0     
+         3      0.5590    0.7468   0.4413    113.5     
+         4      0.5311    0.7903   0.4627    113.4     
+         5      0.4851    0.8109   0.5007    113.6    *
+         6      0.4344    0.9411   0.4796    113.7     
+         7      0.4134    0.9528   0.4679    113.4     
+         8      0.3823    0.9284   0.4782    113.6     
+  holdout ACC by gender: female 66.0 (n=50), male 53.5 (n=127)
+

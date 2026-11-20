@@ -19,3 +19,12 @@ lie-detector/preds/
 
 # macOS metadata
 .DS_Store
+
+# lore direction: local-only inputs and full run outputs (labelled preds, LoRA weights).
+# The committed, label-free export is notebooks/architectures/lore/results/.
+lie-detector/notebooks/architectures/lore/runs/
+lie-detector/notebooks/architectures/lore/assets/
+lie-detector/notebooks/architectures/lore/inputs/
+lie-detector/notebooks/architectures/lore/kaggle_upload/
+lie-detector/notebooks/architectures/lore/kaggle_results/
+lie-detector/notebooks/architectures/lore/**/*.pt

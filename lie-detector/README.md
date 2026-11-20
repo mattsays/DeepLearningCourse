@@ -20,7 +20,7 @@ files, reproducibility) are in [`AGENTS.md`](AGENTS.md).
 
 No generated artifact is in the repository. `data/processed/` does not exist; `dataset.csv`, `clips/`,
 `audio/` and `splits/` live only in the shared Drive folder (see [`docs/data.md`](docs/data.md)). One
-draft direction notebook exists, `notebooks/architectures/pecl.ipynb`; the results board below is empty.
+draft direction notebook exists, `notebooks/architectures/pecl.ipynb`; the results board below has one row so far (`lore`).
 Anything that reads `data/processed/` fails until the preprocessing has run — that is expected.
 
 ## What the model does
@@ -106,7 +106,7 @@ orientation; the shared feature cache is named after the encoder that produced i
 | Direction | Paradigm | Backbones | Owner | Notebook (target) |
 |---|---|---|---|---|
 | `tia` | 1 — frozen backbones + cross-modal fusion | `dinov2-small` / `siglip-base`, `wavlm-base-plus` | — | `tia/train_tia.ipynb` |
-| `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | — | `lore/train_lore.ipynb` |
+| `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | Lorenzo | `lore/train_lore.ipynb` |
 | `fab` | 3 — 3D CNN + temporal head | `x3d_m` / `swin3d_t`, mel-spectrogram | — | `fab/train_fab.ipynb` |
 
 Only three paradigms are documented so far ([`docs/architectures.md`](docs/architectures.md)); add the
@@ -121,7 +121,7 @@ configuration; the best per direction in bold.
 
 | Direction | Owner | Method | Trainable params | ACC (CV) | F1 | AUC | Balanced ACC | Majority | Runtime |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
-| | | | | | | | | | |
+| **`lore`** | Lorenzo | VideoMAE-B + HuBERT-B · LoRA · late fusion | 594,434 | 56.1 ± 7.3 | 55.1 | 60.6 | 56.2 | 52.1 | 114 min train (Tesla T4) |
 | | | | | | | | | | |
 | | | | | | | | | | |
 | | | | | | | | | | |

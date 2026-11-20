@@ -1,0 +1,80 @@
+{
+  "fold": 3,
+  "run": "video-lora-r8",
+  "modality": "video",
+  "best_epoch": 9,
+  "epochs_run": 10,
+  "best_val_auc": 0.6,
+  "threshold": 0.1971,
+  "holdout": {
+    "acc": 0.4943820224719101,
+    "f1": 0.6017699115044248,
+    "auc": 0.5913345983554713,
+    "balanced_acc": 0.5075268817204301,
+    "precision": 0.48226950354609927,
+    "recall": 0.8,
+    "threshold": 0.1971,
+    "n": 178,
+    "confusion": {
+      "tn": 20,
+      "fp": 73,
+      "fn": 17,
+      "tp": 68
+    }
+  },
+  "holdout_at_0.5": {
+    "acc": 0.5730337078651685,
+    "f1": 0.4864864864864865,
+    "auc": 0.5913345983554713,
+    "balanced_acc": 0.5666034155597723,
+    "precision": 0.5714285714285714,
+    "recall": 0.4235294117647059,
+    "threshold": 0.5,
+    "n": 178,
+    "confusion": {
+      "tn": 66,
+      "fp": 27,
+      "fn": 49,
+      "tp": 36
+    }
+  },
+  "val": {
+    "acc": 0.5849056603773585,
+    "f1": 0.6857142857142857,
+    "auc": 0.6,
+    "balanced_acc": 0.597860962566845,
+    "precision": 0.5393258426966292,
+    "recall": 0.9411764705882353,
+    "threshold": 0.1971,
+    "n": 106,
+    "confusion": {
+      "tn": 14,
+      "fp": 41,
+      "fn": 3,
+      "tp": 48
+    }
+  },
+  "majority_holdout": 0.5224719101123596,
+  "sizes": {
+    "train": 1013,
+    "val": 106,
+    "holdout": 178
+  },
+  "pos_weight": 0.7835,
+  "parameters": {
+    "total": 86522881,
+    "trainable": 297217,
+    "adapters": 294912,
+    "trainable_pct": 0.344
+  },
+  "lora_check": {
+    "lora_matrices": 24,
+    "max_logit_change_with_random_B": 0.004045
+  },
+  "seconds": {
+    "train_total": 1283.3,
+    "train_per_epoch": 128.3,
+    "val_per_epoch": 4.9
+  },
+  "peak_gpu_gb": 0.79
+}

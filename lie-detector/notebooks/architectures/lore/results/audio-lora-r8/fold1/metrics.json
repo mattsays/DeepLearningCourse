@@ -1,0 +1,80 @@
+{
+  "fold": 1,
+  "run": "audio-lora-r8",
+  "modality": "audio",
+  "best_epoch": 4,
+  "epochs_run": 8,
+  "best_val_auc": 0.6557,
+  "threshold": 0.2801,
+  "holdout": {
+    "acc": 0.655367231638418,
+    "f1": 0.7053140096618358,
+    "auc": 0.7268542199488491,
+    "balanced_acc": 0.6631074168797954,
+    "precision": 0.5983606557377049,
+    "recall": 0.8588235294117647,
+    "threshold": 0.2801,
+    "n": 177,
+    "confusion": {
+      "tn": 43,
+      "fp": 49,
+      "fn": 12,
+      "tp": 73
+    }
+  },
+  "holdout_at_0.5": {
+    "acc": 0.5875706214689266,
+    "f1": 0.3177570093457944,
+    "auc": 0.7268542199488491,
+    "balanced_acc": 0.5728260869565217,
+    "precision": 0.7727272727272727,
+    "recall": 0.2,
+    "threshold": 0.5,
+    "n": 177,
+    "confusion": {
+      "tn": 87,
+      "fp": 5,
+      "fn": 68,
+      "tp": 17
+    }
+  },
+  "val": {
+    "acc": 0.6422018348623854,
+    "f1": 0.6829268292682927,
+    "auc": 0.6557017543859649,
+    "balanced_acc": 0.6494601889338731,
+    "precision": 0.5915492957746479,
+    "recall": 0.8076923076923077,
+    "threshold": 0.2801,
+    "n": 109,
+    "confusion": {
+      "tn": 28,
+      "fp": 29,
+      "fn": 10,
+      "tp": 42
+    }
+  },
+  "majority_holdout": 0.519774011299435,
+  "sizes": {
+    "train": 1011,
+    "val": 109,
+    "holdout": 177
+  },
+  "pos_weight": 0.7831,
+  "parameters": {
+    "total": 94668929,
+    "trainable": 297217,
+    "adapters": 294912,
+    "trainable_pct": 0.314
+  },
+  "lora_check": {
+    "lora_matrices": 24,
+    "max_logit_change_with_random_B": 0.014024
+  },
+  "seconds": {
+    "train_total": 159.7,
+    "train_per_epoch": 20.0,
+    "val_per_epoch": 1.0
+  },
+  "peak_gpu_gb": 3.23
+}
