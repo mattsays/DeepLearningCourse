@@ -92,3 +92,95 @@ def format_row(direction: str, results: dict, *, owner: str = "—", method: str
     shown = f"{params:,}" if isinstance(params, int) else str(params)
     return (f"| {direction} | {owner} | {method} | {shown} | {acc} | {results['f1'] * 100:.1f} "
             f"| {results['auc'] * 100:.1f} | {results['balanced_acc'] * 100:.1f} | {maj} | {runtime} |")
+
+
+def subject_level(y_true, y_prob, subjects, threshold: float = 0.5) -> dict:
+    """Score a clip-level model with one equal weight per subject.
+
+    A clip-level mean is dominated by prolific speakers: one subject with 29
+    clips is 14% of a 205-clip holdout. This returns the two summaries that
+    treat people as the unit:
+
+    - ``subject_acc``: mean of the per-subject accuracies, so every subject
+      counts the same whatever their clip count;
+    - ``subject_vote_acc``: one vote per subject — the subject's mean
+      probability against their majority label. A 50/50 subject is labelled 1
+      (``>= 0.5``); the tie is arbitrary, and rare in a pure/mixed comparison.
+
+    ``clip_acc`` is the ordinary pooled number, kept for reference.
+    """
+    y_true = np.asarray(y_true).astype(int)
+    y_prob = np.asarray(y_prob, dtype=float)
+    subjects = np.asarray(subjects)
+    if not (len(y_true) == len(y_prob) == len(subjects)):
+        raise ValueError("y_true, y_prob and subjects must have the same length")
+
+    per_subject = {}
+    for subject in np.unique(subjects):
+        mask = subjects == subject
+        labels, probs = y_true[mask], y_prob[mask]
+        predicted = (probs >= threshold).astype(int)
+        per_subject[str(subject)] = {
+            "n": int(mask.sum()),
+            "accuracy": float((predicted == labels).mean()),
+            "mean_prob": float(probs.mean()),
+            "rate": float(labels.mean()),
+        }
+
+    accuracies = np.array([v["accuracy"] for v in per_subject.values()])
+    votes = np.array([1 if v["mean_prob"] >= threshold else 0
+                      for v in per_subject.values()])
+    majorities = np.array([1 if v["rate"] >= 0.5 else 0 for v in per_subject.values()])
+    return {
+        "n_subjects": len(per_subject),
+        "subject_acc": float(accuracies.mean()),
+        "subject_vote_acc": float((votes == majorities).mean()),
+        "clip_acc": float(((y_prob >= threshold) == y_true).mean()),
+        "per_subject": per_subject,
+    }
+
+
+def cluster_bootstrap(y_true, y_prob, groups, n_boot: int = 1000, seed: int = 0,
+                      threshold: float = 0.5) -> dict:
+    """Percentile CIs that resample *groups* (subjects), not clips.
+
+    Clips from one subject are not independent: on the v1 protocol the ICC of
+    a holdout reaches 0.70 and the design effect is ~4.8, so a binomial CI on
+    205 clips is roughly twice as narrow as it should be. Resampling subjects
+    with replacement is the cheap fix and needs no distributional assumption.
+
+    Returns ``{metric: {"mean", "lo", "hi", "n"}}`` for acc, f1, auc and
+    balanced_acc. A draw with a single class is kept for acc, F1 and balanced
+    accuracy, whose definition does not need both classes; only AUC is skipped
+    there, so its ``n`` can be smaller than ``n_boot``.
+    """
+    y_true = np.asarray(y_true).astype(int)
+    y_prob = np.asarray(y_prob, dtype=float)
+    groups = np.asarray(groups)
+    if not (len(y_true) == len(y_prob) == len(groups)):
+        raise ValueError("y_true, y_prob and groups must have the same length")
+
+    unique = np.unique(groups)
+    members = {group: np.where(groups == group)[0] for group in unique}
+    rng = np.random.default_rng(seed)
+    metrics = ("acc", "f1", "auc", "balanced_acc")
+    draws = {name: [] for name in metrics}
+    for _ in range(n_boot):
+        picked = rng.choice(unique, size=len(unique), replace=True)
+        index = np.concatenate([members[group] for group in picked])
+        scores = evaluate(y_true[index], y_prob[index], threshold=threshold)
+        for name in metrics:
+            value = scores[name]
+            if value == value:                       # skip NaN (AUC on one class)
+                draws[name].append(value)
+
+    out = {}
+    for name in metrics:
+        values = np.asarray(draws[name], dtype=float)
+        out[name] = {
+            "mean": float(values.mean()) if values.size else float("nan"),
+            "lo": float(np.percentile(values, 2.5)) if values.size else float("nan"),
+            "hi": float(np.percentile(values, 97.5)) if values.size else float("nan"),
+            "n": int(values.size),
+        }
+    return out
