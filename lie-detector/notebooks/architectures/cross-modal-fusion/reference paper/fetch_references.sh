@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Download the papers indexed in references.md into this folder.
+# Verify, or re-download, the papers indexed in references.md.
 #
-# They are not committed: eleven PDFs are 82 MB, and a clone of this repository should stay
-# small. The filenames here are the ones references.md links to.
+# The PDFs are committed; this script is the check that each file is the whole file (arXiv's
+# byte count, not a truncated download) and the way back if one goes missing.
 #
 #   ./fetch_references.sh          # fetch what is missing
 #   ./fetch_references.sh --check  # only report what is here

@@ -3,10 +3,10 @@
 The literature this direction stands on. One PDF per row, named `<topic>-<arXiv id>.pdf`; the
 one file that predates this index keeps its original name (`2303.12745v2.pdf`).
 
-**The PDFs are not committed.** Twelve papers are 82 MB, and this repository gets cloned into
-Colab for every notebook: `./fetch_references.sh` downloads exactly the files this index links
-to (resumable, and it verifies each byte count against the server before calling a file done).
-Run it once after cloning; `--check` only reports what is missing.
+The PDFs are in this folder, committed (twelve files, 82 MB). `./fetch_references.sh --check`
+compares each one with the server's byte count and says what is missing; run it without
+`--check` to re-download whatever got lost. It exists because the link was slow the day they
+were fetched, and because a paper that silently truncates is worse than a missing one.
 
 Every row answers *what in this direction would be unsupported without it*. A paper that only
 sounds related does not belong here: the report cites these, and a citation nobody can trace to a
