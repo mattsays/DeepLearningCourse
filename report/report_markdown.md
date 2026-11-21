@@ -48,11 +48,41 @@ Finally, because the training folds contain ~56% deceptive clips (due to the two
 
 ### 2.1 Theoretical Foundation: Cognitive Load and Vocal Arousal
 
+Before introducing deep neural architectures with millions of parameters, we establish a lightweight, transparent baseline called `load`. Rather than learning representations from raw pixels or waveforms, `load` relies exclusively on **17 hand-crafted acoustic measurements** computed from the clip's 16 kHz audio track, grounded in two established psychological theories of deception:
+
+1. **Cognitive Load (Vrij's approach)**: fabricating and maintaining a lie while monitoring an interlocutor's reaction requires greater mental effort than recalling the truth. This extra cognitive load can slow down speech production and increase hesitations and pauses. *(An important caveat applies here: Vrij's paradigm works best when an interviewer actively elicits load through unexpected questions; in DOLOS, our classifier can only observe short answers passively without access to the question).*
+2. **Vocal Arousal (Voice-Stress research)**: concealed emotion and stress subtly affect autonomic control of respiration and vocal-fold tension, manifesting as shifts in vocal pitch, cycle-to-cycle vocal instability, and reduced harmonic clarity.
+
 ### 2.2 Acoustic Feature Extraction (17 Hand-Crafted Mathematical & Physical Features)
+
+Each clip is converted into a single 17-dimensional vector in a few milliseconds on CPU (no GPU required), combining two complementary feature families:
+
+- **Energy & Pause Structure (9 features, NumPy)**: the waveform is analyzed over 25 ms sliding windows with a 10 ms step. Any frame whose energy falls more than 25 dB below the clip's 90th-percentile loudness is marked as silence, and continuous silent segments of at least 200 ms are counted as pauses (shorter gaps reflect normal consonant closures). From this envelope, we extract `duration_s`, `rms_mean`, `rms_std`, `energy_range_db` (95th–5th percentile across voiced frames only), `voiced_ratio`, `pause_count`, `pause_ratio`, `pause_mean_ms`, and `onsets_per_s` (silent-to-voiced transitions per second, approximating syllable/word rate).
+- **Pitch & Voice Quality (8 features, Praat via `parselmouth`)**: using standard phonetic analysis (75–500 Hz search range), we extract `f0_mean` and `f0_std` (mean and standard deviation of the fundamental frequency $F_0$), `f0_range_st` (pitch range in logarithmic semitones, $12 \log_2(F_0 / 100)$, making male and female voices directly comparable), `jitter_local` (micro-instability of pitch between consecutive vocal cycles), `shimmer_local` (micro-instability of amplitude), `hnr_mean` (Harmonics-to-Noise Ratio, capturing vocal clarity versus breathy or tense noise), `intensity_mean_db`, and `intensity_std_db`.
 
 ### 2.3 Classifier Architecture (`LoadHead`, 609 Parameters)
 
+Because the 17 features span very different physical scales (e.g., `f0_mean` around 150 Hz vs. `jitter_local` around 0.02), the classifier (`LoadHead`) first standardizes each feature using `(x - mu) / sigma`, where `mu` and `sigma` are computed **strictly on each fold's training split** to avoid any data leakage. The normalized vector is then passed to a compact two-layer Multi-Layer Perceptron (MLP):
+
+`Dropout → Linear(17, 32) → GELU → Dropout → Linear(32, 1)`
+
+In total, the model has only **609 trainable parameters** ($17 \times 32 + 32$ in the first layer, plus $32 \times 1 + 1$ in the output layer). It is trained with class-weighted binary cross-entropy (`BCEWithLogitsLoss`), early stopping on validation AUC, and validation-tuned thresholding on the 5-fold subject split (while using a fixed epoch budget and `0.50` threshold on the 3-fold official split, which has no validation set).
+
 ### 2.4 Results Across Protocols and Comparison with the MUMIN Oracle
+
+Evaluated across **3 random seeds** on both protocols, `load` produces the following results:
+
+| Protocol | ACC (%) | AUC (%) | Per-Seed AUC (%) | Trainable Params |
+|---|---:|---:|---|---:|
+| **Subject-Independent (5-fold)** | 50.8 ± 4.1 | **54.0** | 56.4 · 53.1 · 52.7 | 609 |
+| **Official Clip-Level (3-fold)** | 55.1 ± 2.1 | **58.8** | 58.5 · 59.1 · 58.6 | 609 |
+| *Majority class baseline* | 52.0 | — | — | — |
+| *MUMIN oracle (41 hand annotations)* | 51.1 | 52.5 | — | 41 |
+
+Three key insights emerge from this purely mathematical baseline:
+1. **Competitive with the behavioral oracle**: on unseen speakers, 17 acoustic statistics reach **54.0% AUC**, slightly outperforming a classifier trained on all 41 human-annotated MUMIN behavioral cues (**52.5% AUC**). This shows that passive observable cues in short clips carry a real, yet modest, signal.
+2. **Threshold sensitivity vs. ranking**: average accuracy (50.8%) sits just below the 52.0% majority floor, largely because one fold (fold 3, which has the lowest deception rate at 45.7%) over-predicts deception at the chosen threshold—even though the threshold-free AUC (54.0%) remains consistently above 50%.
+3. **Minimal protocol gap (+4.3 ACC / +4.8 AUC)**: moving from the subject-independent split to the official clip-level split yields only a small gain. Because 17 summary acoustic numbers contain no facial appearance, clothing, or studio background, `load` cannot exploit speaker or episode familiarity. This establishes a clean, leakage-free reference floor against which all deep multimodal architectures can be judged.
 
 ---
 
