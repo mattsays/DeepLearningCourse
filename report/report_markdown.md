@@ -90,9 +90,64 @@ Three key insights emerge from this purely mathematical baseline:
 
 ### 3.1 Reference Paper Analysis and Reported Results (DOLOS / PECL, Guo et al., ICCV 2023)
 
+Direction 1 takes its inspiration from **PECL (Parameter-Efficient Crossmodal Learning)**, the reference architecture introduced alongside the DOLOS dataset (Guo et al., ICCV 2023). The core motivation of PECL is to leverage rich prior knowledge from large-scale pre-trained vision and speech Transformers—specifically an ImageNet-pretrained **ViT** and **Wav2Vec 2.0 (W2V2)**—without full fine-tuning, which would overfit on a dataset of ~1,675 clips.
+
+Rather than freezing the entire network, PECL extracts features from the **first 4 Transformer encoder layers** of both ViT and W2V2 (as lower-level representations retain finer facial and acoustic details and avoid overfitting observed with deeper layers) and inserts two lightweight trainable components:
+1. **UT-Adapter (Uniform Temporal Adapter)**: placed in parallel with both the Multi-Head Self-Attention (MHSA) and MLP blocks inside each of the 4 encoder layers. It projects embeddings from $768 \to 128$, applies a 1D temporal convolution (`kernel_size=3`), and projects back $128 \to 768$, enabling both modalities to capture local temporal dynamics.
+2. **PAVF (Plug-in Audio-Visual Fusion)**: placed between each pair of visual and audio encoder layers $(V_i, A_i)$ for $i = 1 \dots 4$. Given $L = 64$ visual frames ($160\times 160$ MTCNN face crops) and $L = 64$ audio tokens, PAVF learns a $64 \times 64$ cross-modal correlation matrix $P^i = X_a^i W_P^i (X_v^i)^\top$ to perform bidirectional cross-attention ($V \to A$ and $A \to V$) at each depth, concatenating the four fused outputs for classification.
+
+In total, PECL trains **5.06M parameters** out of 71.08M (**7.12%**: 3.08M in UT-Adapters and 1.98M in PAVF modules). Optionally, it adds **multi-task learning** by jointly predicting deception alongside 25 manually annotated MUMIN behavioral labels.
+
+On the paper's **3-fold clip-level split**, PECL reports:
+- **Visual only (ViT + UT-Adapter)**: **61.44% ACC** | 69.42% F1 | 58.89% AUC
+- **Audio only (W2V2 + UT-Adapter)**: **59.19% ACC** | 73.46% F1 | 52.54% AUC
+- **Simple Concatenation (last layer)**: **61.62% ACC** | 70.20% F1 | 60.50% AUC
+- **PECL (PAVF)**: **64.75% ACC** | 71.20% F1 | 62.71% AUC
+- **PECL (PAVF + Multi-Task with 25 MUMIN labels)**: **66.84% ACC** | 73.35% F1 | 64.58% AUC
+- **MUMIN + MLP (hand-annotated cues only)**: **58.84% ACC**
+
+Crucially, when the paper cross-tests PECL on external datasets with **unseen subjects** (Table 3 of the paper), accuracy drops to **57.54%** on *Bag-of-Lies* and **56.17%** on *Real-Life Trials*.
+
 ### 3.2 Deconstruction of Our Architecture and Differences from the Reference Paper
 
+Our `tia` direction (`cross-modal-fusion`) adopts a **PECL-inspired** philosophy but pushes parameter efficiency much further: instead of inserting adapters inside the encoders, **we freeze both foundation backbones 100%** and pre-extract their embeddings once to disk, training only a compact downstream head (~58k–165k parameters, roughly **30× smaller** than PECL's trainable budget).
+
+Specifically, each clip (~1,158 clips with complete cached audio and video) is represented by:
+- **Visual stream**: `facebook/dinov2-small` extracts the 384-dimensional `[CLS]` token from 16 uniformly sampled face crops $\rightarrow$ `(16, 384)`. *(An alternative video-native cache using `vjepa2-vitl` over 64 frames produces `(32, 1024)` spatio-temporal embeddings).*
+- **Acoustic stream**: `microsoft/wavlm-base-plus` (chosen over W2V2 for its stronger paralinguistic pre-training on pitch, stress, and speaker separation) produces 768-dimensional hidden states average-pooled to 64 temporal tokens $\rightarrow$ `(64, 768)`.
+
+In `model.py`, both streams are linearly projected into a common $d = 128$ latent space (`384→128`, `768→128`) and evaluated across a structured family of **11 variants**:
+- **Multimodal baseline (`LateFusion`, 164,737 params)**: averages each stream over time, concatenates `[v, a]` (256-d), and applies `LayerNorm → Dropout(0.3) → Linear(256, 64) → GELU → Dropout(0.3) → Linear(64, 1)`.
+- **Unimodal controls (`VideoOnly`, 57,857 params; `AudioOnly`, 107,009 params; `TextOnly`)**: isolate each channel to test whether multimodal fusion actually improves over the best single modality.
+- **Hypothesis-driven variants**: `Congruence` (147,714 params, classifies solely from the cosine disagreement $1 - \cos(v, a)$), `VideoDelta` / `LateDelta` (add mean absolute frame-to-frame change $|x_t - x_{t-1}|$ to capture facial motion), `VideoAttention` / `AudioAttention` / `LateAttention` (replace uniform mean pooling with learned additive `AttentionPool`), and `AudioText`.
+
+The five key differences from the reference PECL paper are:
+1. **Complete freezing vs. internal adapters**: PECL trains 5.06M parameters inside the first 4 encoder layers; `tia` keeps backbones 100% frozen and trains only the final fusion head (58k–165k parameters).
+2. **Modern self-supervised backbones**: `DINOv2-small` (or `V-JEPA 2`) + `WavLM-base-plus` (last layer) instead of ImageNet `ViT` + `Wav2Vec 2.0` (first 4 layers).
+3. **Temporal resolution and alignment**: PECL pairs 64 frames with 64 audio tokens (1:1 alignment); `tia` uses 16 frames (~3 fps at the 5 s median clip) against 64 audio tokens and fuses after temporal pooling rather than layer-by-layer cross-attention.
+4. **No MUMIN multi-task supervision**: consistent with our inference-time constraint, MUMIN labels are never used during training (only for offline linear-probe diagnostics).
+5. **Subject-independent primary evaluation**: `tia` is evaluated primarily on the 5-fold subject-independent split, using the official 3-fold split solely to measure the *protocol effect*.
+
 ### 3.3 Results: Comparison Against `load` and the Reference Paper (Including Protocol Effect & MUMIN Diagnostics)
+
+On the **5-fold subject-independent split**, `tia` yields the following results (with `late` averaged over 3 seeds, and single-channel/congruence controls run on seed 0 as indications):
+
+| Variant | Seeds | Subject ACC (%) | Subject AUC (%) | Official ACC (%) | Official AUC (%) | Trainable Params |
+|---|---:|---:|---:|---:|---:|---:|
+| **`late` (DINOv2 + WavLM)** | 3 | 53.0 ± 7.7 | 55.2 | 72.2 ± 3.0 | 80.4 | 164,737 |
+| **`audio` (WavLM only)** | 1 / 3 | **54.7 ± 3.9** | **58.9** | 58.8 ± 2.0 | 62.5 | 107,009 |
+| **`video` (DINOv2 only)** | 1 | 52.2 ± 5.5 | 53.7 | 72.8 ± 2.8 | 79.5 | 57,857 |
+| **`congruence` (`1 - cos`)** | 1 | 52.6 ± 2.5 | 57.3* | — | — | 147,714 |
+| *`load` baseline (17 features)* | 3 | 50.8 ± 4.1 | 54.0 | 55.1 ± 2.1 | 58.8 | 609 |
+| *Majority class baseline* | — | 52.0 | — | — | — | — |
+
+*\*Note: `congruence` reaches 74.4% AUC on a single fold while sitting at ~53.0% (chance) on the remaining four.*
+
+Comparing `tia` against both the `load` mathematical baseline and the PECL paper reveals three central findings:
+
+1. **Audio carries the signal; frozen fusion does not beat `load` by much**: on unseen speakers, `AudioOnly` (WavLM, **58.9% AUC**) is the strongest single-seed variant and outperforms `load` (**54.0% AUC**) by ~5 AUC points. However, 3-seed `LateFusion` lands at **55.2% AUC** (per-seed spread 52.5–57.7%), statistically indistinguishable from `load` (54.0% AUC) and below `AudioOnly`—showing that adding 16-frame DINOv2 features does not improve generalization.
+2. **Quantifying the Protocol Effect (+19.2 ACC / +25.2 AUC)**: when the exact same `LateFusion` model is run on the paper's official 3-fold clip-level split, performance jumps from **53.0% / 55.2%** to **72.2% ACC / 80.4% AUC** (even above PECL's 64.75% ACC, because DINOv2 is a much stronger visual identity encoder than a 4-layer ViT). Crucially, `VideoOnly` jumps by **+20.6 ACC / +25.8 AUC**, whereas `AudioOnly` gains only **+4.1 ACC / +3.6 AUC**—matching the **+4.3 ACC / +4.8 AUC** shift of `load`. This proves that the 19–25 point gap on the official split is driven almost entirely by **visual round/speaker recognition**, not deception detection. Notably, our subject-independent accuracy (~53–55%) aligns closely with PECL's own cross-dataset numbers on unseen subjects (57.54% on Bag-of-Lies, 56.17% on Real-Life Trials).
+3. **MUMIN Diagnostics rule out an encoder bottleneck**: linear probes trained on the frozen embeddings successfully recover the 41 human-annotated MUMIN cues (mean AUC **0.665** vs. 0.567 null band for DINOv2; **0.585** vs. 0.539 for WavLM), missing only very fast movements like eyebrow raising at 3 fps. Yet a classifier trained on the 41 ground-truth MUMIN labels themselves scores only **51.1% ACC / 52.5% AUC** on the subject-independent split (vs. 58.84% in the paper's Table 4). Thus, DINOv2 and WavLM *do* see the facial and vocal behaviors—those behaviors simply do not strongly predict deception across unseen speakers.
 
 ---
 
