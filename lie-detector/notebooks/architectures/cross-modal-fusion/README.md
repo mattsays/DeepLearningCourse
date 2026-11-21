@@ -54,11 +54,16 @@ split. That gap, and the one it implies for every model here, is measured in
 
 | File | What it is |
 |---|---|
-| [`extract_features.ipynb`](extract_features.ipynb) | one-off: frozen DINOv2 and WavLM features into the shared cache |
+| [`extract_features.ipynb`](extract_features.ipynb) | one-off: frozen DINOv2 (or HSEmotion), WavLM and MiniLM features into the shared cache |
 | [`extract_vjepa2.ipynb`](extract_vjepa2.ipynb) | optional second video cache: V-JEPA 2 ViT-L, `(32, 1024)` per clip |
-| [`train.ipynb`](train.ipynb) | the campaign: every variant, both protocols, predictions per clip |
+| [`campaign.ipynb`](campaign.ipynb) | the batch path: every reported run, both protocols, in one kernel |
+| [`training.py`](training.py) | the recipe — features, folds, the loop, the campaign driver |
+| [`train.ipynb`](train.ipynb) | one configuration interactively: every variant, predictions per clip |
 | [`model.py`](model.py) | the variants and the `VARIANTS` registry |
+| [`export.py`](export.py) | writes one run to `results/`; the layout is owned by [`results/README.md`](results/README.md) |
+| [`results/`](results/) | one directory per run: summary, per-fold metrics, predictions, provenance |
 | [`diagnostics.ipynb`](diagnostics.ipynb) | does the embedding contain the annotated cues |
+| [`reference paper/`](reference%20paper/references.md) | the literature this direction stands on, indexed with what each paper supports |
 | [`docs/trainable-module.md`](docs/trainable-module.md) | design of the trainable part, parameter budget, experiment ladder |
 | [`docs/protocol-effect.md`](docs/protocol-effect.md) | the same model on the subject and the paper's splits |
 | [`docs/diagnostics-findings.md`](docs/diagnostics-findings.md) | what the cue probes measured |
@@ -68,14 +73,40 @@ split. That gap, and the one it implies for every model here, is measured in
 ```
 extract_features.ipynb   # once, writes cached_features/<encoder>/ into the shared folder
 extract_vjepa2.ipynb     # optional: a video-native backbone, cached_features/vjepa2-vitl/
-train.ipynb              # VARIANT, SPLIT, SEEDS at the top; results in preds/
-diagnostics.ipynb        # after the caches exist; writes results/
+campaign.ipynb           # the six reported runs, 3 seeds each; writes results/<run>/ for all
+train.ipynb              # one configuration: VARIANT, SPLIT, SEEDS at the top, last cell saves it
+diagnostics.ipynb        # after the caches exist; writes results/diagnostics_mumin.csv
 ```
 
-### A second video backbone
+### Other video backbones
 
-`extract_vjepa2.ipynb` builds the same contract with 64 frames through V-JEPA 2 instead of 16
-face crops through DINOv2. Set `VIDEO_ENCODER = "vjepa2-vitl"` in `train.ipynb`: the notebook
-calls `model.configure(...)` with the widths it finds in the caches, so the variants build a
-1024-d input layer without edits. Audio and text stay identical, which makes the paired
-comparison one-variable: same folds, same seeds, same probe, different visual encoder.
+Two alternatives to DINOv2 write the same cache contract, so switching to one is a single line in
+`train.ipynb`: the notebook calls `model.configure(...)` with the widths it finds in the caches,
+so the variants build the matching input layer without edits. Audio and text stay identical,
+which makes each comparison one-variable — same folds, same seeds, same probe, different visual
+encoder.
+
+**V-JEPA 2 — self-supervised, video-native.** [`extract_vjepa2.ipynb`](extract_vjepa2.ipynb):
+64 frames at 256 px through a ViT-L, cached as `(32, 1024)`. `VIDEO_ENCODER = "vjepa2-vitl"`.
+
+**HSEmotion — supervised, face-specific.** One entry in `ENCODERS` of
+[`extract_features.ipynb`](extract_features.ipynb): EfficientNet-B0 trained on AffectNet
+emotions ([HSEmotion](https://github.com/av-savchenko/face-emotion-recognition), Apache-2.0),
+cached as `(16, 1280)` (penultimate embedding) or `(16, 8)` (class posteriors).
+`VIDEO_ENCODER = "hsemotion-b0-vgaf"`. It is the only encoder here trained on faces and the only
+supervised one; the hypothesis it makes testable is the old Ekman one — a lie shows as an
+emotion the speaker is suppressing.
+
+Two caveats before that row is read as a like-for-like swap:
+
+- **Not parameter-matched.** The 1280-d embedding makes the video projection 1280→128 instead of
+  384→128, so `late` moves from 164,737 to 279,425 trainable parameters and `late_delta` from
+  222,465 to 451,841 — past the ceiling [`docs/trainable-module.md`](docs/trainable-module.md)
+  puts at 300–500k. `d=64` brings them back to 139,777 and 225,985; say which one ran.
+- **The crop is DINOv2's.** HSEmotion was trained on tight AffectNet crops, ours are MTCNN boxes
+  with a 0.25 margin. Keeping them identical is what makes the comparison one-variable, so any
+  accuracy it costs is part of the result, not a bug in the cache.
+
+The 8-class cache is the cheaper half of the experiment. Audio plus the average expression and
+its motion (`late_delta`) is 126,209 parameters, of which the video stream is 2,304: it asks
+whether the emotion output itself carries the label, with no capacity left to hide behind.

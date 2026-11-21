@@ -9,11 +9,13 @@ Every variant takes ``(video, audio)`` and returns one logit per clip, shape ``(
 the training loop in ``train.ipynb`` is identical for all of them. ``VARIANTS`` is the
 registry the notebook selects from: adding a method is one class plus one line here.
 
-The video cache is usually DINOv2 ``(16, 384)``, but the direction also takes a video-native
-backbone: `extract_vjepa2.ipynb` writes ``cached_features/vjepa2-vitl/<clip_id>.npy`` as
-``(32, 1024)``. Only the input width changes, so the classes read the widths from module
-constants and ``configure()`` sets them from whatever cache the notebook loaded. The temporal
-axis is already pooled by each variant, so a different token count needs no other change.
+The video cache is usually DINOv2 ``(16, 384)``, but the direction also takes other backbones:
+`extract_vjepa2.ipynb` writes ``cached_features/vjepa2-vitl/<clip_id>.npy`` as ``(32, 1024)``,
+and `extract_features.ipynb` writes the supervised HSEmotion encoder as ``(16, 1280)`` — or
+``(16, 8)`` with ``output: "emotions"``, the class posteriors. Only the input width changes, so
+the classes read the widths from module constants and ``configure()`` sets them from whatever
+cache the notebook loaded. The temporal axis is already pooled by each variant, so a different
+token count needs no other change either.
 
 Parameter counts, the reasoning behind each option and the experiment ladder are in
 ``docs/trainable-module.md``.
