@@ -10,7 +10,7 @@
 //   02-related-work.typ       §2
 //   03-data.typ               §3  dataset and evaluation protocol
 //   04-baseline.typ           §4  theory-driven baseline
-//   05-architectures.typ      §5  the four architectures and the results
+//   05-architectures.typ      §5  index only: one file per architecture, in 05-architectures/
 //   06-best-model.typ         §6  analysis of Cross-Modal Fusion
 //   07-discussion.typ         §7
 //   08-conclusion.typ         §8
