@@ -20,18 +20,26 @@ Acoustic Stream (3-ch Mel) ──► ConvNeXt-Tiny     ──► (B, T_a, 768) �
 4. **Sequential Modelling**: A 2-layer Bidirectional GRU (or Dilated TCN) models the psychological trajectory over time.
 5. **Temporal Attention Pooling**: Dynamically weights salient emotional micro-leakage instants ($\alpha_t$) rather than washing out the signal with a uniform average.
 
+## Notebooks & Approaches
+
+1. **`train_fab.ipynb`**: Original Swin3D (scene video) + ConvNeXt-3ch (audio) + Bi-GRU / TCN with Two-Stream LayerNorm projection.
+2. **`train_marlin.ipynb`**: **MARLIN** (Masked Autoencoder for facial video Representation LearnINg, CVPR 2023) on MTCNN face crops + ConvNeXt-3ch (audio) + Bi-GRU / TCN.
+
 ## Feature Pre-Extraction (Phase 2)
 
 To avoid network I/O bottlenecks across Google Drive, multimodal sequence descriptors are pre-extracted
-once using `scripts/extract_features_fab.py`:
+once into the shared cache:
 
 ```bash
-# On Google Colab with GPU runtime:
+# 1. Swin3D + ConvNeXt-3ch (scene video + audio):
 python scripts/extract_features_fab.py --data-dir /content/drive/MyDrive/dolos --encoder swin3d_convnext_3ch
+
+# 2. MARLIN (MTCNN face crops) + ConvNeXt-3ch (facial video + audio):
+python scripts/extract_features_marlin.py --data-dir /content/drive/MyDrive/dolos --encoder marlin_convnext --marlin-model marlin_vit_base_ytf
 ```
 
-- **Output structure**: `DATA/cached_features/swin3d_convnext_3ch/<clip_id>.npy`
-- **Output tensor shape**: `(T_v=8, 1536)` where `[0:768]` is Swin3D visual features and `[768:1536]` is ConvNeXt acoustic features.
+- **Output structure**: `DATA/cached_features/<ENCODER>/<clip_id>.npy`
+- **Output tensor shape**: `(T_v=8, 1536)` where `[0:768]` is visual/face features and `[768:1536]` is ConvNeXt acoustic features.
 - **RAM Preloading**: Total disk space is ~400 MB. `CachedFeatures` loads all arrays directly into RAM at initialization, reducing epoch training time to ~2 seconds.
 
 ## Experimental Matrix (Ablation Study)
