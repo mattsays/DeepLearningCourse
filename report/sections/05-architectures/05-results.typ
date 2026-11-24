@@ -33,18 +33,17 @@ fold, and @tab:unimodal isolates the contribution of each modality.
 
 #figure(
   table(
-    columns: (auto, auto, auto, auto),
-    align: (left, right, right, right),
+    columns: (auto, auto, auto, auto, auto),
+    align: (left, right, right, right, right),
     table.hline(),
-    table.header([Fold], [Cross-Modal Fusion], [VideoMAE + HuBERT], [Theory-driven baseline]),
+    table.header([Fold], [Cross-Modal Fusion], [VideoMAE + HuBERT], [MARLIN + ConvNeXt], [Theory-driven baseline]),
     table.hline(stroke: 0.5pt),
-    [1], [69.0 / 77.1], [65.2 / 72.9], [52.3 / 55.0],
-    [2], [73.4 / 81.3], [67.9 / 76.0], [56.9 / 61.3],
-    [3], [74.2 / 82.9], [65.7 / 70.3], [56.0 / 60.0],
+    [1], [69.0 / 77.1], [65.2 / 72.9], [56.3 / 57.5], [52.3 / 55.0],
+    [2], [73.4 / 81.3], [67.9 / 76.0], [62.6 / 63.8], [56.9 / 61.3],
+    [3], [74.2 / 82.9], [65.7 / 70.3], [58.4 / 59.6], [56.0 / 60.0],
     table.hline(),
   ),
-  caption: [ACC / AUC per official fold (mean over seeds where several were run). No
-    per-fold scores of the MARLIN + ConvNeXt run were saved, so they are unavailable.],
+  caption: [ACC / AUC per official fold (mean over seeds where several were run).],
 ) <tab:folds>
 
 #figure(

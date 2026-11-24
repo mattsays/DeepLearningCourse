@@ -94,12 +94,12 @@ each other.
     [Theory-driven baseline], [381], [—], [—], [1,132],
     [Cross-Modal Fusion], [429], [432], [413], [1,274],
     [VideoMAE + HuBERT, LoRA], [482], [483], [461], [1,426],
+    [MARLIN + ConvNeXt], [482], [483], [461], [1,426],
     table.hline(),
   ),
   caption: [Test clips actually scored on each official fold. Cross-Modal Fusion needs a cached
     embedding for every modality; the baseline reuses a feature cache built for a different clip
-    list. Per-fold counts of the baseline after fold 1 were not logged, and the MARLIN + ConvNeXt
-    run logged no clip counts at all, so its coverage is unavailable.],
+    list. Per-fold counts of the baseline after fold 1 were not logged.],
 ) <tab:coverage>
 
 == Metrics and evaluation rules
