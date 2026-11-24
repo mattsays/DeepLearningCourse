@@ -55,10 +55,21 @@ python scripts/extract_features_marlin.py --data-dir /content/drive/MyDrive/dolo
 
 ## Results Board
 
+### 1. Subject-Independent 5-Fold Cross-Validation (Official Project Protocol)
 Evaluated under the official 5-Fold Subject-Independent Cross-Validation protocol (`Protocol.load(DATA / "splits")`). The majority baseline on the working set is **52.4%**.
 
 | Direction | Owner | Method | Trainable params | ACC (CV) | F1 | AUC | Balanced ACC | Majority | Runtime |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
-| `fab` | — | Swin3D + ConvNeXt-3ch + Bi-GRU + Attn | TBD | TBD | TBD | TBD | TBD | 52.4 | TBD |
+| **`fab`** | Fabio | MARLIN-B (Faces) + ConvNeXt-T · TCN · Mean Pool | 97,857 | **54.1 ± 3.2** | **58.5** | **56.4** | **54.7** | 52.4 | ≈15 s (Tesla T4) |
 
-*Predictions per clip are saved to `preds/cv_fab.csv`.*
+*Out-of-fold predictions per clip are saved to `preds/cv_fab_marlin.csv`.*
+
+### 2. Official 3-Fold Benchmark (Direct Comparison with DOLOS Paper / PECL)
+Evaluated under the original DOLOS paper clip-level 3-fold split (`folds.official(fold)`):
+
+| Benchmark | Method | Trainable params | ACC | F1 | AUC | Balanced ACC |
+|---|---|---:|---:|---:|---:|---:|
+| **PECL (Reported in Paper)** | Wav2Vec2 + ViT + UT-Adapter + PAVF | 5.06M | 64.75 | 71.20 | 62.71 | — |
+| **MARLIN + ConvNeXt (Ours)** | MARLIN-B + ConvNeXt-T · TCN · Mean Pool | **97,857** | **59.1 ± 3.2** | **61.4** | **60.3** | **60.6** |
+
+*Official 3-fold predictions per clip are saved to `preds/official_3fold_marlin_tcn.csv`.*

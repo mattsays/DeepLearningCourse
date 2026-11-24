@@ -107,7 +107,7 @@ orientation; the shared feature cache is named after the encoder that produced i
 |---|---|---|---|---|
 | `tia` | 1 — frozen backbones + cross-modal fusion | `dinov2-small` / `siglip-base`, `wavlm-base-plus` | — | `tia/train_tia.ipynb` |
 | `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | Lorenzo | `lore/train_lore.ipynb` |
-| `fab` | 3 — 3D CNN + temporal head | `x3d_m` / `swin3d_t`, mel-spectrogram | — | `fab/train_fab.ipynb` |
+| `fab` | 3 — 3D CNN + temporal head | `marlin-vit-base` / `convnext_tiny`, mel-spectrogram | Fabio | `fab/train_marlin.ipynb` |
 
 Only three paradigms are documented so far ([`docs/architectures.md`](docs/architectures.md)); add the
 fourth row here when it is assigned. Fill the Owner column in the same commit. `notebooks/architectures/pecl.ipynb`
@@ -122,7 +122,7 @@ configuration; the best per direction in bold.
 | Direction | Owner | Method | Trainable params | ACC (CV) | F1 | AUC | Balanced ACC | Majority | Runtime |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|
 | **`lore`** | Lorenzo | VideoMAE-B + HuBERT-B · LoRA · late fusion | 594,434 | 56.1 ± 7.3 | 55.1 | 60.6 | 56.2 | 52.1 | 114 min train (Tesla T4) |
-| | | | | | | | | | |
+| **`fab`** | Fabio | MARLIN-B (Faces) + ConvNeXt-T · TCN · Mean Pool | 97,857 | 54.1 ± 3.2 | 58.5 | 56.4 | 54.7 | 52.4 | ≈15 s (Tesla T4) |
 | | | | | | | | | | |
 | | | | | | | | | | |
 | *reference* | — | majority class | — | 52.4 | — | — | 50.0 | — | — |

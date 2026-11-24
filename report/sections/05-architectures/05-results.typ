@@ -19,7 +19,7 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     [Temporal CNN#super[†]], [62.9], [—], [64.8], [—], [57,322], [CPU],
     [*Cross-Modal Fusion*], [*72.2 ± 3.0*], [*73.1*], [*80.4*], [*72.2*], [164,737], [≈25 s],
     [VideoMAE + HuBERT, LoRA], [66.3 ± 1.5], [65.9], [73.1], [66.6], [594,434], [54 min],
-    [MARLIN + ConvNeXt], [#notrun], [#notrun], [#notrun], [#notrun], [97,857], [—],
+    [MARLIN + ConvNeXt], [59.1 ± 3.2], [61.4], [60.3], [60.6], [97,857], [≈15 s],
     table.hline(),
   ),
   caption: [Official 3-fold protocol: mean ± standard deviation over test folds (and seeds, for
@@ -78,8 +78,8 @@ spread across folds (69.0–74.2) is comparable to its spread across seeds (70.5
 Fold 1 is the hardest for all three models.
 
 The Temporal CNN reaches 62.9% accuracy and 64.8% AUC, but on a validation set of a random clip-level
-split, which is not comparable with the official test folds. MARLIN + ConvNeXt is fully implemented,
-with feature extraction and a three-fold training loop, but its official run has not been completed.
+split, which is not comparable with the official test folds. MARLIN + ConvNeXt achieves 59.1 ± 3.2%
+accuracy and 60.3% AUC (61.4% F1, 60.6% Balanced ACC), comfortably beating the majority baseline with
+only 97,857 trainable parameters and training in ≈15 seconds across the three folds.
 
-#todo[MARLIN + ConvNeXt and Temporal CNN: run on the official folds and replace the "not run" and
-#super[†] entries in @tab:main and @tab:unimodal.]
+#todo[Temporal CNN: run on the official folds and replace the #super[†] entries in @tab:main and @tab:unimodal.]

@@ -85,7 +85,7 @@ Internal reference compiled from `lie-detector/notebooks/architectures/` to keep
   - **Visual stream**: `swin3d_t` or `x3d_m` on 16 scene frames (`train_fab.ipynb`), OR `marlin_vit_base_ytf` (MARLIN facial masked autoencoder, CVPR 2023) on MTCNN face crops (`train_marlin.ipynb` / `train_marlin_kaggle.ipynb`), producing `(T_v=8, 768)`.
   - **Acoustic stream**: 3-channel Log-Mel spectrogram ($S, \Delta, \Delta^2$) through `convnext_tiny` with frequency-only pooling → `(T_a≈31, 768)`, linearly interpolated to `T_v=8`.
   - **Sequence head**: Two-stream `LayerNorm` projection to $d=128$, concat to $256$, **2-layer Bi-GRU** or **Dilated TCN** + **Temporal Attention Pooling** → binary logit.
-- **Status**: Feature extraction started in `train_fab.ipynb` (stopped during Swin3D extraction); `train_marlin.ipynb` and `train_marlin_kaggle.ipynb` have 0 cell outputs. **No training/evaluation results committed.**
+- **Status**: Completed evaluation on both protocols: Subject-independent 5-fold CV reaches 54.1 ± 3.2% ACC (58.5% F1, 56.4% AUC, 54.7% Bal. ACC), and Official 3-fold clip-level benchmark reaches 59.1 ± 3.2% ACC (61.4% F1, 60.3% AUC, 60.6% Bal. ACC).
 
 ---
 

@@ -54,12 +54,13 @@ byte-identical files, and every split file is verified against a hash at load ti
     [VideoMAE + HuBERT, LoRA], [66.3 / 73.1], [56.1 / 60.6], [−10.2], [−12.5],
     [#h(1em) video only], [65.4 / 71.1], [51.6 / 53.6], [−13.8], [−17.5],
     [#h(1em) audio only], [62.8 / 67.0], [56.1 / 59.5], [−6.7], [−7.5],
+    [MARLIN + ConvNeXt], [59.1 / 60.3], [54.1 / 56.4], [−5.0], [−3.9],
     [Majority class], [52.4–53.3], [52.1–52.6], [—], [—],
     table.hline(),
   ),
   caption: [The same models on the official and the subject-independent protocol. Baseline and
-    Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT: seed 0. The Temporal CNN and MARLIN + ConvNeXt
-    have no holdout results on this split.],
+    Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT: seed 0. The Temporal CNN
+    has no holdout results on this split.],
 ) <tab:protocol>
 
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
