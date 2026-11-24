@@ -15,15 +15,14 @@ hard: the signal is small, and the datasets that contain it are small too.
 We treat deception detection as binary classification. Given a raw video clip of a few seconds
 (median 5 s) in which a person answers a question, the model predicts `truth` (0) or `deception` (1). It may use only
 signals that can be computed directly from the video and audio streams at inference time. Human
-behavioural annotations, such as the MUMIN codes shipped with the dataset, are never an input; at
-most they are used as an auxiliary training target.
+behavioural annotations, such as the MUMIN codes shipped with the dataset, are never an input.
 
 The question we ask is practical: given a dataset of about 1,700 clips, _which way of using
 pre-trained knowledge works best_? Rather than relying on a single model family, we design a
-comparative study across four distinct architectural paradigms—a from-scratch temporal CNN on
+comparative study across four distinct architectural paradigms, a from-scratch temporal CNN on
 facial landmarks and acoustic descriptors, a cross-modal fusion head on frozen DINOv2 and WavLM
 embeddings, parameter-efficient LoRA adaptation of VideoMAE and HuBERT, and temporal convolutional
-modelling over frozen MARLIN and ConvNeXt features—anchored to a 609-parameter baseline built
+modelling over frozen MARLIN and ConvNeXt features, anchored to a 609-parameter baseline built
 solely from theory-motivated acoustic statistics.
 
 Our contributions are:

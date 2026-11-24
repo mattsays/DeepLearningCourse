@@ -24,7 +24,7 @@
 #block(inset: (x: 2em))[
   #text(weight: "bold")[Abstract.]
   Automated deception detection is a binary classification task that asks a model to distinguish
-  `truth` from `deception` in short video clips (median 5 s) using only audio-visual signals
+  `truth` from `deception` in short video clips using only audio-visual signals
   computable at inference time, without manual behavioural annotations. We study this problem on
   DOLOS, a 1,675-clip corpus recorded from the television game show _Would I Lie To You?_, and
   compare four deep paradigms against a 609-parameter acoustic baseline grounded in Cognitive Load
@@ -37,10 +37,11 @@
   head on frozen encoders (PECL trains 5.06M). This is 7.4 accuracy points above the PECL result
   reported by the dataset paper, under a related but non-identical evaluation: we score a subset of
   the official test clips and do not re-run PECL. LoRA adaptation reaches 66.3% accuracy and 73.1%
-  AUC, and MARLIN + ConvNeXt 59.1% and 60.3%. Unimodal ablations show that the visual stream carries
-  almost all of the performance on the official split. In Appendix A, we re-evaluate the models on a
-  strict subject-independent 5-fold split where no speaker crosses training, validation, and test
-  boundaries: the development estimates drop to 54–56% accuracy, driven by a collapse in the visual
+  AUC, MARLIN + ConvNeXt 59.1% and 60.3%, and the from-scratch temporal CNN 56.3% and 59.1%.
+  Unimodal ablations show that the visual stream carries almost all of the performance on the
+  official split. In Appendix A, we re-evaluate the models on a strict subject-independent 5-fold
+  split where no speaker crosses training, validation, and test boundaries: the development
+  estimates drop to 50–56% accuracy, driven by a collapse in the visual
   channel, while the acoustic stream keeps a modest signal whose AUC, unlike its accuracy, stays
   above chance under a speaker-cluster bootstrap. This indicates that much of
   the clip-level performance reflects speaker and round recognition rather than generalisable

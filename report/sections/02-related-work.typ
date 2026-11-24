@@ -19,7 +19,7 @@ Early automatic systems therefore relied on hand-coded behaviour. The MUMIN sche
 deception datasets such as Real-Life Trials @perezrosas2015trial, Bag-of-Lies @gupta2019bagoflies and
 Box of Lies @soldner2019boxoflies use such annotations as features, often together with transcripts.
 These annotations are expensive and cannot be produced at inference time, which is why our models
-learn from raw video and audio instead—using either low-level geometric and acoustic descriptors
+learn from raw video and audio instead, using either low-level geometric and acoustic descriptors
 (MediaPipe facial landmarks @lugaresi2019mediapipe, openSMILE eGeMAPS @eyben2016gemaps, and
 Praat/Parselmouth phonetics @jadoul2018parselmouth) or pre-trained neural representations.
 

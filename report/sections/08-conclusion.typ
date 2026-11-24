@@ -24,7 +24,7 @@ embeddings encode static posture and framing far better than fast facial motion,
 subject-disjoint evaluation of Appendix A brings every model back to 50–56% accuracy. We therefore
 recommend reporting a speaker-independent split alongside the official one.
 
-Future work follows from these limits: an official run of the Temporal CNN; re-running PECL and
+Future work follows from these limits: re-running PECL and
 every model on one identical set of clips; nested, subject-disjoint model selection and an
 episode-disjoint control; controls for identity reliance, such as speaker-identification probes and
 face-blurred inputs; denser frame sampling and motion-sensitive features to reach the timescale of

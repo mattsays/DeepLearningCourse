@@ -38,8 +38,7 @@ of the time).
     [Clips downloadable today], [—], [1,452],
     table.hline(),
   ),
-  caption: [DOLOS statistics: as published, and as measured on the local annotation files
-    (`lie-detector/dataset/README.md`).],
+  caption: [DOLOS statistics: as published and as measured on the local annotation files.],
 ) <tab:stats>
 
 == Preprocessing
@@ -92,14 +91,16 @@ each other.
     [Downloadable clips], [483], [483], [461], [1,427],
     table.hline(stroke: 0.3pt),
     [Theory-driven baseline], [381], [—], [—], [1,132],
+    [Temporal CNN], [482], [483], [461], [1,426],
     [Cross-Modal Fusion], [429], [432], [413], [1,274],
     [VideoMAE + HuBERT, LoRA], [482], [483], [461], [1,426],
+    [MARLIN + ConvNeXt], [n/a], [n/a], [n/a], [n/a],
     table.hline(),
   ),
   caption: [Test clips actually scored on each official fold. Cross-Modal Fusion needs a cached
     embedding for every modality; the baseline reuses a feature cache built for a different clip
-    list. Per-fold counts of the baseline after fold 1 were not logged, and the MARLIN + ConvNeXt
-    run logged no clip counts at all, so its coverage is unavailable.],
+    list. Per-fold counts of the baseline after fold 1 were not logged. n/a: the MARLIN + ConvNeXt
+    run saved no predictions or clip counts, so its coverage is unavailable.],
 ) <tab:coverage>
 
 == Metrics and evaluation rules
@@ -110,7 +111,7 @@ We report the three metrics of the paper:
   therefore the most stable comparison on test folds of ≈450 clips.
 
 We add *balanced accuracy* (the mean of the two per-class recalls) where available, and the
-_majority baseline_ — always predicting the most frequent class on the same clips — as the floor
+_majority baseline_, always predicting the most frequent class on the same clips, as the floor
 every model must beat: 52.4–53.3% depending on the subset.
 
 The official folds have no validation set, and the models handle this in two ways (@tab:rules).

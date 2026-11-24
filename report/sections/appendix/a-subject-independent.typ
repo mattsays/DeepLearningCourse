@@ -52,6 +52,7 @@ boundary. An episode-disjoint control has not been run.
     table.header([Model], [Official ACC / AUC], [Subject ACC / AUC], [Δ ACC], [Δ AUC]),
     table.hline(stroke: 0.5pt),
     [Theory-driven baseline], [55.1 / 58.8], [50.8 / 54.0], [−4.3], [−4.8],
+    [Temporal CNN], [56.3 / 59.1], [50.5 / 51.9], [−5.8], [−7.2],
     [Cross-Modal Fusion, late], [72.2 / 80.4], [56.1 / 57.3], [−16.1], [−23.1],
     [#h(1em) video only], [73.2 / 80.2], [49.9 / 51.0], [−23.3], [−29.2],
     [#h(1em) audio only], [58.8 / 62.5], [54.9 / 58.3], [−3.9], [−4.2],
@@ -62,8 +63,8 @@ boundary. An episode-disjoint control has not been run.
     [Majority class], [52.4–53.3], [52.1–52.6], [—], [—],
     table.hline(),
   ),
-  caption: [The same models on the official and the subject-independent protocol. Baseline and
-    Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0.],
+  caption: [The same models on the official and the subject-independent protocol. Baseline,
+    Temporal CNN and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0.],
 ) <tab:protocol>
 
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
@@ -71,7 +72,10 @@ concentrated in the visual channel: DINOv2 alone loses 23 accuracy points and fa
 the LoRA-adapted VideoMAE loses 14, whereas WavLM, HuBERT and the 17 acoustic features lose 4–7. The
 acoustic representations exclude the _visual_ identity cues — face, clothing, set — but not
 identity altogether: voice timbre and the recording conditions of an episode remain available, so
-the smaller drop is consistent with, not proof of, less reliance on identity.
+the smaller drop is consistent with, not proof of, less reliance on identity. The Temporal CNN,
+which sees no pixels but the mean 3-D position of 15 face regions, still loses 5.8 accuracy and 7.2
+AUC points and ends at chance (50.5 / 51.9): absolute landmark coordinates also encode face shape
+and head placement, so they too can carry speaker-specific information.
 
 Audio becomes the strongest single channel, but only its ranking is reliably above chance. We pooled
 the 886 holdout clips of VideoMAE + HuBERT (135 speakers), each judged at its own fold's threshold,

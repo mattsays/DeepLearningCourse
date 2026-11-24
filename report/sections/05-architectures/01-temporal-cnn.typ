@@ -3,8 +3,8 @@
 == Time-Batching Temporal CNN (deep baseline)
 *Why.* It is the simplest learned model that still sees _time_. It uses no pre-trained encoder:
 only interpretable per-frame descriptors of the face and voice, on which a small convolutional
-network learns short temporal patterns — for example, "the mouth corners move down over 0.3 s while
-loudness drops". It tells us how far hand-designed signals go once a network, rather than a fixed
+network learns short temporal patterns. 
+It tells us how far hand-designed signals go once a network, rather than a fixed
 statistic, decides how to combine them over time.
 
 *Input.* Each clip is resampled to a 10 fps grid. For every frame, MediaPipe FaceLandmarker
@@ -21,7 +21,7 @@ channels, the next three have kernel 3 and keep 64 channels; each is followed by
 normalisation and ReLU, and the first two by dropout 0.3. The receptive field is 11 frames, about
 1.1 s. Clips have different lengths, so a batch is zero-padded to its longest clip and the network
 receives the true length of each sequence. The features are then averaged over the _valid_ frames
-only — a masked mean — which lets clips of any length share a batch without the padding diluting the
+only which lets clips of any length share a batch without the padding diluting the
 representation; we call this _time batching_. A linear layer maps the 64-dimensional summary to the
 deception logit. An optional second head regresses the 41 MUMIN annotations from the same summary;
 it is used only as an auxiliary training loss and is discarded at inference.

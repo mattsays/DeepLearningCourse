@@ -49,8 +49,13 @@ def load_folds(splits: Path, protocol: str, labels: dict, seed: int) -> list[dic
     if protocol == "official":
         for k in (1, 2, 3):
             d = json.loads((splits / f"official_fold{k}.json").read_text())
-            train = [c for c in d["train"]["clips"] if c in labels]
             test = [c for c in d["test"]["clips"] if c in labels]
+            # The official files list a few clips in both train and test of the same fold
+            # (dataset README §11); they are scored, never trained on.
+            both = set(d["train"]["clips"]) & set(test)
+            if both:
+                print(f"official_fold{k}: {len(both)} clip(s) in train and test, dropped from train")
+            train = [c for c in d["train"]["clips"] if c in labels and c not in both]
             y = [labels[c] for c in train]
             tr, va = train_test_split(train, test_size=0.15, stratify=y, random_state=seed + k)
             folds.append({"train": set(tr), "val": set(va), "holdout": set(test)})
