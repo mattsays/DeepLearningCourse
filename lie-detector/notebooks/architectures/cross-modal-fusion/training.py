@@ -9,6 +9,10 @@ Here the same loop takes the split and the variant as arguments. [`campaign.ipyn
 calls :func:`run_campaign` once and gets every `results/<run>/` directory; `train.ipynb` keeps its
 interactive cells for trying one thing, and the recipe itself is this module.
 
+[`test.ipynb`](test.ipynb) is the one thing this module does that the campaign must not:
+:func:`run_test` trains the same folds with ``split="test"`` and scores the closed test set with
+them, once, at the end.
+
 Two things this file does *not* decide: what a run is worth (that is `results/README.md` and the
 direction README) and what the split contains (`lib.dataset.Protocol`).
 """
@@ -165,7 +169,9 @@ class Data:
         """Every clip the protocol touches, once, in a stable order.
 
         In official mode this is the union of the paper's train/test pairs, which covers the
-        whole dataset; the subject folds leave the virgin test set out.
+        whole dataset; the subject folds leave the virgin test set out. The ``test`` split is
+        the subject folds plus that set: it trains on the same clips and scores the closed
+        one, which is why it needs its features in the same store.
         """
         ids = []
         for fold in range(1, self.n_folds + 1):
@@ -173,6 +179,8 @@ class Data:
                      else self.folds.subject(fold))
             for part in parts:
                 ids += part
+        if self.split == "test":
+            ids += self.folds.test()
         return list(dict.fromkeys(ids))
 
     def fold_parts(self, fold: int):
@@ -195,12 +203,33 @@ class Data:
 # ---------------------------------------------------------------- the loop
 
 
-def train_one_fold(data: Data, variant: str, fold: int, seed: int, verbose: bool = True) -> dict:
+def predict(net, data: Data, ids=None, loader=None) -> tuple[list[str], list[int], list[float]]:
+    """``(clip ids, labels, probabilities)`` for one fitted model over one set of clips.
+
+    Pass ``loader`` when the caller already built it (the validation loop rebuilds nothing);
+    otherwise the ids are wrapped in a fresh, unshuffled loader.
+    """
+    device = data.settings.torch_device()
+    dl = loader if loader is not None else data.loader(ids, False)
+    probs, targets = [], []
+    net.eval()
+    with torch.no_grad():
+        for (video, audio, text), y in dl:
+            probs += torch.sigmoid(net(video.to(device), audio.to(device),
+                                       text.to(device))).tolist()
+            targets += y.tolist()
+    return dl.dataset.clip_ids, targets, probs
+
+
+def train_one_fold(data: Data, variant: str, fold: int, seed: int, verbose: bool = True,
+                   return_net: bool = False) -> dict:
     """Train one fold and return its metrics plus the holdout predictions.
 
     Early stopping on validation AUC, ``pos_weight`` to compensate the class prior, and the
     decision threshold chosen on ``val`` — never on the holdout. The official split has no
     validation set, so it runs the fixed epoch budget at threshold 0.5, as the paper does.
+    ``return_net`` hands the fitted net back: that is what scores the test set in
+    :func:`run_test`.
     """
     settings, device = data.settings, data.settings.torch_device()
     train_ids, val_ids, hold_ids = data.fold_parts(fold)
@@ -236,13 +265,7 @@ def train_one_fold(data: Data, variant: str, fold: int, seed: int, verbose: bool
 
         if dl_val is None:                    # official split: no early stopping, no val threshold
             continue
-        net.eval()
-        probs, targets = [], []
-        with torch.no_grad():
-            for (video, audio, text), y in dl_val:
-                probs += torch.sigmoid(net(video.to(device), audio.to(device),
-                                           text.to(device))).tolist()
-                targets += y.tolist()
+        _, targets, probs = predict(net, data, loader=dl_val)
         score = evaluate(targets, probs)["auc"]
         score = score if score == score else 0.0          # NaN if the val has one class
 
@@ -259,15 +282,7 @@ def train_one_fold(data: Data, variant: str, fold: int, seed: int, verbose: bool
         net.load_state_dict(best_state)
     else:
         best_thr = 0.5                        # the paper's operating point: argmax of the logits
-    net.eval()
-    probs, targets = [], []
-    with torch.no_grad():
-        for (video, audio, text), y in dl_hold:
-            probs += torch.sigmoid(net(video.to(device), audio.to(device),
-                                       text.to(device))).tolist()
-            targets += y.tolist()
-
-    ids = dl_hold.dataset.clip_ids
+    ids, targets, probs = predict(net, data, loader=dl_hold)
     assert len(ids) == len(probs) == len(targets), (len(ids), len(probs), len(targets))
 
     metrics = evaluate(targets, probs, threshold=best_thr)
@@ -276,7 +291,10 @@ def train_one_fold(data: Data, variant: str, fold: int, seed: int, verbose: bool
     if verbose:
         print(f"    fold {fold} seed {seed}: ACC {metrics['acc'] * 100:5.1f}  "
               f"AUC {metrics['auc'] * 100:5.1f}  thr {best_thr:.2f}  {seconds:4.0f}s")
-    return {"metrics": metrics, "ids": ids, "targets": targets, "probs": probs}
+    out = {"metrics": metrics, "ids": ids, "targets": targets, "probs": probs}
+    if return_net:
+        out["net"] = net
+    return out
 
 
 def run_one(data: Data, variant: str, verbose: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -295,6 +313,47 @@ def run_one(data: Data, variant: str, verbose: bool = True) -> tuple[pd.DataFram
     per_clip = (per_clip.groupby("clip_id", as_index=False)
                         .agg(y_true=("y_true", "first"), y_prob=("y_prob", "mean")))
     return summary, per_clip
+
+
+def run_test(data: Data, variant: str,
+             verbose: bool = True) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Train every seed × fold and score the closed test set with each fitted model.
+
+    The number this returns is the one ``docs/evaluation.md`` reserves for the end: the test
+    set is scored, never used. Each model keeps the threshold it chose on its own ``val`` —
+    nothing about the test set picks a threshold, an epoch or a variant — so an unusual
+    number here is a result, not something to adjust.
+
+    Returns ``(test_summary, test_preds, holdout_summary)``: one row per seed × fold, one row
+    per clip and model, and the holdout metrics those same folds scored (which is what
+    ``results/<variant>-subject/folds.csv`` holds, so the retraining can be checked against
+    the run the board quotes).
+    """
+    if data.split != "test":
+        raise ValueError(f"run_test scores the closed set: build Data with split='test', "
+                         f"not {data.split!r}")
+    test_ids = data.folds.test()
+    rows, pooled, holdout_rows = [], [], []
+    for seed in data.settings.seeds:
+        for fold in range(1, data.n_folds + 1):
+            out = train_one_fold(data, variant, fold, seed, verbose=verbose, return_net=True)
+            holdout_rows.append({"seed": seed, "fold": fold, **out["metrics"]})
+
+            threshold = out["metrics"]["threshold"]
+            ids, targets, probs = predict(out["net"], data, test_ids)
+            metrics = evaluate(targets, probs, threshold=threshold)
+            metrics["seconds"] = out["metrics"]["seconds"]
+            metrics["epochs"] = out["metrics"]["epochs"]
+            rows.append({"seed": seed, "fold": fold, **metrics})
+            pooled.append(pd.DataFrame({"clip_id": ids, "y_true": targets, "y_prob": probs,
+                                        "seed": seed, "fold": fold}))
+            if verbose:
+                print(f"    fold {fold} seed {seed} on the test set: "
+                      f"ACC {metrics['acc'] * 100:5.1f}  AUC {metrics['auc'] * 100:5.1f}  "
+                      f"thr {threshold:.2f}")
+
+    return (pd.DataFrame(rows), pd.concat(pooled, ignore_index=True),
+            pd.DataFrame(holdout_rows))
 
 
 def config_for(data: Data, variant: str, settings: Settings, direction: str = "tia",

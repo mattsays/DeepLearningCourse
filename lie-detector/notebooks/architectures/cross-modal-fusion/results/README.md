@@ -22,9 +22,10 @@ results/
 ```
 
 Run names are built by `export.run_name`: `late-subject`, `late-official`, `audio-subject`,
-`late-subject-nocaptains`, `late-subject+v2`. `subject` is our subject-independent 5-fold
-protocol — the one the board reads. `official` is the paper's clip-level 3-fold, which leaks
-speaker and round; it is reproduced to measure the leak, never to compete.
+`late-subject-nocaptains`, `late-subject+v2`, `late-test`. `subject` is our subject-independent
+5-fold protocol — the one the board reads. `official` is the paper's clip-level 3-fold, which leaks
+speaker and round; it is reproduced to measure the leak, never to compete. `test` is the closed
+set, opened once (see below).
 
 ## The files
 
@@ -90,10 +91,28 @@ Two flat files sit beside the directories, written by
 `oracle_mumin.csv` (the 41 annotations through a logistic regression, subject split — the
 non-deployable reference at 51.1 ACC / 52.5 AUC).
 
+## The opened test set: `<variant>-test`
+
+[`test.ipynb`](../test.ipynb) retrains the five subject folds with the configuration frozen before
+`subject_test.json` was opened and scores the closed set with each fitted model. This is the one
+directory here whose clips no board row was computed on, and the only one the test subjects appear
+in.
+
+Two differences from a board run:
+
+- `preds.csv` holds **one row per model and clip** — three seeds × five folds score the same clips
+  — not one per clip. The ensemble the notebook prints is `groupby("clip_id").y_prob.mean()` on
+  that file.
+- `board_row.md` says what the directory is, not a line for `## Results board`. The board is the
+  mean over the five holdouts; a test number is a different quantity on 27 subjects, and
+  [`docs/evaluation.md`](../../../../docs/evaluation.md) gives its interval as ±18.5 pp. It is
+  reported once, beside the board estimate, not compared with it.
+
 ## What is not here
 
 - **Checkpoints.** The trainable part is 10⁵ parameters; retraining a fold is cheaper than
   storing one, and `run.json` + the caches reproduce it.
 - **Features.** `cached_features/` lives in the shared Drive folder and is 330 MB.
-- **The virgin test set.** `subject_test.json` is opened once, for the final number, and no run
-  in this folder touches it.
+- **The virgin test set, until it is opened.** `subject_test.json` is scored once, by
+  [`test.ipynb`](../test.ipynb), and written to `<variant>-test/`; no other run in this folder
+  reads it.

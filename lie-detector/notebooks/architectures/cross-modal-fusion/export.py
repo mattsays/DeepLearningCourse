@@ -21,7 +21,9 @@ Layout (owned by ``results/README.md``; do not restate it elsewhere)::
     results/<run>/board_row.md    the results-board line, or why this run has none
 
 ``run_name`` is ``<variant>-<split>``, with ``-nocaptains`` and ``+<protocol>`` appended when
-the run is an ablation, e.g. ``late-subject``, ``late-official``, ``late-subject+2``.
+the run is an ablation, e.g. ``late-subject``, ``late-official``, ``late-test``,
+``late-subject+2``. ``test`` is the closed set: its ``preds.csv`` carries one row per model
+and clip, not one per clip, because every fold scores every test clip.
 """
 
 from __future__ import annotations
@@ -140,6 +142,10 @@ def _summary_json(summary: pd.DataFrame, config: dict) -> dict:
 def _board_row(summary: pd.DataFrame, config: dict, per_clip: pd.DataFrame) -> str:
     """The one line for the results board, or the reason this split has none."""
     split, protocol = config.get("split"), config.get("protocol", "v1")
+    if split == "test":
+        return ("This run is the **opened test set**: `subject_test.json`, scored once with "
+                "the configuration frozen before it was opened. It is the number reserved for "
+                "the end, not a board row — the board is the mean over the five holdouts.\n")
     if split == "official":
         return ("This run is the **official 3-fold clip-level split**: a reproduction of the "
                 "paper's protocol, not a board row. Report it only as the leaky side of the "
@@ -193,5 +199,5 @@ def save_run(summary: pd.DataFrame, per_clip: pd.DataFrame, config: dict,
     (directory / "run.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
     (directory / "board_row.md").write_text(_board_row(summary, config, per_clip),
                                             encoding="utf-8")
-    print(f"saved {directory}: {len(folds)} fold/seed rows, {len(pooled)} clips")
+    print(f"saved {directory}: {len(folds)} fold/seed rows, {len(pooled)} prediction rows")
     return directory

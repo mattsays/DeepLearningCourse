@@ -59,6 +59,7 @@ split. That gap, and the one it implies for every model here, is measured in
 | [`campaign.ipynb`](campaign.ipynb) | the batch path: every reported run, both protocols, in one kernel |
 | [`training.py`](training.py) | the recipe — features, folds, the loop, the campaign driver |
 | [`train.ipynb`](train.ipynb) | one configuration interactively: every variant, predictions per clip |
+| [`test.ipynb`](test.ipynb) | the closed test set, scored once: `results/<variant>-test/` |
 | [`model.py`](model.py) | the variants and the `VARIANTS` registry |
 | [`export.py`](export.py) | writes one run to `results/`; the layout is owned by [`results/README.md`](results/README.md) |
 | [`results/`](results/) | one directory per run: summary, per-fold metrics, predictions, provenance |
@@ -75,8 +76,15 @@ extract_features.ipynb   # once, writes cached_features/<encoder>/ into the shar
 extract_vjepa2.ipynb     # optional: a video-native backbone, cached_features/vjepa2-vitl/
 campaign.ipynb           # the six reported runs, 3 seeds each; writes results/<run>/ for all
 train.ipynb              # one configuration: VARIANT, SPLIT, SEEDS at the top, last cell saves it
+test.ipynb               # the closed test set: open it once, at the end, never twice
 diagnostics.ipynb        # after the caches exist; writes results/diagnostics_mumin.csv
 ```
+
+`test.ipynb` is the last stop, and the only notebook that reads `subject_test.json`. It retrains
+the five subject folds of one configuration, scores the 27 subjects with each fitted model at that
+model's own validation threshold, and writes `results/<variant>-test/`. The guard in the notebook is deliberate: the configuration is chosen
+before the set is opened, and a second variant run afterwards is a draw from the same small sample,
+not a second estimate.
 
 ### Other video backbones
 
