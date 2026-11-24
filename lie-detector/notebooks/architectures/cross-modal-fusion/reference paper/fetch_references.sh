@@ -15,7 +15,6 @@ PAPERS="
 pecl-dolos             2303.12745
 dinov2                 2304.07193
 wavlm                  2110.13900
-minilm                 2002.10957
 vjepa2                 2506.09985
 mult                   1906.00295
 perceiver              2103.03206

@@ -42,7 +42,6 @@ class Encoders:
 
     video: str = "dinov2-small"
     audio: str = "wavlm-base-plus"
-    text: str = "text-minilm"
 
 
 @dataclass
@@ -80,10 +79,10 @@ class Settings:
 
 
 class Features:
-    """The three caches in RAM, keyed by clip id, read once — in parallel.
+    """Both caches in RAM, keyed by clip id, read once — in parallel.
 
     ``CachedFeatures`` stats every clip it is handed and reads whatever split it is given, so
-    building one per split (and three per fold) re-reads a 330 MB cache dozens of times over a
+    building one per split (and two per fold) re-reads a 330 MB cache dozens of times over a
     latency-bound Drive mount. One pass here, then every loader is a dict lookup.
     """
 
@@ -92,13 +91,10 @@ class Features:
                                                    ids, "video", settings.read_workers)
         self.audio, missing_audio = self._read_all(cache_dir(settings.encoders.audio, settings.data),
                                                    ids, "audio", settings.read_workers)
-        self.text, missing_text = self._read_all(cache_dir(settings.encoders.text, settings.data),
-                                                 ids, "text", settings.read_workers)
-        self.clip_ids = [c for c in ids if c in self.video and c in self.audio and c in self.text]
+        self.clip_ids = [c for c in ids if c in self.video and c in self.audio]
         self.index = {c: i for i, c in enumerate(self.clip_ids)}
         print(f"  video {len(self.video)} read, {missing_video} missing | "
-              f"audio {len(self.audio)} read, {missing_audio} missing | "
-              f"text {len(self.text)} read, {missing_text} missing")
+              f"audio {len(self.audio)} read, {missing_audio} missing")
         print(f"  usable: {len(self.clip_ids)}/{len(ids)} clips")
 
     @staticmethod
@@ -127,12 +123,11 @@ class Features:
     def widths(self) -> dict[str, int]:
         sample = self.clip_ids[0]
         return {"video": self.video[sample].shape[-1],
-                "audio": self.audio[sample].shape[-1],
-                "text": self.text[sample].shape[-1]}
+                "audio": self.audio[sample].shape[-1]}
 
 
 class Paired(Dataset):
-    """``(video, audio, text) -> label`` for the clips the store holds."""
+    """``(video, audio) -> label`` for the clips the store holds."""
 
     def __init__(self, features: Features, ids, clips):
         self.features = features
@@ -144,8 +139,7 @@ class Paired(Dataset):
 
     def __getitem__(self, index):
         clip_id = self.clip_ids[index]
-        return ((self.features.video[clip_id], self.features.audio[clip_id],
-                 self.features.text[clip_id]),
+        return ((self.features.video[clip_id], self.features.audio[clip_id]),
                 torch.tensor(self.clips[clip_id].y, dtype=torch.long))
 
 
@@ -159,11 +153,10 @@ class Data:
         self.clips, self.folds, self.settings, self.split = clips, folds, settings, split
         self.n_folds = 3 if split == "official" else folds.folds
         ids = self.working_ids()
-        print(f"[{split}] {len(ids)} clips in the protocol, reading the three caches once")
+        print(f"[{split}] {len(ids)} clips in the protocol, reading both caches once")
         self.features = Features(clips.keep(ids), settings)
         self.widths = self.features.widths()
-        model.configure(video_dim=self.widths["video"], audio_dim=self.widths["audio"],
-                        text_dim=self.widths["text"])
+        model.configure(video_dim=self.widths["video"], audio_dim=self.widths["audio"])
 
     def working_ids(self) -> list[str]:
         """Every clip the protocol touches, once, in a stable order.
@@ -214,9 +207,8 @@ def predict(net, data: Data, ids=None, loader=None) -> tuple[list[str], list[int
     probs, targets = [], []
     net.eval()
     with torch.no_grad():
-        for (video, audio, text), y in dl:
-            probs += torch.sigmoid(net(video.to(device), audio.to(device),
-                                       text.to(device))).tolist()
+        for (video, audio), y in dl:
+            probs += torch.sigmoid(net(video.to(device), audio.to(device))).tolist()
             targets += y.tolist()
     return dl.dataset.clip_ids, targets, probs
 
@@ -254,11 +246,11 @@ def train_one_fold(data: Data, variant: str, fold: int, seed: int, verbose: bool
     epoch = -1
     for epoch in range(settings.epochs):
         net.train()
-        for (video, audio, text), y in dl_train:
-            video, audio, text, y = (video.to(device), audio.to(device), text.to(device),
+        for (video, audio), y in dl_train:
+            video, audio, y = (video.to(device), audio.to(device),
                                      y.to(device))
             optimiser.zero_grad()
-            loss = loss_fn(net(video, audio, text), y.float())
+            loss = loss_fn(net(video, audio), y.float())
             loss.backward()
             torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0)
             optimiser.step()
@@ -370,9 +362,8 @@ def config_for(data: Data, variant: str, settings: Settings, direction: str = "t
         owner=owner,
         folds=data.n_folds,
         seeds=list(settings.seeds),
-        encoders={"video": settings.encoders.video, "audio": settings.encoders.audio,
-                  "text": settings.encoders.text},
-        widths={"video": model.VIDEO_DIM, "audio": model.AUDIO_DIM, "text": model.TEXT_DIM},
+        encoders={"video": settings.encoders.video, "audio": settings.encoders.audio},
+        widths={"video": model.VIDEO_DIM, "audio": model.AUDIO_DIM},
         trainable_params=sum(p.numel() for p in net.parameters() if p.requires_grad),
         training={"batch_size": settings.batch_size, "epochs": settings.epochs,
                   "patience": settings.patience, "lr": settings.lr,

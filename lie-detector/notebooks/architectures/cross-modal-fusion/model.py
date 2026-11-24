@@ -28,23 +28,19 @@ import torch.nn as nn
 
 VIDEO_DIM = 384
 AUDIO_DIM = 768
-TEXT_DIM = 384
 
 
-def configure(video_dim: int | None = None, audio_dim: int | None = None,
-              text_dim: int | None = None) -> None:
+def configure(video_dim: int | None = None, audio_dim: int | None = None) -> None:
     """Set the input widths the variants build their first layer from.
 
     Call this once, after the caches are loaded and before the first model is built. Without
-    it the defaults above apply, which is what DINOv2 + WavLM + MiniLM produce.
+    it the defaults above apply, which is what DINOv2 + WavLM produce.
     """
-    global VIDEO_DIM, AUDIO_DIM, TEXT_DIM
+    global VIDEO_DIM, AUDIO_DIM
     if video_dim:
         VIDEO_DIM = int(video_dim)
     if audio_dim:
         AUDIO_DIM = int(audio_dim)
-    if text_dim:
-        TEXT_DIM = int(text_dim)
 
 
 class LateFusion(nn.Module):
@@ -68,8 +64,7 @@ class LateFusion(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         v = self.video(video).mean(dim=1)      # (B, 16, 384) -> (B, d)
         a = self.audio(audio).mean(dim=1)      # (B, 64, 768) -> (B, d)
         return self.head(torch.cat([v, a], dim=-1)).squeeze(-1)
@@ -90,8 +85,7 @@ class VideoOnly(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         return self.head(self.video(video).mean(dim=1)).squeeze(-1)
 
 
@@ -110,8 +104,7 @@ class AudioOnly(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         return self.head(self.audio(audio).mean(dim=1)).squeeze(-1)
 
 
@@ -131,59 +124,11 @@ class Congruence(nn.Module):
         self.weight = nn.Parameter(torch.zeros(1))
         self.bias = nn.Parameter(torch.zeros(1))
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         v = nn.functional.normalize(self.video(video).mean(dim=1), dim=-1)
         a = nn.functional.normalize(self.audio(audio).mean(dim=1), dim=-1)
         score = 1.0 - (v * a).sum(dim=-1)          # (B,), in [0, 2]
         return self.weight * score + self.bias
-
-
-class AudioText(nn.Module):
-    """Audio + text: the two channels that carry language. The face is not used.
-
-    Whisper transcribes, a frozen sentence encoder embeds the transcript; the vector is
-    concatenated with the pooled audio embedding. Same budget as `LateFusion`.
-    """
-
-    def __init__(self, d: int = 128, hidden: int = 64, drop: float = 0.3):
-        super().__init__()
-        self.audio = nn.Linear(AUDIO_DIM, d)
-        self.text = nn.Linear(TEXT_DIM, d)
-        self.head = nn.Sequential(
-            nn.LayerNorm(2 * d),
-            nn.Dropout(drop),
-            nn.Linear(2 * d, hidden),
-            nn.GELU(),
-            nn.Dropout(drop),
-            nn.Linear(hidden, 1),
-        )
-
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
-        a = self.audio(audio).mean(dim=1)      # (B, 64, 768) -> (B, d)
-        t = self.text(text)                    # (B, 384) -> (B, d)
-        return self.head(torch.cat([a, t], dim=-1)).squeeze(-1)
-
-
-class TextOnly(nn.Module):
-    """Only the words, through a frozen sentence encoder."""
-
-    def __init__(self, d: int = 128, hidden: int = 64, drop: float = 0.3):
-        super().__init__()
-        self.text = nn.Linear(TEXT_DIM, d)
-        self.head = nn.Sequential(
-            nn.LayerNorm(d),
-            nn.Dropout(drop),
-            nn.Linear(d, hidden),
-            nn.GELU(),
-            nn.Dropout(drop),
-            nn.Linear(hidden, 1),
-        )
-
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
-        return self.head(self.text(text)).squeeze(-1)
 
 
 class AttentionPool(nn.Module):
@@ -229,8 +174,7 @@ class VideoDelta(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         change = (video[:, 1:] - video[:, :-1]).abs().mean(dim=1)   # (B, 384)
         pose = self.pose(video).mean(dim=1)
         motion = self.motion(change)
@@ -254,8 +198,7 @@ class LateDelta(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         change = (video[:, 1:] - video[:, :-1]).abs().mean(dim=1)
         pose = self.pose(video).mean(dim=1)
         motion = self.motion(change)
@@ -279,8 +222,7 @@ class VideoAttention(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         return self.head(self.pool(self.video(video))).squeeze(-1)
 
 
@@ -300,8 +242,7 @@ class AudioAttention(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         return self.head(self.pool(self.audio(audio))).squeeze(-1)
 
 
@@ -322,8 +263,7 @@ class LateAttention(nn.Module):
             nn.Linear(hidden, 1),
         )
 
-    def forward(self, video: torch.Tensor, audio: torch.Tensor,
-                text: torch.Tensor | None = None) -> torch.Tensor:
+    def forward(self, video: torch.Tensor, audio: torch.Tensor) -> torch.Tensor:
         v = self.pool(self.video(video))
         a = self.pool(self.audio(audio))
         return self.head(torch.cat([v, a], dim=-1)).squeeze(-1)
@@ -334,8 +274,6 @@ VARIANTS = {
     "video": VideoOnly,
     "audio": AudioOnly,
     "congruence": Congruence,
-    "audio_text": AudioText,
-    "text": TextOnly,
     "video_delta": VideoDelta,
     "late_delta": LateDelta,
     "video_attention": VideoAttention,
@@ -347,10 +285,9 @@ VARIANTS = {
 if __name__ == "__main__":
     video = torch.randn(4, 16, VIDEO_DIM)
     audio = torch.randn(4, 64, AUDIO_DIM)
-    text = torch.randn(4, TEXT_DIM)
     for name, build in VARIANTS.items():
         net = build()
-        logits = net(video, audio, text)
+        logits = net(video, audio)
         assert logits.shape == (4,), (name, logits.shape)
         trainable = sum(p.numel() for p in net.parameters() if p.requires_grad)
         print(f"{name:11s} {trainable:>8,} trainable parameters, logits {tuple(logits.shape)}")

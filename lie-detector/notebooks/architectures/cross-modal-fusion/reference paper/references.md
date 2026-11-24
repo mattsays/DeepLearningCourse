@@ -3,7 +3,7 @@
 The literature this direction stands on. One PDF per row, named `<topic>-<arXiv id>.pdf`; the
 one file that predates this index keeps its original name (`2303.12745v2.pdf`).
 
-The PDFs are in this folder, committed (twelve files, 82 MB). `./fetch_references.sh --check`
+The PDFs are in this folder, committed (eleven files, 81 MB). `./fetch_references.sh --check`
 compares each one with the server's byte count and says what is missing; run it without
 `--check` to re-download whatever got lost. It exists because the link was slow the day they
 were fetched, and because a paper that silently truncates is worse than a missing one.
@@ -24,7 +24,6 @@ design decision is decoration.
 |---|---|---|
 | [`dinov2-2304.07193.pdf`](dinov2-2304.07193.pdf) | Oquab et al., *DINOv2: Learning Robust Visual Features without Supervision* (arXiv:2304.07193) | The video stream: one CLS vector per face crop, no fine-tuning. Supports the premise that a frozen all-purpose feature is enough to describe a face — and, by being a strong *identity* encoder, it is also the explanation of the leak in [`docs/protocol-effect.md`](../docs/protocol-effect.md). |
 | [`wavlm-2110.13900.pdf`](wavlm-2110.13900.pdf) | Chen et al., *WavLM: Large-Scale Self-Supervised Pre-Training for Full Stack Speech Processing* (arXiv:2110.13900) | The audio stream. Its pre-training includes denoising and speech-separation objectives, which is the argument for expecting paralinguistic information (stress, hesitation) in the representation, not just words. |
-| [`minilm-2002.10957.pdf`](minilm-2002.10957.pdf) | Wang et al., *MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained Transformers* (arXiv:2002.10957) | The text stream of `audio_text` / `text`: a 384-d frozen embedding of the Whisper transcript, small enough to sit inside the parameter budget. |
 | [`vjepa2-2506.09985.pdf`](vjepa2-2506.09985.pdf) | Assran et al., *V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning* (arXiv:2506.09985) | The video-native alternative cache — `extract_vjepa2.ipynb`, `(32, 1024)` per clip. It is the experiment that separates "a face encoder at 3 fps" from "a model that sees motion". Not on the board: one backbone swap, reported as a one-variable comparison. |
 
 The supervised face encoder (HSEmotion, EfficientNet-B0 on AffectNet) has no paper in this

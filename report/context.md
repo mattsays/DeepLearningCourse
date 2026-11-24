@@ -42,7 +42,7 @@ Internal reference compiled from `lie-detector/notebooks/architectures/` to keep
   - Default visual: `facebook/dinov2-small` on 16 MTCNN face crops → `(16, 384)`. (Optional caches in code: `vjepa2-vitl` `(32, 1024)` over 64 frames; `hsemotion-b0-vgaf` `(16, 1280)` or `(16, 8)`).
   - Default audio: `microsoft/wavlm-base-plus` last hidden state average-pooled to 64 tokens → `(64, 768)`.
   - Projection to $d = 128$, `LayerNorm`, `Dropout(0.3)`, `Linear → GELU → Dropout(0.3) → Linear(64, 1)`.
-  - 11 variants in `model.py`: `late` (164,737 params), `video` (57,857), `audio` (107,009), `congruence` (`1 - cos(v,a)`, 147,714), `audio_text`, `text`, `video_delta`, `late_delta`, `video_attention`, `audio_attention`, `late_attention`.
+  - 9 variants in `model.py`: `late` (164,737 params), `video` (57,857), `audio` (107,009), `congruence` (`1 - cos(v,a)`, 147,714), `video_delta`, `late_delta`, `video_attention`, `audio_attention`, `late_attention`.
 - **Committed Results (`results/*/summary.json`, 3 seeds [0, 1, 2])**:
   - **`late-official`**: **72.18 ± 2.96% ACC**, **80.41 ± 2.93% AUC**, 73.09% F1, 72.19% bal. ACC (164,737 params). Beats PECL PAVF by **+7.4 ACC / +17.7 AUC**.
   - **`video-official`**: **73.15 ± 1.71% ACC**, **80.24 ± 1.79% AUC**, 74.76% F1, 73.02% bal. ACC (57,857 params).
@@ -125,11 +125,10 @@ Internal reference compiled from `lie-detector/notebooks/architectures/` to keep
   - Jordan et al. (2019) — direct test of Ekman's Micro-Expressions Training Tool (cited in `load/docs/theory.md`).
   - Allwood et al., *The MUMIN coding scheme...*, LRE 2007 (`allwood2007mumin`).
 
-### `cross-modal-fusion` (`tia`, 12 PDFs in `cross-modal-fusion/reference paper/`)
+### `cross-modal-fusion` (`tia`, 11 PDFs in `cross-modal-fusion/reference paper/`)
 - **Backbones**:
   - **DINOv2**: Oquab et al., *DINOv2: Learning Robust Visual Features without Supervision*, TMLR 2024 (arXiv:2304.07193, `dinov2-2304.07193.pdf`, `oquab2024dinov2`).
   - **WavLM**: Chen et al., *WavLM: Large-Scale Self-Supervised Pre-Training for Full Stack Speech Processing*, IEEE JSTSP 2022 (arXiv:2110.13900, `wavlm-2110.13900.pdf`, `chen2022wavlm`).
-  - **MiniLM**: Wang et al., *MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained Transformers*, NeurIPS 2020 (arXiv:2002.10957, `minilm-2002.10957.pdf`).
   - **V-JEPA 2**: Assran et al., *V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction and Planning*, 2025 (arXiv:2506.09985, `vjepa2-2506.09985.pdf`).
   - *(HSEmotion: Savchenko `face-emotion-recognition` GitHub repo, Apache-2.0; no PDF.)*
 - **Fusion, Adaptation & Methodology**:

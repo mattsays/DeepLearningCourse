@@ -54,7 +54,7 @@ split. That gap, and the one it implies for every model here, is measured in
 
 | File | What it is |
 |---|---|
-| [`extract_features.ipynb`](extract_features.ipynb) | one-off: frozen DINOv2 (or HSEmotion), WavLM and MiniLM features into the shared cache |
+| [`extract_features.ipynb`](extract_features.ipynb) | one-off: frozen DINOv2 (or HSEmotion) and WavLM features into the shared cache |
 | [`extract_vjepa2.ipynb`](extract_vjepa2.ipynb) | optional second video cache: V-JEPA 2 ViT-L, `(32, 1024)` per clip |
 | [`campaign.ipynb`](campaign.ipynb) | the batch path: every reported run, both protocols, in one kernel |
 | [`training.py`](training.py) | the recipe — features, folds, the loop, the campaign driver |
@@ -90,7 +90,7 @@ not a second estimate.
 
 Two alternatives to DINOv2 write the same cache contract, so switching to one is a single line in
 `train.ipynb`: the notebook calls `model.configure(...)` with the widths it finds in the caches,
-so the variants build the matching input layer without edits. Audio and text stay identical,
+so the variants build the matching input layer without edits. The audio stream stays identical,
 which makes each comparison one-variable — same folds, same seeds, same probe, different visual
 encoder.
 
