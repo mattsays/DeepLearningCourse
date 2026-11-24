@@ -98,7 +98,8 @@ each other.
   ),
   caption: [Test clips actually scored on each official fold. Cross-Modal Fusion needs a cached
     embedding for every modality; the baseline reuses a feature cache built for a different clip
-    list. Per-fold counts of the baseline after fold 1 were not logged.],
+    list. Per-fold counts of the baseline after fold 1 were not logged, and the MARLIN + ConvNeXt
+    run logged no clip counts at all, so its coverage is unavailable.],
 ) <tab:coverage>
 
 == Metrics and evaluation rules
@@ -114,7 +115,8 @@ every model must beat: 52.4–53.3% depending on the subset.
 
 The official folds have no validation set, and the models handle this in two ways (@tab:rules).
 Cross-Modal Fusion and the theory-driven baseline train for a fixed number of epochs and classify at
-the paper's operating point, threshold 0.5. VideoMAE + HuBERT and MARLIN + ConvNeXt carve a
+the paper's operating point, threshold 0.5. The Temporal CNN, VideoMAE + HuBERT and
+MARLIN + ConvNeXt carve a
 stratified 15% validation set out of each training fold, at the clip level, and use it for early
 stopping and to choose the threshold. Neither rule ever looks at the test fold. The second rule
 trains on less data but tunes more; we keep both and state which one each number uses.
@@ -128,6 +130,7 @@ trains on less data but tunes more; we keep both and state which one each number
     table.hline(stroke: 0.5pt),
     [Theory-driven baseline], [none], [fixed 60 epochs], [0.5],
     [Cross-Modal Fusion], [none], [fixed 30 epochs], [0.5],
+    [Temporal CNN], [15% of train, clip-level], [best val AUC], [max. val balanced ACC],
     [VideoMAE + HuBERT, LoRA], [15% of train, clip-level], [best val AUC], [max. val balanced ACC],
     [MARLIN + ConvNeXt], [15% of train, clip-level], [best val loss], [max. val balanced ACC],
     table.hline(),

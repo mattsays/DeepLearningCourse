@@ -69,10 +69,21 @@ boundary. An episode-disjoint control has not been run.
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
 concentrated in the visual channel: DINOv2 alone loses 23 accuracy points and falls to chance, and
 the LoRA-adapted VideoMAE loses 14, whereas WavLM, HuBERT and the 17 acoustic features lose 4–7. The
-acoustic representations carry no face, clothing or set, so they have little identity to exploit.
-Audio becomes the strongest single channel: HuBERT alone reaches 56.1% (95% speaker-cluster
-bootstrap interval 51.4–60.8%, one-sided binomial $p = 0.010$ against the 52.1% majority), the only
-single-channel result clearly above chance. The DOLOS paper's own cross-dataset results (57.54% on
+acoustic representations exclude the _visual_ identity cues — face, clothing, set — but not
+identity altogether: voice timbre and the recording conditions of an episode remain available, so
+the smaller drop is consistent with, not proof of, less reliance on identity.
+
+Audio becomes the strongest single channel, but only its ranking is reliably above chance. We pooled
+the 886 holdout clips of VideoMAE + HuBERT (135 speakers), each judged at its own fold's threshold,
+and resampled whole speakers 10,000 times, comparing the model on every resample with the majority
+rate of that same resample (`lore/scripts/cluster_test.py`). HuBERT's accuracy of 56.1% is 4.0
+points above the 52.1% majority, but the 95% interval of that gain, −4.7 to +9.1, contains zero
+(one-sided $p = 0.21$): its accuracy is suggestive, not significant. Its pooled AUC of 58.7 is
+8.7 points above 0.5 with interval +2.8 to +14.7 ($p = 0.001$), and the fused model behaves the
+same way (AUC 60.4, interval +4.1 to +16.5). The video branch is not distinguishable from chance on
+either measure (AUC 53.5, interval −3.2 to +10.3). A binomial test on the clips would report
+$p = 0.010$ for HuBERT's accuracy, but it treats the clips of one speaker as independent and is
+therefore too optimistic. The DOLOS paper's own cross-dataset results (57.54% on
 Bag-of-Lies, 56.17% on Real-Life Trials, both with unseen subjects) fall in the same range as our
 subject-independent estimates.
 
@@ -84,7 +95,7 @@ decided from these numbers.
 Two further observations point the same way. The fused Cross-Modal Fusion model chooses very
 different thresholds on different folds and seeds (0.06–0.84), a sign that its validation scores
 carry little signal. And the official split is not only easier but more reproducible: its per-seed
-AUCs span 2.2 points, against 5.0 on the subject split, because identity is a stable signal and
+AUCs span 2.2 points, against 5.0 on the subject split, consistent with identity being a stable signal and
 behaviour is not.
 
 These five-fold numbers are _development estimates_, not untouched test results. The variants of

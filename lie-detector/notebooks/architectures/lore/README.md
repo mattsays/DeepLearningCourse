@@ -38,7 +38,9 @@ Training cost on Kaggle (Tesla T4): 98.8 min for video and 15.7 min for audio ov
 ## What it means
 
 **The voice carries the signal, the face does not.** On unseen speakers the audio branch is the only
-one above chance: pooled 56.1 %, 95 % subject-bootstrap CI 51.4–60.8. Video sits at 51.6 % with
+one above chance, in AUC only: pooled AUC 58.7 (speaker-bootstrap CI over 0.5: +2.8 to +14.7),
+while its 56.1 % accuracy is not significantly above the 52.1 % majority once speakers are
+resampled ([`docs/report.md`](docs/report.md) §6.1). Video sits at 51.6 % with
 53.6 AUC, and the tuned fusion weight gives video w = 0 in 3 of 5 folds.
 
 **The protocol is most of the paper's number.** The same video model goes from 65.4 % on the paper's

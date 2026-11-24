@@ -3,8 +3,9 @@
 // ================================================================ 7
 = Discussion and Limitations <sec:discussion>
 
-*What the visual stream recognises.* All the evidence points to the face. The best model gets its
-accuracy from the video branch, and the frozen DINOv2 encoder was trained for generic visual
+*What the visual stream recognises.* The evidence points to static visual identity and context
+rather than to facial behaviour: the face crops keep hair, framing, head pose and some background,
+not only the face. The best model gets its accuracy from the video branch, and the frozen DINOv2 encoder was trained for generic visual
 similarity, not for expressions; its probes read posture and position well but fast facial movement
 poorly. On the official folds, test clips share speakers and recording sessions with training: in
 each fold 95–99% of the test clips have their speaker in the training set, and every test clip comes

@@ -43,7 +43,8 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     [3], [74.2 / 82.9], [65.7 / 70.3], [56.0 / 60.0],
     table.hline(),
   ),
-  caption: [ACC / AUC per official fold (mean over seeds where several were run).],
+  caption: [ACC / AUC per official fold (mean over seeds where several were run). No
+    per-fold scores of the MARLIN + ConvNeXt run were saved, so they are unavailable.],
 ) <tab:folds>
 
 #figure(

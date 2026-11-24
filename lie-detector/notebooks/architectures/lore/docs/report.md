@@ -21,7 +21,9 @@ protocols.
 **Speaker-independent protocol.** This is our protocol: 5-fold cross-validation, with no person on both
 sides of a split.
 - Fused model: **56.1 ± 7.3 % accuracy** and 60.6 AUC, against a 52.1 % majority baseline.
-- Audio branch alone: 56.1 % (95 % subject-cluster bootstrap CI 51.4–60.8; binomial p = 0.010 vs majority).
+- Audio branch alone: 56.1 %, 4.0 points above the 52.1 % majority — not significant once speakers
+  are resampled (gain CI −4.7 to +9.1, p = 0.21); its AUC of 58.7 is (CI +2.8 to +14.7 over 0.5,
+  p = 0.001). See §6.1, *Is it above chance?*
 - Video branch: at chance (51.6 %, AUC 53.6).
 
 **The paper's clip-level 3-fold split.** The same speakers and episodes appear in train and test.
@@ -290,17 +292,22 @@ Per fold (holdout ACC / AUC):
 | 4 | 45.8 / 45.5 | 51.4 / 55.8 | 51.4 / 55.8 | 0.00 |
 | 5 | 55.4 / 59.5 | 55.4 / 57.6 | 55.4 / 57.6 | 0.00 |
 
-**Is it above chance?** We pooled the 886 holdout clips, each judged with its own fold's threshold, and
-resampled whole speakers 2,000 times to get 95 % confidence intervals:
+**Is it above chance?** We pooled the 886 holdout clips (135 speakers), each judged with its own
+fold's threshold, and resampled whole speakers 10,000 times. On every resample the model is compared
+with the majority rate *of that resample* (ACC − majority) and with 0.5 (AUC − 0.5); p is the
+one-sided share of resamples in which the gain is ≤ 0. Produced by
+[`scripts/cluster_test.py`](../scripts/cluster_test.py), stored in
+`results/fusion-video-lora-r8+audio-lora-r8/cluster_test.json`:
 
-| Model | pooled ACC | 95 % CI | p vs 52.1 % majority |
-|---|---|---|---|
-| video only | 51.6 | 45.4–57.2 | 0.64 |
-| audio only | 56.1 | 51.4–60.8 | 0.010 |
-| fused (tuned) | 56.1 | 50.9–61.1 | 0.010 |
+| Model | pooled ACC | ACC − 52.1 % majority [95 % CI] | p | pooled AUC | AUC − 0.5 [95 % CI] | p |
+|---|---|---|---|---|---|---|
+| video only | 51.6 | −0.6 [−9.9, +5.3] | 0.66 | 53.5 | +3.5 [−3.2, +10.3] | 0.16 |
+| audio only | 56.1 | +4.0 [−4.7, +9.1] | 0.21 | 58.7 | +8.7 [+2.8, +14.7] | 0.001 |
+| fused (tuned) | 56.1 | +4.0 [−4.6, +9.1] | 0.21 | 60.4 | +10.4 [+4.1, +16.5] | 0.001 |
 
-The p-values come from a one-sided binomial test, which treats clips as independent and so is
-optimistic. The bootstrap intervals already account for speakers.
+The accuracy gains are not significant once speakers, not clips, are the unit; the audio and fused
+AUCs are. An earlier version of this table quoted a one-sided binomial p = 0.010 for both accuracy
+rows: that test treats the clips of one speaker as independent and is too optimistic.
 
 ### 6.2 The paper's clip-level split (3 folds; not comparable with §6.1)
 

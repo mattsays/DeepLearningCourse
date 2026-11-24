@@ -28,8 +28,9 @@ it is used only as an auxiliary training loss and is discarded at inference.
 
 *Training.* Binary cross-entropy with positive-class weighting, plus the optional MUMIN
 mean-squared-error term; AdamW (learning rate $3 dot 10^(-4)$, weight decay $10^(-4)$), batch size 16,
-gradient clipping at 5.0, learning-rate halving on validation-loss plateaus, and early stopping on
-validation loss.
+gradient clipping at 5.0, learning-rate halving when validation AUC stops improving, early stopping
+on validation AUC (patience 15, at most 40 epochs) and the threshold chosen on validation. The
+auxiliary MUMIN loss is switched off (weight 0) in the reported runs, which use three seeds.
 
 *Size.* 57,322 trainable parameters, of which 54,657 are used at inference (the rest is the MUMIN
 head).

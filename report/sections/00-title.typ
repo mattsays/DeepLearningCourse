@@ -41,7 +41,8 @@
   almost all of the performance on the official split. In Appendix A, we re-evaluate the models on a
   strict subject-independent 5-fold split where no speaker crosses training, validation, and test
   boundaries: the development estimates drop to 54–56% accuracy, driven by a collapse in the visual
-  channel while the acoustic stream retains modest above-chance signal. This indicates that much of
+  channel, while the acoustic stream keeps a modest signal whose AUC, unlike its accuracy, stays
+  above chance under a speaker-cluster bootstrap. This indicates that much of
   the clip-level performance reflects speaker and round recognition rather than generalisable
   deception cues.
 ]
