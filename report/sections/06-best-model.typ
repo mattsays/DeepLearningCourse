@@ -110,8 +110,7 @@ classes, as expected from a threshold of 0.5 combined with class weighting.
 
 The code implements a wider design space (@tab:variants): attention pooling instead of the mean,
 frame-difference ("delta") features that describe facial motion, a _congruence_ model that decides
-only from the disagreement $1 - cos(v, a)$ between the two streams, and a transcript-based text
-branch. These variants were explored only on the subject-independent split of Appendix A and were
+only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were explored only on the subject-independent split of Appendix A and were
 not run on the official folds.
 
 #figure(
@@ -124,7 +123,6 @@ not run on the official folds.
     [Video / audio / late attention], [additive attention pooling over time instead of the mean], [66,178 / 115,330 / 173,058],
     [Video delta / late delta], [adds the mean of $|x_t - x_(t-1)|$ over frame embeddings], [115,585 / 222,465],
     [Congruence], [logit from $1 - cos(v, a)$ only], [147,714],
-    [Text / audio + text], [Whisper transcript embedded by MiniLM], [57,857 / 164,737],
     table.hline(),
   ),
   caption: [Implemented Cross-Modal Fusion variants not evaluated on the official folds.],
