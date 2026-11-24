@@ -14,8 +14,11 @@ The paper reports 1,675 clips (899 deception, 776 truth), 213 participants and 8
 median duration of 5 s. The annotation files we received differ slightly (@tab:stats). The clips
 are not distributed as video: they are cut from YouTube episodes. Of the 1,678 annotated clips,
 1,452 could still be downloaded with their media; all download failures come from 9 episodes that
-are no longer available. Two properties of the corpus matter for the rest of the paper: it is
-dominated by male speakers (79%), and two recurring team captains contribute 468 clips (28%).
+are no longer available. Structurally, the corpus consists of *151 episode–label rounds* (a
+median of 10 clips per round), is skewed by gender (*79.1% male* vs. *20.9% female* clips,
+with deception rates of 56.6% and 43.8%, respectively), and includes two recurring team captains
+(_Lee Mack_ and _David Mitchell_) who contribute 468 clips (28% of the dataset, deceptive 69.0%
+of the time).
 
 #figure(
   table(
@@ -51,10 +54,10 @@ inputs; @sec:arch gives the details.
     table.header([Model], [Visual input], [Audio input], [Face detector]),
     table.hline(stroke: 0.5pt),
     [Theory-driven baseline], [—], [16 kHz waveform → 17 statistics], [—],
-    [Temporal CNN], [478 landmarks at 10 fps → 15 regions], [8 eGeMAPS descriptors at 10 fps], [MediaPipe],
+    [Temporal CNN & DualHeadGAT], [478 landmarks at 10 fps → 15 regions], [8 eGeMAPS descriptors at 10 fps], [MediaPipe],
     [Cross-Modal Fusion], [16 face crops, 224²], [whole waveform, 16 kHz], [MTCNN],
     [VideoMAE + HuBERT], [16 face crops, 224² (of 32 cached)], [waveform, ≤ 10 s, 16 kHz], [YuNet + SFace],
-    [MARLIN + ConvNeXt], [16 face crops, 224²], [3-channel log-mel, 128 bands], [MTCNN],
+    [Swin3D / MARLIN + ConvNeXt], [16 scene or face crops, 224²], [3-channel log-mel ($S, Delta, Delta^2$)], [MTCNN],
     table.hline(),
   ),
   caption: [Inputs of each model. Frames are always sampled uniformly over the whole clip.],
@@ -120,7 +123,7 @@ trains on less data but tunes more; we keep both and state which one each number
     [Theory-driven baseline], [none], [fixed 60 epochs], [0.5],
     [Cross-Modal Fusion], [none], [fixed 30 epochs], [0.5],
     [VideoMAE + HuBERT, LoRA], [15% of train, clip-level], [best val AUC], [max. val balanced ACC],
-    [MARLIN + ConvNeXt], [15% of train, clip-level], [best val loss], [max. val balanced ACC],
+    [Swin3D / MARLIN + ConvNeXt], [15% of train, clip-level], [best val loss], [max. val balanced ACC],
     table.hline(),
   ),
   caption: [How each model is trained and thresholded on the official folds.],

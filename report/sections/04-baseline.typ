@@ -39,15 +39,38 @@ $12 log_2 (F_0 \/ 100)$, which makes male and female voices comparable. From Pra
 process we compute local jitter (period instability) and local shimmer (amplitude instability) with
 the standard settings; the harmonics-to-noise ratio is averaged over the clip; intensity is
 summarised by its mean and standard deviation in dB. Clips with fewer than three voiced frames get
-missing pitch features, which are imputed with the median.
+missing pitch features, which are imputed with the median. @tab:load-feats summarises the 17 features
+and the psychological account each group targets.
+
+#figure(
+  table(
+    columns: (auto, auto, auto, auto),
+    align: (left, left, left, left),
+    table.hline(),
+    table.header([Family], [Features (17 total)], [Tool], [Target account]),
+    table.hline(stroke: 0.5pt),
+    [Energy & pauses (9)],
+    [`duration_s`, `rms_mean`, `rms_std`, `energy_range_db`, `voiced_ratio`, `pause_count`, `pause_ratio`, `pause_mean_ms`, `onsets_per_s`],
+    [NumPy],
+    [Cognitive load (speech timing, hesitations)],
+    [Pitch & voice quality (8)],
+    [`f0_mean`, `f0_std`, `f0_range_st`, `jitter_local`, `shimmer_local`, `hnr_mean`, `intensity_mean_db`, `intensity_std_db`],
+    [Praat],
+    [Vocal arousal (pitch, cycle instability, HNR)],
+    table.hline(),
+  ),
+  caption: [The 17 hand-crafted acoustic features used by the `LoadHead` baseline.],
+) <tab:load-feats>
 
 == Classifier and training
 The features are standardised with means and standard deviations computed on the training fold
 only, then passed to a two-layer MLP:
 $ hat(y) = W_2 dot.c "Dropout"("GELU"(W_1 dot.c "Dropout"(z) + b_1)) + b_2, quad
   W_1 in RR^(32 times 17), W_2 in RR^(1 times 32), $
-with dropout 0.3. This gives *609 trainable parameters*. The model is trained with binary
-cross-entropy weighted by the class ratio of the training fold, AdamW (learning rate $10^(-3)$,
-weight decay $10^(-2)$), batch size 32 and gradient clipping at 1.0, for a fixed 60 epochs on the
-official folds, with three seeds. One fold trains in about three seconds. Its results appear with the
-others in @tab:main.
+with dropout 0.3. This gives *609 trainable parameters* ($17 times 32 + 32$ in the first layer and
+$32 times 1 + 1$ in the output layer). The model is trained with binary cross-entropy weighted by
+the class ratio of the training fold, AdamW (learning rate $10^(-3)$, weight decay $10^(-2)$),
+batch size 32 and gradient clipping at 1.0, for a fixed 60 epochs on the official 3-fold split,
+with three seeds. One fold trains in about three seconds. On the official split, `LoadHead` reaches
+*55.1 ± 2.1% ACC* and *58.8% AUC* (per-seed AUC: 58.5, 59.1, 58.6), establishing the non-neural
+floor in @tab:main.
