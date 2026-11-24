@@ -62,9 +62,8 @@ this protocol effect directly in Appendix A.
 
 == Self-supervised encoders, graph/temporal models, and adaptation
 DOLOS is too small to train or fully fine-tune large backbones from scratch. Our study therefore
-contrasts compact models trained from scratch—a 1-D temporal CNN and a Graph Attention Network
-(`DualHeadGAT`, @velickovic2018gat) over sliding-window landmark and acoustic graphs—against
-architectures built on self-supervised pre-training:
+contrasts a compact model trained from scratch—a 1-D temporal CNN over facial-landmark and acoustic
+descriptors—against architectures built on self-supervised pre-training:
 - *DINOv2* @oquab2024dinov2, a ViT trained by self-distillation on 142M curated images, whose
   `[CLS]` token is a strong general-purpose image descriptor;
 - *WavLM* @chen2022wavlm and *HuBERT* @hsu2021hubert, speech Transformers trained by masked
@@ -73,8 +72,8 @@ architectures built on self-supervised pre-training:
 - *VideoMAE* @tong2022videomae, a video Transformer trained to reconstruct 90% masked space-time
   tubelets, and *MARLIN* @cai2023marlin, the same idea applied to facial video with facial-region
   guided masking;
-- *ConvNeXt* @liu2022convnext, a modernised CNN that we pair with 3-channel log-mel spectrograms
-  and 3-D video convolutions (`Swin3D` / `X3D`) or MARLIN.
+- *ConvNeXt* @liu2022convnext, a modernised CNN that we apply to 3-channel log-mel spectrograms and
+  pair with MARLIN.
 
 Two strategies keep the number of trained parameters small on large backbones. The first keeps the
 encoder _frozen_, pre-computes its embeddings once and trains only a lightweight fusion head. The
@@ -91,8 +90,8 @@ and with PECL's internal adapters.
     table.header([Regime], [Trainable component], [Trainable params], [Main trade-off]),
     table.hline(stroke: 0.5pt),
     [Theory-driven], [MLP on 17 acoustic stats], [609], [No visual identity leak; limited to passive acoustics],
-    [From scratch], [1-D CNN or GAT on landmarks + LLDs], [18k–57k], [Strong task inductive bias; no pre-trained priors],
-    [Frozen + head], [Linear projections + fusion MLP], [58k–165k], [Fast, low overfitting; cannot adapt internal layers],
+    [From scratch], [1-D CNN on landmarks + LLDs], [57k], [Strong task inductive bias; no pre-trained priors],
+    [Frozen + head], [Linear projections + fusion MLP or TCN], [58k–165k], [Fast, low overfitting; cannot adapt internal layers],
     [Adapters (PECL)], [UT-Adapter + PAVF inside 4 layers], [5.06M], [Mid-level cross-attention; higher capacity on ~1.7k clips],
     [LoRA], [Rank-$r$ Q/V updates + linear heads], [594k], [Adapts deep video/audio Transformers; 0.3% of backbone],
     table.hline(),

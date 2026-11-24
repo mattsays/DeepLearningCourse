@@ -18,7 +18,10 @@ the 32 frames — the even or the odd ones at random — with a random resized c
 horizontal flip shared across frames; at test time it sees the even frames without augmentation.
 
 *Audio pipeline.* Training uses a random 8 s window of the 16 kHz waveform and evaluation the first
-10 s; each crop is z-normalised. Batches group clips of similar length to limit padding.
+10 s; each crop is z-normalised. Batches group clips of similar length to limit padding. Because of
+this window, the audio branch never hears the end of clips longer than 10 s (up to 48 s in the local
+annotations), whereas the video frames always span the whole clip; the two branches therefore do
+not see exactly the same part of a long answer.
 
 *Encoders and adaptation.* VideoMAE-Base (fine-tuned on Kinetics-400) turns 16 frames into
 8×14×14 = 1,568 tokens, which are averaged and normalised by the checkpoint's own LayerNorm.

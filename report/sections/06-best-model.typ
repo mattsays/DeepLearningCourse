@@ -1,7 +1,7 @@
 #import "../template.typ": *
 
 // ================================================================ 6
-= Best Model: Cross-Modal Fusion <sec:best>
+= Best Official-Split Model: Cross-Modal Fusion <sec:best>
 
 == Architecture
 Let $V in RR^(16 times 384)$ be the DINOv2 `[CLS]` embeddings of the 16 face crops of a clip and
@@ -84,8 +84,8 @@ concatenation with one projected stream and a 128→64→1 head.
 
 The visual branch alone matches the fused model; the difference (+1.0 ACC, −0.2 AUC) is well within
 one standard deviation. With a third of the parameters, video-only is also the more stable of the two
-(±1.7 vs ±3.0). Audio contributes a real but much weaker signal, and late fusion does not combine the
-two any better than video alone.
+(±1.7 vs ±3.0). Audio contributes a real but much weaker signal, and this late-fusion head does not
+combine the two any better than video alone.
 
 #figure(
   table(
@@ -110,8 +110,8 @@ classes, as expected from a threshold of 0.5 combined with class weighting.
 
 The code implements a wider design space (@tab:variants): attention pooling instead of the mean,
 frame-difference ("delta") features that describe facial motion, a _congruence_ model that decides
-only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were explored only on the subject-independent split of Appendix A and were
-not run on the official folds.
+only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were explored
+only on the subject-independent split of Appendix A and were not run on the official folds.
 
 #figure(
   table(
@@ -129,9 +129,11 @@ not run on the official folds.
 ) <tab:variants>
 
 == Comparison with PECL
-On the same official protocol the model outperforms PECL by 7.5 ACC and 17.7 AUC points, and the
-PECL multi-task variant by 5.4 and 15.8, while training 30 times fewer parameters. The two designs
-differ on three points:
+On the official folds the model scores 7.4 ACC and 17.7 AUC points above the PECL result reported
+by #cite(<guo2023dolos>, form: "prose"), and 5.3 and 15.8 above its multi-task variant, while
+training 30 times fewer _trainable_ parameters. This is a higher reported score under a related but
+non-identical evaluation, not a head-to-head result: we did not re-run PECL, and the two numbers are
+computed on different sets of test clips (caveats below). The two designs differ on three points:
 - *Frozen encoders vs adapters.* PECL trains 5.06M parameters inside the first four layers of its
   encoders; we train only 165k in a head on top of frozen encoders.
 - *Encoders.* We use the last layer of DINOv2 and WavLM instead of the first four layers of an
@@ -140,23 +142,30 @@ differ on three points:
   average 16 frames and 64 tokens over time and fuse once.
 
 PECL's multi-task supervision with MUMIN labels is not used: annotations are never part of our
-models. The comparison has two caveats. We score 1,274 test clips instead of 1,650, and the
-reference implementation selects its reported epoch on the test fold#footnote[Re-scored in the same
-way — best test epoch, threshold 0.5 — VideoMAE + HuBERT reaches 68.0 ± 1.8 ACC and 72.9 AUC. We do
-not use this selection rule anywhere else.], which, if anything, favours PECL.
+models. The comparison has three caveats. First, we score 1,274 test clips instead of the 1,650
+of the paper's test files, and the missing clips are not a random sample: they are the ones that
+could not be downloaded or had no cached embedding. Second, each of our own models is scored on a
+different subset (@tab:coverage), so even our internal ranking is not on identical clips. Third,
+the reference implementation selects its reported epoch on the test fold#footnote[Re-scored in the
+same way — best test epoch, threshold 0.5 — VideoMAE + HuBERT reaches 68.0 ± 1.8 ACC and 72.9 AUC.
+We do not use this selection rule anywhere else.], which, if anything, favours PECL. A direct
+comparison would require re-running PECL on exactly our clips.
 
 == Analysis
 *By gender.* Female speakers are 20% of the test clips. Using the seed-averaged predictions of the
 fused model (pooled ACC 73.4%, AUC 81.3%), accuracy is 70.3% (AUC 79.3) on the 256 clips of women
 and 74.1% (AUC 81.9) on the 1,016 clips of men. VideoMAE + HuBERT shows the same gap (64.9% vs
-66.6%), and so does the theory-driven baseline (50.9% vs 56.2%), which suggests that the cause is
-the smaller amount of female training data rather than a specific architecture.
+66.6%), and so does the theory-driven baseline (50.9% vs 56.2%), so the gap is not specific to one
+architecture. The smaller amount of female training data is one plausible explanation, but our
+experiments do not isolate it: female clips also have a different base rate (43.8% deception
+against 56.6% for male clips).
 
 *By clip length.* Splitting the test clips into three equal groups by duration (2–4 s, 4–5 s,
 5–48 s), the fused model reaches 71.2%, 71.7% and 77.1% accuracy (AUC 79.0, 80.4, 84.2). Longer
 clips help the video branch (78.3% on the longest third) but show no consistent trend for audio
-(55.9%, 63.4%, 58.5%). With a fixed budget of 16 frames, a longer clip spreads the frames over more
-of the answer and over more camera shots, so the visual summary covers more of the scene.
+(55.9%, 63.4%, 58.5%). One possible reason is that, with a fixed budget of 16 frames, a longer clip
+spreads the frames over more of the answer and over more camera shots, so the visual summary covers
+more of the scene; we have not tested this directly.
 
 *What the visual embedding contains.* Linear probes trained on the frozen, time-averaged embeddings
 recover the hand-annotated MUMIN behaviours well above a prevalence-matched noise level: 24 of 26
@@ -165,6 +174,6 @@ frequent cues from DINOv2 (mean AUC 0.665 against 0.567 for noise) and 18 from W
 mouth corners down (0.756), facing the interlocutor (0.753) — while fast facial actions such as
 eyebrow raising (0.549), nodding and frowning are barely readable at 16 frames per clip. The best
 audio cues are vocalisations: filled pauses such as "ah"/"mmh" (0.818) and laughter (0.737). The
-embeddings therefore describe who is in the frame and how they are positioned far better than how
-their face moves, which is consistent with video dominating the score and with the discussion in
-@sec:discussion.
+visual embeddings therefore encode static configuration — posture, position, framing — far better
+than facial motion. This is consistent with, though not proof of, the reading in @sec:discussion
+that the video branch partly recognises the person and the scene.

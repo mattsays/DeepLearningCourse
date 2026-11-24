@@ -75,11 +75,13 @@ seeds costs less than a single experiment on a trainable encoder. That asymmetry
 argument for the design: it buys repetition, and repetition is what separates a one-point difference
 from noise (@sec:discussion).
 
-*Size.* 164,737 trainable parameters, 30 times fewer than PECL; @tab:params breaks the budget down.
+*Size.* 164,737 trainable parameters, 30 times fewer _trainable_ parameters than PECL (5.06M);
+@tab:params breaks the budget down. The frozen encoders add ≈116M parameters; they run once to build
+the caches, and that extraction is not counted in the training times we report.
 
 *The design space.* The implementation contains more than the configuration that reached the board;
 @tab:variants prices the alternatives, and none was run on the official folds. What was run there is
 the pair of controls: a video-only and an audio-only variant that keep the same classifier and switch
 one stream off. They answer the only question that can demote this architecture — _does fusing two
 channels add anything over the better single one?_ — and @tab:unimodal reports the answer: on the
-official folds, it does not.
+official folds, this late-fusion head does not.

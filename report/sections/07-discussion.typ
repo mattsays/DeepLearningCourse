@@ -13,25 +13,29 @@ label, clothing, lighting and studio with the other clips of that round. Part of
 therefore reflect recognising the person and the round rather than the lie. Two observations support
 this reading: VideoMAE + HuBERT ranks clips of the _same_ speaker only moderately well (within-speaker
 AUC 0.63 for audio and 0.66 for video, against 0.67 and 0.71 over all test clips), and Appendix A shows that all models
-lose most of their advantage when speakers are disjoint. The official protocol measures performance
-on speakers the model has already seen, not generalisation to new people.
+lose most of their advantage when speakers are disjoint.
 
 *Small and imbalanced data.* Each fold trains on 750–870 clips. 79% of the clips show men, and two
 recurring team captains account for 28% of the corpus and lie in 69% of their clips. Standard
 deviations across folds and seeds reach 2–3 points, so differences of 1–2 points between models are
 not meaningful.
 
-*Heterogeneous evaluation rules and coverage.* The models were scored on 1,132–1,426 of the 1,650
-test clips of the paper (@tab:coverage), and two different stopping and threshold rules were used
-(@tab:rules). Since AUC is threshold-free, the AUC ranking is the more reliable comparison. The
-fixed-epoch rule gives Cross-Modal Fusion no tuning advantage, so its lead is unlikely to be an
-artefact of the rule.
+*Heterogeneous evaluation rules and coverage.* The models of @tab:coverage were scored on
+1,132–1,426 of the 1,650 test clips of the paper, and two different stopping and threshold rules
+were used (@tab:rules). Since AUC is threshold-free, the AUC ranking is the more reliable
+comparison. The fixed-epoch rule gives Cross-Modal Fusion no tuning advantage, so its lead is
+unlikely to be an artefact of the rule. The front ends differ as well — face detector, crop, number
+of frames and audio window (@tab:inputs) — so the ranking compares complete pipelines rather than
+isolated architectural choices.
 
 *Temporal resolution.* Sixteen frames per clip is about 3 frames per second at the median duration
 of 5 s, 5.3 fps on the shortest clips and 1.8 fps on the longest, while facial micro-expressions last
 40–600 ms. WavLM's 250–450 frames per clip are compressed four to seven times into 64 tokens. None
 of the models can see the fastest facial cues, and our frozen model averages away the order of
-frames entirely.
+frames entirely. The HuBERT branch hears at most the first 10 s of a clip at evaluation, while its
+video counterpart spans the whole clip. Both late-fusion models combine the modalities only after
+averaging each over time, so they cannot test whether the _timing_ of facial and vocal cues
+relative to each other carries signal.
 
 *External validity.* A game show is a low-stakes, performed setting, and its contestants are
 practised comedians who lie for entertainment. Detecting deception in a courtroom, an interview or at

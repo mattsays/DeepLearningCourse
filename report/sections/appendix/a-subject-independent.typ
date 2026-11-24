@@ -39,6 +39,10 @@ The unit is the person: no subject ever crosses a boundary.
 The script is `lie-detector/scripts/make_splits.py`; same annotations and same seed give
 byte-identical files, and every split file is verified against a hash at load time.
 
+The folds are subject-disjoint but not episode-disjoint: clips of different speakers recorded in the
+same episode share studio, lighting and audio conditions, and can still fall on both sides of a
+boundary. An episode-disjoint control has not been run.
+
 == Results and the protocol effect
 #figure(
   table(
@@ -59,8 +63,7 @@ byte-identical files, and every split file is verified against a hash at load ti
     table.hline(),
   ),
   caption: [The same models on the official and the subject-independent protocol. Baseline and
-    Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT: seed 0. The Temporal CNN
-    has no holdout results on this split.],
+    Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0.],
 ) <tab:protocol>
 
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
@@ -73,14 +76,26 @@ single-channel result clearly above chance. The DOLOS paper's own cross-dataset 
 Bag-of-Lies, 56.17% on Real-Life Trials, both with unseen subjects) fall in the same range as our
 subject-independent estimates.
 
+MARLIN + ConvNeXt has the smallest protocol gap of the deep models (−5.0 ACC, −3.9 AUC), but also
+the lowest official score, and it was run without single-stream variants. Whether its face-specific
+encoder relies less on identity than DINOv2 or VideoMAE, or simply has less to lose, cannot be
+decided from these numbers.
+
 Two further observations point the same way. The fused Cross-Modal Fusion model chooses very
 different thresholds on different folds and seeds (0.06–0.84), a sign that its validation scores
 carry little signal. And the official split is not only easier but more reproducible: its per-seed
 AUCs span 2.2 points, against 5.0 on the subject split, because identity is a stable signal and
 behaviour is not.
 
-The reserved test set of 27 subjects has not been opened: no configuration was selected with enough
-confidence to justify spending it.
+These five-fold numbers are _development estimates_, not untouched test results. The variants of
+@tab:variants and the design choices of each model were explored on the same folds, so any choice
+made by looking at them is optimistically biased; a clean estimate needs model selection nested
+inside the training folds. The reserved test set of 27 subjects (182 clips) exists for this reason.
+The configuration to be scored on it is frozen — Cross-Modal Fusion, late variant, seeds 0, 1 and
+2, retrained on the same five folds (`cross-modal-fusion/test.ipynb`) — and the set is opened
+exactly once; it was not opened for this report. With 27 subjects its interval would be about
+±18.5 points (`lie-detector/docs/evaluation.md`), enough to confirm the order of magnitude of the
+five-fold estimate but not to rank models.
 
 == MUMIN diagnostics
 Linear probes on the frozen embeddings recover the 41 MUMIN annotations better than chance: mean

@@ -16,7 +16,6 @@
 //   08-conclusion.typ         §8
 //   appendix/a-subject-independent.typ   Appendix A
 //   appendix/b-implementation.typ        Appendix B
-//   appendix/c-contributions.typ         Appendix C
 //
 // Shared helpers (the TODO box, the "not run" marker and the diagram blocks) are in
 // report/template.typ. Section numbering, cross-references and the bibliography index
@@ -72,4 +71,3 @@
 
 #include "sections/appendix/a-subject-independent.typ"
 #include "sections/appendix/b-implementation.typ"
-#include "sections/appendix/c-contributions.typ"

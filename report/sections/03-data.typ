@@ -11,7 +11,9 @@ an objective _game ground truth_ rather than an annotator's opinion. The speaker
 celebrities, the setting is a studio, and the stakes are low.
 
 The paper reports 1,675 clips (899 deception, 776 truth), 213 participants and 84 episodes, with a
-median duration of 5 s. The annotation files we received differ slightly (@tab:stats). The clips
+median duration of 5 s. The annotation files we received differ slightly (@tab:stats); in
+particular, 5 of their clips are longer than the 19 s maximum stated by the paper (up to 48 s),
+most likely annotation errors. The clips
 are not distributed as video: they are cut from YouTube episodes. Of the 1,678 annotated clips,
 1,452 could still be downloaded with their media; all download failures come from 9 episodes that
 are no longer available. Structurally, the corpus consists of *151 episode–label rounds* (a
@@ -32,6 +34,7 @@ of the time).
     [Subjects], [213], [180 (after alias merging)],
     [Episodes], [84], [75 distinct videos],
     [Male / female clips], [1,324 / 351], [1,327 / 351 (79.1% / 20.9%)],
+    [Duration], [2–19 s, median 5 s], [2–48 s, median 5 s (5 clips > 19 s)],
     [Clips downloadable today], [—], [1,452],
     table.hline(),
   ),
@@ -54,10 +57,10 @@ inputs; @sec:arch gives the details.
     table.header([Model], [Visual input], [Audio input], [Face detector]),
     table.hline(stroke: 0.5pt),
     [Theory-driven baseline], [—], [16 kHz waveform → 17 statistics], [—],
-    [Temporal CNN & DualHeadGAT], [478 landmarks at 10 fps → 15 regions], [8 eGeMAPS descriptors at 10 fps], [MediaPipe],
+    [Temporal CNN], [478 landmarks at 10 fps → 15 regions], [8 eGeMAPS descriptors at 10 fps], [MediaPipe],
     [Cross-Modal Fusion], [16 face crops, 224²], [whole waveform, 16 kHz], [MTCNN],
     [VideoMAE + HuBERT], [16 face crops, 224² (of 32 cached)], [waveform, ≤ 10 s, 16 kHz], [YuNet + SFace],
-    [Swin3D / MARLIN + ConvNeXt], [16 scene or face crops, 224²], [3-channel log-mel ($S, Delta, Delta^2$)], [MTCNN],
+    [MARLIN + ConvNeXt], [16 face crops, 224²], [3-channel log-mel ($S, Delta, Delta^2$)], [MTCNN],
     table.hline(),
   ),
   caption: [Inputs of each model. Frames are always sampled uniformly over the whole clip.],
@@ -67,13 +70,16 @@ inputs; @sec:arch gives the details.
 We follow the evaluation of the dataset paper and of earlier deception benchmarks: the three
 train/test folds distributed with DOLOS. Each fold places about two thirds of the clips in training
 and one third in test (1,099/549, 1,095/553 and 1,100/548 clips in the paper's files), and results
-are averaged over the three test folds. Using the same folds keeps our numbers comparable with
-@tab:pecl.
+are averaged over the three test folds. The folds do not cover the whole corpus: each one
+re-divides the same 1,646 of the 1,677 distinct annotated clips, and the remaining 31, mostly clips
+with broken timestamps, belong to no fold. The 1,650 of @tab:coverage is therefore the sum of the
+three test files, not a count of distinct clips, and it is the paper's denominator for @tab:pecl.
 
 Because some clips can no longer be downloaded, and because each architecture needs its own
-features, every model is scored on a slightly different subset of each test fold (@tab:coverage).
-The differences are a few percent of the test set, but they mean that the comparison with the paper
-is approximate.
+features, every model is scored on a different subset of each test fold: from 69% to 86% of the
+paper's test clips for the models in @tab:coverage. Our numbers and the paper's are therefore
+related but not identical evaluations, and our models are not scored on exactly the same clips as
+each other.
 
 #figure(
   table(
@@ -123,7 +129,7 @@ trains on less data but tunes more; we keep both and state which one each number
     [Theory-driven baseline], [none], [fixed 60 epochs], [0.5],
     [Cross-Modal Fusion], [none], [fixed 30 epochs], [0.5],
     [VideoMAE + HuBERT, LoRA], [15% of train, clip-level], [best val AUC], [max. val balanced ACC],
-    [Swin3D / MARLIN + ConvNeXt], [15% of train, clip-level], [best val loss], [max. val balanced ACC],
+    [MARLIN + ConvNeXt], [15% of train, clip-level], [best val loss], [max. val balanced ACC],
     table.hline(),
   ),
   caption: [How each model is trained and thresholded on the official folds.],

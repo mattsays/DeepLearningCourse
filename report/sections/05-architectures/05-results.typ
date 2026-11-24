@@ -23,8 +23,10 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     table.hline(),
   ),
   caption: [Official 3-fold protocol: mean ± standard deviation over test folds (and seeds, for
-    the 3-seed models). Baseline and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT: seed 0. Training
-    time is for one seed over the three folds on a T4 GPU, excluding feature extraction.
+    the 3-seed models). Baseline and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and
+    MARLIN + ConvNeXt: seed 0. Each model is scored on its own subset of the official test clips
+    (@tab:coverage), and the PECL row is quoted from the paper, not re-run. Training time is for one
+    seed over the three folds on a T4 GPU, excluding feature extraction.
     #super[†]Not on the official folds: validation set (213 clips) of a single random 85/15
     clip-level split; included for orientation only.],
 ) <tab:main>
@@ -53,24 +55,33 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     table.hline(stroke: 0.5pt),
     [Cross-Modal Fusion (3 seeds)], [58.8 / 62.5], [*73.2 / 80.2*], [72.2 / 80.4],
     [VideoMAE + HuBERT, LoRA], [62.8 / 67.0], [65.4 / 71.1], [66.3 / 73.1],
-    [Temporal CNN], [#notrun], [#notrun], [62.9 / 64.8#super[†]],
-    [MARLIN + ConvNeXt], [#notrun], [#notrun], [#notrun],
     table.hline(),
   ),
-  caption: [Unimodal ablations, ACC / AUC on the official protocol. #super[†]Random-split
-    validation, see @tab:main.],
+  caption: [Unimodal ablations, ACC / AUC on the official protocol, for the two models where both
+    single-stream variants were run.],
 ) <tab:unimodal>
 
-*Reading.* Every measured model beats the majority floor, and every deep model beats the
-theory-driven baseline by a wide margin: 17 accuracy and 22 AUC points for Cross-Modal Fusion. The
-ranking follows the strength of the _visual_ representation. The two models built on pre-trained
-visual Transformers are the best, and both outperform PECL; the frozen DINOv2 features are better
-than the LoRA-adapted VideoMAE, although VideoMAE sees motion and is adapted to the task.
+*Reading.* Every measured model beats the majority floor, and every deep model scored on the
+official folds beats the theory-driven baseline: by 17 accuracy and 22 AUC points for Cross-Modal
+Fusion, by 4 and 1.5 for MARLIN + ConvNeXt. The two models built on general-purpose pre-trained
+visual Transformers, DINOv2 and VideoMAE, are the best, and both score above the PECL result
+reported in the paper, under the related but non-identical evaluation described in @sec:data. The
+frozen-DINOv2 pipeline scores higher than the LoRA-adapted VideoMAE pipeline, although VideoMAE sees
+motion and is adapted to the task. The two pipelines also differ in face detector, crop, frame
+count, audio window and validation rule (@tab:inputs, @tab:rules), so this is a comparison of
+pipelines, not of freezing against adaptation alone.
 
-Fusion adds little. In Cross-Modal Fusion the video branch alone matches the fused model (73.2 vs
-72.2 ACC, 80.2 vs 80.4 AUC), and the audio branch alone is 14 points lower. In VideoMAE + HuBERT the
-fused model gains one accuracy point over video alone, and an untuned 50/50 fusion is slightly
-better still (67.1 / 73.7). The audio branches are consistently weaker but not useless: WavLM and
+MARLIN + ConvNeXt reaches 59.1 ± 3.2% accuracy and 60.3% AUC with 97,857 trainable parameters. A
+frozen encoder pre-trained specifically on faces, followed by an explicit temporal model, therefore
+does not close the gap to the general-purpose visual encoders on this protocol. No single-stream
+variant of it was run, so we cannot say how its score splits between the face and the voice.
+
+This late-fusion design, which averages each stream over time before combining them, did not
+improve over the visual stream. In Cross-Modal Fusion the video branch alone matches the fused model
+(73.2 vs 72.2 ACC, 80.2 vs 80.4 AUC), and the audio branch alone is 14 points lower. In
+VideoMAE + HuBERT the fused model gains one accuracy point over video alone, and an untuned 50/50
+fusion is slightly better still (67.1 / 73.7). Neither model lets the two streams interact over
+time, so these results say nothing about richer forms of cross-modal fusion. The audio branches are consistently weaker but not useless: WavLM and
 HuBERT reach 59–63% accuracy, between the theory-driven baseline and the visual models.
 
 The results are stable across folds. Cross-Modal Fusion is the best model on every fold, and its
@@ -78,8 +89,4 @@ spread across folds (69.0–74.2) is comparable to its spread across seeds (70.5
 Fold 1 is the hardest for all three models.
 
 The Temporal CNN reaches 62.9% accuracy and 64.8% AUC, but on a validation set of a random clip-level
-split, which is not comparable with the official test folds. MARLIN + ConvNeXt achieves 59.1 ± 3.2%
-accuracy and 60.3% AUC (61.4% F1, 60.6% Balanced ACC), comfortably beating the majority baseline with
-only 97,857 trainable parameters and training in ≈15 seconds across the three folds.
-
-#todo[Temporal CNN: run on the official folds and replace the #super[†] entries in @tab:main and @tab:unimodal.]
+split, which is not comparable with the official test folds; it is listed for orientation only.
