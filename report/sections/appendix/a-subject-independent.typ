@@ -51,7 +51,7 @@ boundary. An episode-disjoint control has not been run.
     table.hline(),
     table.header([Model], [Official ACC / AUC], [Subject ACC / AUC], [Δ ACC], [Δ AUC]),
     table.hline(stroke: 0.5pt),
-    [Theory-driven baseline], [55.1 / 58.8], [50.8 / 54.0], [−4.3], [−4.8],
+    [Theory-driven baseline], [56.5 / 59.2], [53.1 / 53.6], [−3.4], [−5.6],
     [Temporal CNN], [56.3 / 59.1], [50.5 / 51.9], [−5.8], [−7.2],
     [Cross-Modal Fusion, late], [72.2 / 80.4], [56.1 / 57.3], [−16.1], [−23.1],
     [#h(1em) video only], [73.2 / 80.2], [49.9 / 51.0], [−23.3], [−29.2],
@@ -59,17 +59,19 @@ boundary. An episode-disjoint control has not been run.
     [VideoMAE + HuBERT, LoRA], [66.3 / 73.1], [56.1 / 60.6], [−10.2], [−12.5],
     [#h(1em) video only], [65.4 / 71.1], [51.6 / 53.6], [−13.8], [−17.5],
     [#h(1em) audio only], [62.8 / 67.0], [56.1 / 59.5], [−6.7], [−7.5],
-    [MARLIN + ConvNeXt], [59.1 / 60.3], [54.1 / 56.4], [−5.0], [−3.9],
-    [Majority class], [52.4–53.3], [52.1–52.6], [—], [—],
+    [MARLIN + ConvNeXt#super[‡]], [58.9 / 58.9], [54.8 / 55.4], [−4.1], [−3.5],
+    [Majority class], [52.4–53.6], [52.1–52.6], [—], [—],
     table.hline(),
   ),
   caption: [The same models on the official and the subject-independent protocol. Baseline,
-    Temporal CNN and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0.],
+    Temporal CNN and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0.
+    #super[‡]Recomputed from the run's per-clip predictions; its subject-split file covers 800 of the
+    886 holdout clips (152–165 per fold instead of 177–178).],
 ) <tab:protocol>
 
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
 concentrated in the visual channel: DINOv2 alone loses 23 accuracy points and falls to chance, and
-the LoRA-adapted VideoMAE loses 14, whereas WavLM, HuBERT and the 17 acoustic features lose 4–7. The
+the LoRA-adapted VideoMAE loses 14, whereas WavLM, HuBERT and the 17 acoustic features lose 3–7. The
 acoustic representations exclude the _visual_ identity cues — face, clothing, set — but not
 identity altogether: voice timbre and the recording conditions of an episode remain available, so
 the smaller drop is consistent with, not proof of, less reliance on identity. The Temporal CNN,
@@ -91,8 +93,9 @@ therefore too optimistic. The DOLOS paper's own cross-dataset results (57.54% on
 Bag-of-Lies, 56.17% on Real-Life Trials, both with unseen subjects) fall in the same range as our
 subject-independent estimates.
 
-MARLIN + ConvNeXt has the smallest protocol gap of the deep models (−5.0 ACC, −3.9 AUC), but also
-the lowest official score, and it was run without single-stream variants. Whether its face-specific
+MARLIN + ConvNeXt has the smallest protocol gap of the deep models (−4.1 ACC, −3.5 AUC), but also
+the lowest official score of the three models built on pre-trained encoders, it was run without
+single-stream variants, and its subject-split predictions miss 86 holdout clips. Whether its face-specific
 encoder relies less on identity than DINOv2 or VideoMAE, or simply has less to lose, cannot be
 decided from these numbers.
 

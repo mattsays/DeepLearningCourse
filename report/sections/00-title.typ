@@ -37,7 +37,7 @@
   head on frozen encoders (PECL trains 5.06M). This is 7.4 accuracy points above the PECL result
   reported by the dataset paper, under a related but non-identical evaluation: we score a subset of
   the official test clips and do not re-run PECL. LoRA adaptation reaches 66.3% accuracy and 73.1%
-  AUC, MARLIN + ConvNeXt 59.1% and 60.3%, and the from-scratch temporal CNN 56.3% and 59.1%.
+  AUC, MARLIN + ConvNeXt 58.9% and 58.9%, and the from-scratch temporal CNN 56.3% and 59.1%.
   Unimodal ablations show that the visual stream carries almost all of the performance on the
   official split. In Appendix A, we re-evaluate the models on a strict subject-independent 5-fold
   split where no speaker crosses training, validation, and test boundaries: the development

@@ -1,0 +1,65 @@
+{
+  "protocol": "official",
+  "seeds": "0,1,2",
+  "n_folds": 3,
+  "acc": 0.550277293660224,
+  "f1": 0.5739851841868034,
+  "auc": 0.578357652983127,
+  "bal_acc": 0.5450512518242464,
+  "majority": 0.5330039257174888,
+  "acc_std": 0.017600463917240322,
+  "f1_std": 0.09311313521850709,
+  "auc_std": 0.016170494741185964,
+  "bal_acc_std": 0.013331029543262598,
+  "majority_std": 0.0035797954343088642,
+  "per_fold": [
+    {
+      "fold": 1,
+      "acc": 0.547,
+      "auc": 0.5771,
+      "n_test": 482.0
+    },
+    {
+      "fold": 2,
+      "acc": 0.5369,
+      "auc": 0.5683,
+      "n_test": 483.0
+    },
+    {
+      "fold": 3,
+      "acc": 0.5669,
+      "auc": 0.5897,
+      "n_test": 461.0
+    }
+  ],
+  "per_seed": [
+    {
+      "seed": 0,
+      "acc": 0.5354,
+      "auc": 0.564
+    },
+    {
+      "seed": 1,
+      "acc": 0.555,
+      "auc": 0.5903
+    },
+    {
+      "seed": 2,
+      "acc": 0.5605,
+      "auc": 0.5807
+    }
+  ],
+  "trainable_params": 57322,
+  "train_minutes": 7.8,
+  "config": {
+    "protocol": "official",
+    "seeds": "0,1,2",
+    "epochs": 40,
+    "lr": 0.0003,
+    "mumin_weight": 0.0,
+    "patience": 15,
+    "batch_size": 16,
+    "hidden": 64,
+    "dropout": 0.3
+  }
+}

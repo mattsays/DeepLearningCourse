@@ -71,6 +71,8 @@ with dropout 0.3. This gives *609 trainable parameters* ($17 times 32 + 32$ in t
 $32 times 1 + 1$ in the output layer). The model is trained with binary cross-entropy weighted by
 the class ratio of the training fold, AdamW (learning rate $10^(-3)$, weight decay $10^(-2)$),
 batch size 32 and gradient clipping at 1.0, for a fixed 60 epochs on the official 3-fold split,
-with three seeds. One fold trains in about three seconds. On the official split, `LoadHead` reaches
-*55.1 ± 2.1% ACC* and *58.8% AUC* (per-seed AUC: 58.5, 59.1, 58.6), establishing the non-neural
-floor in @tab:main.
+with three seeds; the threshold is the paper's 0.5. One fold trains in about four seconds on CPU.
+The features are computed for every downloadable clip (no extraction failed, and Praat left no
+missing values), so the baseline is scored on all 1,427 downloadable official test clips. On the
+official split, `LoadHead` reaches *56.5 ± 1.7% ACC* and *59.2% AUC* (per-seed AUC: 59.6, 59.2,
+58.9), establishing the non-neural floor in @tab:main.

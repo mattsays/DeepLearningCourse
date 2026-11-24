@@ -27,10 +27,10 @@ Internal reference compiled from `lie-detector/notebooks/architectures/` to keep
   - *Energy & Pause (9, NumPy)*: `duration_s`, `rms_mean`, `rms_std`, `energy_range_db`, `voiced_ratio`, `pause_count`, `pause_ratio`, `pause_mean_ms`, `onsets_per_s`.
   - *Pitch & Voice Quality (8, Praat/`parselmouth`)*: `f0_mean`, `f0_std`, `f0_range_st`, `jitter_local`, `shimmer_local`, `hnr_mean`, `intensity_mean_db`, `intensity_std_db`.
 - **Architecture (`LoadHead`)**: Train-split z-standardization → `Dropout → Linear(17, 32) → GELU → Dropout → Linear(32, 1)` (**609 trainable params**).
-- **Results (3 seeds)**:
-  - Subject 5-fold: **50.8 ± 4.1% ACC**, **54.0% AUC** (per-seed AUC: 56.4, 53.1, 52.7) vs. 52.0% majority and 51.1% ACC / 52.5% AUC MUMIN oracle.
-  - Official 3-fold: **55.1 ± 2.1% ACC**, **58.8% AUC** (per-seed AUC: 58.5, 59.1, 58.6).
-  - Protocol gap: **+4.3 ACC / +4.8 AUC** (minimal, as 17 summary statistics carry no visual identity).
+- **Results (3 seeds, `run_load.py`, cache on all 1,452 clips, `load/results/`)**:
+  - Subject 5-fold: **53.1 ± 4.7% ACC**, **53.6% AUC** vs. 52.0% majority and 51.1% ACC / 52.5% AUC MUMIN oracle.
+  - Official 3-fold: **56.5 ± 1.7% ACC**, **59.2% AUC** (per-seed AUC: 59.6, 59.2, 58.9), 1,427 test clips.
+  - Protocol gap: **+3.4 ACC / +5.6 AUC**. (Older notebook run on a partial cache: 50.8 / 54.0 subject, 55.1 / 58.8 official.)
 
 ---
 
@@ -85,7 +85,7 @@ Internal reference compiled from `lie-detector/notebooks/architectures/` to keep
   - **Visual stream**: `swin3d_t` or `x3d_m` on 16 scene frames (`train_fab.ipynb`), OR `marlin_vit_base_ytf` (MARLIN facial masked autoencoder, CVPR 2023) on MTCNN face crops (`train_marlin.ipynb` / `train_marlin_kaggle.ipynb`), producing `(T_v=8, 768)`.
   - **Acoustic stream**: 3-channel Log-Mel spectrogram ($S, \Delta, \Delta^2$) through `convnext_tiny` with frequency-only pooling → `(T_a≈31, 768)`, linearly interpolated to `T_v=8`.
   - **Sequence head**: Two-stream `LayerNorm` projection to $d=128$, concat to $256$, **2-layer Bi-GRU** or **Dilated TCN** + **Temporal Attention Pooling** → binary logit.
-- **Status**: Completed evaluation on both protocols: Subject-independent 5-fold CV reaches 54.1 ± 3.2% ACC (58.5% F1, 56.4% AUC, 54.7% Bal. ACC), and Official 3-fold clip-level benchmark reaches 59.1 ± 3.2% ACC (61.4% F1, 60.3% AUC, 60.6% Bal. ACC).
+- **Status**: run on both protocols, seed 0 (`fab/results/marlin-{official,subject}/`). The report quotes numbers **recomputed from `preds.csv` against `dataset.csv` labels**: official 3-fold **58.9 ± 0.9% ACC**, 59.8% F1, **58.9% AUC**, 59.0% bal. ACC (per fold 60.0/58.1, 58.4/56.8, 58.4/61.8; 1,426 clips); subject 5-fold **54.8 ± 4.0% ACC**, **55.4% AUC** on 800 of the 886 holdout clips. The committed `folds.csv` / `summary.json` (59.1 / 60.3 official, 54.1 / 56.4 subject) are not reproduced by the predictions, and 17 `ls_wilty_ep73_true*` clips are labelled deception in the official `preds.csv`.
 
 ---
 
@@ -103,6 +103,7 @@ Internal reference compiled from `lie-detector/notebooks/architectures/` to keep
   - **Checkpoints (`runs/`)**:
     - `runs/cnn_baseline/best.pt` (leaky random split, ep 37): `val_acc = 62.9%`, `val_auc = 64.8%`.
     - `runs/cv_cnn/fold{1..5}/best.pt` (5-fold subject CV, `train_fold_temporal.py`): `best_val_auc` = `0.544, 0.578, 0.640, 0.500, 0.518` (mean **0.556**). *No holdout metrics JSON/CSV committed.*
+  - **Reported runs** (`cnn-batching/train_official_temporal.py`, 3 seeds, `teo/results/`): official 3-fold **56.3 ± 2.9% ACC**, 56.1% F1, **59.1% AUC**, 56.4% bal. ACC (1,426 clips); subject 5-fold **50.5 ± 5.2% ACC**, **51.9% AUC**. Single-stream variants on the official folds in `temporal-official-{video,audio}/`.
 - **Architecture 4B — `DualHeadGAT` (`gat/model.py`, newly added)**:
   - **18,410 trainable params** at `hidden=64, heads=4, dropout=0.3` (5,642 at `hidden=32`).
   - Converts each clip into sliding-window intra-window graphs (`window_sec=1.5`, `fps=10`, `overlap=0.5`) with landmark nodes (`node_type=0`) and audio nodes (`node_type=1`).

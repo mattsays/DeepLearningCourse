@@ -75,8 +75,9 @@ with broken timestamps, belong to no fold. The 1,650 of @tab:coverage is therefo
 three test files, not a count of distinct clips, and it is the paper's denominator for @tab:pecl.
 
 Because some clips can no longer be downloaded, and because each architecture needs its own
-features, every model is scored on a different subset of each test fold: from 69% to 86% of the
-paper's test clips for the models in @tab:coverage. Our numbers and the paper's are therefore
+features, every model is scored on a subset of each test fold: from 77% to 86% of the paper's test
+clips (@tab:coverage). Four models are scored on essentially all 1,427 downloadable clips; only
+Cross-Modal Fusion, which needs a cached embedding for both modalities, loses 153 more. Our numbers and the paper's are therefore
 related but not identical evaluations, and our models are not scored on exactly the same clips as
 each other.
 
@@ -90,17 +91,16 @@ each other.
     [Paper's files], [549], [553], [548], [1,650],
     [Downloadable clips], [483], [483], [461], [1,427],
     table.hline(stroke: 0.3pt),
-    [Theory-driven baseline], [381], [—], [—], [1,132],
+    [Theory-driven baseline], [483], [483], [461], [1,427],
     [Temporal CNN], [482], [483], [461], [1,426],
     [Cross-Modal Fusion], [429], [432], [413], [1,274],
     [VideoMAE + HuBERT, LoRA], [482], [483], [461], [1,426],
-    [MARLIN + ConvNeXt], [n/a], [n/a], [n/a], [n/a],
+    [MARLIN + ConvNeXt], [482], [483], [461], [1,426],
     table.hline(),
   ),
   caption: [Test clips actually scored on each official fold. Cross-Modal Fusion needs a cached
-    embedding for every modality; the baseline reuses a feature cache built for a different clip
-    list. Per-fold counts of the baseline after fold 1 were not logged. n/a: the MARLIN + ConvNeXt
-    run saved no predictions or clip counts, so its coverage is unavailable.],
+    embedding for every modality. The fold-1 test file lists one clip twice: the baseline scores both
+    entries, the other models score it once.],
 ) <tab:coverage>
 
 == Metrics and evaluation rules
@@ -112,7 +112,7 @@ We report the three metrics of the paper:
 
 We add *balanced accuracy* (the mean of the two per-class recalls) where available, and the
 _majority baseline_, always predicting the most frequent class on the same clips, as the floor
-every model must beat: 52.4–53.3% depending on the subset.
+every model must beat: 52.4–53.6% depending on the subset.
 
 The official folds have no validation set, and the models handle this in two ways (@tab:rules).
 Cross-Modal Fusion and the theory-driven baseline train for a fixed number of epochs and classify at

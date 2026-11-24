@@ -155,8 +155,9 @@ comparison would require re-running PECL on exactly our clips.
 *By gender.* Female speakers are 20% of the test clips. Using the seed-averaged predictions of the
 fused model (pooled ACC 73.4%, AUC 81.3%), accuracy is 70.3% (AUC 79.3) on the 256 clips of women
 and 74.1% (AUC 81.9) on the 1,016 clips of men. VideoMAE + HuBERT shows the same gap (64.9% vs
-66.6%), and so does the theory-driven baseline (50.9% vs 56.2%), so the gap is not specific to one
-architecture. The smaller amount of female training data is one plausible explanation, but our
+66.6%), so the gap is not specific to one architecture; the acoustic baseline, on the other hand,
+shows none (57.6% on 290 female and 56.5% on 1,135 male clips). The smaller amount of female
+training data is one plausible explanation for the gap of the two visual models, but our
 experiments do not isolate it: female clips also have a different base rate (43.8% deception
 against 56.6% for male clips).
 

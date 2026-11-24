@@ -22,7 +22,7 @@ deviations across folds and seeds reach 2–3 points, so differences of 1–2 po
 not meaningful.
 
 *Heterogeneous evaluation rules and coverage.* The models of @tab:coverage were scored on
-1,132–1,426 of the 1,650 test clips of the paper, and two different stopping and threshold rules
+1,274–1,427 of the 1,650 test clips of the paper, and two different stopping and threshold rules
 were used (@tab:rules). Since AUC is threshold-free, the AUC ranking is the more reliable
 comparison. The fixed-epoch rule gives Cross-Modal Fusion no tuning advantage, so its lead is
 unlikely to be an artefact of the rule. The front ends differ as well — face detector, crop, number
