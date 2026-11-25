@@ -2,8 +2,9 @@
 
 == Results <sec:results>
 
-@tab:main compares all models on the official 3-fold protocol, @tab:folds breaks the scores down by
-fold, and @tab:unimodal isolates the contribution of each modality.
+@tab:main compares all models on the official 3-fold protocol and @fig:main-chart plots the same
+scores; @tab:folds breaks them down by fold, and @tab:unimodal isolates the contribution of each
+modality.
 
 #figure(
   table(
@@ -29,6 +30,24 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     majority class always predicts `deception`; its F1 is computed on the 1,427 downloadable test
     clips, and a constant score has AUC 50 by definition.],
 ) <tab:main>
+
+#figure(
+  hbar-chart(
+    (
+      ([Theory-driven baseline], (56.5, 59.2)),
+      ([Temporal CNN], (56.3, 59.1)),
+      ([MARLIN + ConvNeXt], (58.9, 58.9)),
+      ([VideoMAE + HuBERT, LoRA], (66.3, 73.1)),
+      ([Cross-Modal Fusion], (72.2, 80.4)),
+    ),
+    series: (("ACC", rgb("#2f5d8a")), ("AUC", rgb("#9cc0e3"))),
+    refs: ((52.9, [majority ≈ 53]), (64.75, [PECL ACC (reported)])),
+    lo: 50, hi: 85, ticks: (50, 60, 70, 80),
+  ),
+  caption: [ACC and AUC (%) on the official 3-fold protocol, from @tab:main. The axis starts at 50,
+    the AUC of a random ranking; the dashed lines mark the majority-class accuracy on the same
+    clips and the PECL accuracy reported by #cite(<guo2023dolos>, form: "prose").],
+) <fig:main-chart>
 
 #figure(
   table(

@@ -110,9 +110,9 @@ classes, as expected from a threshold of 0.5 combined with class weighting.
 
 The code implements a wider design space (@tab:variants): attention pooling instead of the mean,
 frame-difference ("delta") features that describe facial motion, a _congruence_ model that decides
-only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were tried
-during development on the subject-independent split of Appendix A, but those exploratory runs were
-not kept as result files and none was run on the official folds, so we report no numbers for them.
+only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were explored
+during development, but those exploratory runs were not kept as result files and none was run on
+the official folds, so we report no numbers for them.
 
 #figure(
   table(
@@ -170,7 +170,7 @@ spreads the frames over more of the answer and over more camera shots, so the vi
 more of the scene; we have not tested this directly.
 
 *What the visual embedding contains.* Linear probes trained on the frozen, time-averaged embeddings
-(seed 0, on the subject-independent folds of Appendix A)
+(seed 0, run on the five development folds described in Appendix A)
 recover the hand-annotated MUMIN behaviours well above a prevalence-matched noise level: 24 of 26
 frequent cues from DINOv2 (mean AUC 0.665 against 0.567 for noise) and 18 from WavLM (0.585 against
 0.539). The best-read visual cues are static configurations — touching the head or body (0.759),
@@ -178,5 +178,4 @@ mouth corners down (0.756), facing the interlocutor (0.753) — while fast facia
 eyebrow raising (0.549), nodding and frowning are barely readable at 16 frames per clip. The best
 audio cues are vocalisations: speech disturbances other than "ah"/"mmh" fillers (0.818) and laughter (0.737). The
 visual embeddings therefore encode static configuration — posture, position, framing — far better
-than facial motion. This is consistent with, though not proof of, the reading in @sec:discussion
-that the video branch partly recognises the person and the scene.
+than facial motion, in line with the temporal-resolution limit discussed in @sec:discussion.

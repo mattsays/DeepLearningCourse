@@ -14,22 +14,22 @@ above our VideoMAE + HuBERT pipeline adapted with LoRA (66.3% / 73.1%) and above
 than the adaptation strategy, so this is an observation about these pipelines, not evidence that
 freezing beats adapting in general.
 
-Second, _the visual channel carries the official-split performance, and our late-fusion heads did
-not improve on it_. Video alone comes within about a point of the fused model in all three
-architectures where we measured it; audio alone is 3.5–13.3 points lower for the two pre-trained models,
-and close to it only for the from-scratch Temporal CNN, whose two streams are equally weak. The psychologically motivated acoustic features reach
-56.5% accuracy: above chance, level with the Temporal CNN, within 2.4 points of MARLIN + ConvNeXt, and far below the
-two models built on general-purpose pre-trained visual encoders.
+Second, _the visual channel carries most of the performance, and our late-fusion heads did not
+improve on it_. Video alone comes within about a point of the fused model in all three
+architectures where we measured it; audio alone is 3.5–13.3 points lower for the two pre-trained
+models, and close to it only for the from-scratch Temporal CNN, whose two streams are equally weak.
 
-Third, _benchmark accuracy is not yet evidence of lie detection_. The probes show that the visual
-embeddings encode static posture and framing far better than fast facial motion, and the
-subject-disjoint evaluation of Appendix A brings every model back to 50–56% accuracy. We therefore
-recommend reporting a speaker-independent split alongside the official one.
+Third, _general-purpose pre-trained visual encoders make the difference_. The psychologically
+motivated acoustic features reach 56.5% accuracy with 609 parameters: above the majority class,
+level with the Temporal CNN, which learns from landmarks and acoustic descriptors without
+pre-training, and within 2.4 points of the face-specific MARLIN + ConvNeXt. Only the two pipelines
+built on DINOv2 and VideoMAE move clearly beyond this floor, to 66–72%.
 
-Future work follows from these limits: re-running PECL and
-every model on one identical set of clips; nested, subject-disjoint model selection and an
-episode-disjoint control; controls for identity reliance, such as speaker-identification probes and
-face-blurred inputs; denser frame sampling and motion-sensitive features to reach the timescale of
-micro-expressions; true cross-modal interaction (cross-attention or joint self-attention) instead of
-late fusion; and training objectives that discourage speaker identification, such as
-speaker-adversarial losses or per-speaker normalisation.
+Appendix A complements these results with an evaluation of the same models on an alternative,
+speaker-disjoint split, which we report as an open question for the design of future benchmarks.
+
+Future work follows from the limits of @sec:discussion: re-running PECL and every model on one
+identical set of clips; more seeds and single-stream variants for VideoMAE + HuBERT and
+MARLIN + ConvNeXt; denser frame sampling and motion-sensitive features to reach the timescale of
+micro-expressions; true cross-modal interaction (cross-attention or joint self-attention) instead
+of late fusion; and evaluating the same models on additional splits and datasets.

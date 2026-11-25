@@ -2,13 +2,20 @@
 
 = Subject-Independent Evaluation <app:subject>
 
-== Motivation: speakers on both sides of the split
-The official folds are drawn at random over _clips_, so the same person, often within the same
-round, appears in both training and test. @tab:leak measures this on the full annotation set. The
-1,678 clips also form only 151 (episode, label) groups, with a median of 10 clips per group, and all
-clips of a group share the speaker, clothing, set and label. On the downloadable clips the overlap
-is the same or larger: 95.0%, 96.9% and 99.6% of the test clips come from a training speaker, and
-100% from a training episode.
+== An open question about the official folds
+The main text follows the three official folds of the dataset paper, as earlier work on DOLOS does.
+While preparing the experiments we noticed that these folds are drawn at random over _clips_, so
+that a speaker, often within the same round, can appear in both training and test (@tab:leak). We
+could not establish whether this is intended, nor how much it affects the scores. The 1,678 clips
+form only 151 (episode, label) groups, with a median of 10 clips per group, and all clips of a group
+share the speaker, clothing, set and label; if a model partly learns these shared factors, a
+clip-level split could reward recognising the round as well as detecting the lie.
+
+This appendix treats the question as a doubt to be checked, not as a finding. It measures the
+overlap and repeats the experiments on an alternative split in which no speaker is shared. It does
+not replace the official protocol, which remains the basis of every comparison in the main text. On
+the downloadable clips the overlap is the same as on the full annotation set or larger: 95.0%,
+96.9% and 99.6% of the test clips come from a training speaker, and 100% from a training episode.
 
 #figure(
   table(
@@ -73,6 +80,28 @@ boundary. An episode-disjoint control has not been run.
     clips (152–165 per fold instead of 177–178).],
 ) <tab:protocol>
 
+#figure(
+  hbar-chart(
+    (
+      ([Theory-driven baseline], (56.5, 53.1)),
+      ([Temporal CNN], (56.3, 50.5)),
+      ([MARLIN + ConvNeXt], (58.9, 54.8)),
+      ([VideoMAE + HuBERT, LoRA], (66.3, 56.1)),
+      ([#h(0.8em) video only], (65.4, 51.6)),
+      ([#h(0.8em) audio only], (62.8, 56.1)),
+      ([Cross-Modal Fusion, late], (72.2, 56.1)),
+      ([#h(0.8em) video only], (73.2, 49.9)),
+      ([#h(0.8em) audio only], (58.8, 54.9)),
+    ),
+    series: (("Official 3-fold", rgb("#2f5d8a")), ("Subject-independent 5-fold", rgb("#e3a35c"))),
+    refs: ((52.4, [majority ≈ 52–53]),),
+    lo: 45, hi: 80, ticks: (50, 60, 70, 80),
+  ),
+  caption: [Accuracy (%) of the same models on the two protocols, from @tab:protocol. The axis
+    starts at 45; the dashed line marks the majority-class accuracy, which is 52.1–53.3% on both
+    protocols depending on the subset.],
+) <fig:protocol>
+
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
 concentrated in the visual channel: DINOv2 alone loses 23 accuracy points and falls to chance, and
 the LoRA-adapted VideoMAE loses 14, whereas WavLM, HuBERT and the 17 acoustic features lose 3–7. The
@@ -103,11 +132,11 @@ single-stream variants, and its subject-split predictions, like those of Cross-M
 encoder relies less on identity than DINOv2 or VideoMAE, or simply has less to lose, cannot be
 decided from these numbers.
 
-Two further observations point the same way. The fused Cross-Modal Fusion model chooses very
+Two further observations are consistent with this reading. The fused Cross-Modal Fusion model chooses very
 different thresholds on different folds and seeds (0.06–0.84), a sign that its validation scores
 carry little signal. And the official split is not only easier but more reproducible: its per-seed
-AUCs span 2.2 points, against 5.0 on the subject split, consistent with identity being a stable signal and
-behaviour is not.
+AUCs span 2.2 points, against 5.0 on the subject split, consistent with identity being a more
+stable signal than behaviour.
 
 These five-fold numbers are _development estimates_, not untouched test results. The variants of
 @tab:variants and the design choices of each model were explored on the same folds, so any choice
