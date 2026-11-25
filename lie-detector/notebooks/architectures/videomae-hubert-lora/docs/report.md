@@ -2,7 +2,7 @@
 
 *Direction `lore` of the DOLOS lie-detector project (Paradigm 2 in
 [`lie-detector/docs/architectures.md`](../../../../docs/architectures.md)).
-Paths are relative to this direction folder, `lie-detector/notebooks/architectures/lore/`. The code is in
+Paths are relative to this direction folder, `lie-detector/notebooks/architectures/videomae-hubert-lora/`. The code is in
 `lore/`, `scripts/` and `tests/`; the results are in [`results/`](../results/) (label-free export of the
 git-ignored `runs/`, see the [README](../README.md)).
 Every number below was measured from those files or from the local data copy. Numbers taken from the DOLOS
@@ -444,7 +444,7 @@ identity before more capacity can help. Possible ways to do that:
 | `tests/` | protocol, resume, LoRA-activity, pilot and paper-style tests |
 
 ```bash
-# from lie-detector/notebooks/architectures/lore/ (data defaults to <repo>/dolos, see lore/config.py)
+# from lie-detector/notebooks/architectures/videomae-hubert-lora/ (data defaults to <repo>/dolos, see lore/config.py)
 python scripts/build_face_cache.py                       # once
 python scripts/run_cv.py --modality video                 # 5 subject-level folds
 python scripts/run_cv.py --modality audio

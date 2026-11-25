@@ -17,7 +17,7 @@ import sys
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
 
-LORE_ROOT = Path(__file__).resolve().parents[1]      # lie-detector/notebooks/architectures/lore/
+LORE_ROOT = Path(__file__).resolve().parents[1]      # lie-detector/notebooks/architectures/videomae-hubert-lora/
 REPO_ROOT = LORE_ROOT.parents[3]                      # local checkout of DeepLearningCourse
 
 DEFAULT_FACE_CACHE = "faces-yunet-t32-s224"
@@ -44,7 +44,7 @@ class Paths:
     def resolve(cls, data=None, lib=None, faces_root=None, face_cache: str = DEFAULT_FACE_CACHE,
                 audio=None, runs=None) -> "Paths":
         data = _pick(data, "LORE_DATA", REPO_ROOT / "dolos")
-        lib = _pick(lib, "LORE_LIB", REPO_ROOT / "lie-detector")
+        lib = _pick(lib, "LORE_LIB", LORE_ROOT.parents[2])      # the code/ folder that holds lib/
         faces_root = _pick(faces_root, "LORE_FACES_ROOT", data / "cached_features")
         audio = _pick(audio, "LORE_AUDIO", data / "audio")
         runs = _pick(runs, "LORE_RUNS", LORE_ROOT / "runs")

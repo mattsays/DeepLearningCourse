@@ -20,7 +20,7 @@ Features: ``{clip_id}_feats.npy`` (T x 53) written by ``features/extract_feature
 loader also needs ``{clip_id}_mumin.npy``; they are written from the ``mumin_*`` columns of
 ``dataset.csv`` (the auxiliary MUMIN loss weight is 0 by default, as in teo's scripts).
 
-Writes ``teo/results/temporal-<protocol>/``: ``folds.csv`` (one row per seed x fold),
+Writes ``temporal-cnn/results/temporal-<protocol>/``: ``folds.csv`` (one row per seed x fold),
 ``preds.csv`` (clip_id, y_true, y_prob, seed, fold), ``summary.json``. Checkpoints go to
 ``--runs`` (default: next to the cache, outside git).
 """

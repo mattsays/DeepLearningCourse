@@ -32,12 +32,12 @@ CODE = [
     "scripts/build_dataset.py", "scripts/make_splits.py", "scripts/extract_features_marlin.py",
     "notebooks/preprocessing.ipynb",
     # theory-driven baseline
-    A + "load/features.py", A + "load/run_load.py", A + "load/results/",
+    A + "acoustic-baseline/features.py", A + "acoustic-baseline/run_load.py", A + "acoustic-baseline/results/",
     # Temporal CNN
-    A + "teo/cnn-batching/train_official_temporal.py", A + "teo/cnn-batching/train_fold_temporal.py",
-    A + "teo/cnn-batching/model_temporal.py",
-    A + "teo/features/extract_features.py", A + "teo/features/mask_streams.py",
-    A + "teo/results/",
+    A + "temporal-cnn/cnn-batching/train_official_temporal.py", A + "temporal-cnn/cnn-batching/train_fold_temporal.py",
+    A + "temporal-cnn/cnn-batching/model_temporal.py",
+    A + "temporal-cnn/features/extract_features.py", A + "temporal-cnn/features/mask_streams.py",
+    A + "temporal-cnn/results/",
     # Cross-Modal Fusion
     A + "cross-modal-fusion/model.py", A + "cross-modal-fusion/training.py",
     A + "cross-modal-fusion/export.py",
@@ -45,17 +45,18 @@ CODE = [
     A + "cross-modal-fusion/test.ipynb", A + "cross-modal-fusion/diagnostics.ipynb",
     A + "cross-modal-fusion/results/",
     # VideoMAE + HuBERT with LoRA
-    A + "lore/lore/",
-    A + "lore/scripts/run_cv.py", A + "lore/scripts/fuse.py", A + "lore/scripts/build_face_cache.py",
-    A + "lore/scripts/export_results.py", A + "lore/scripts/cluster_test.py",
-    A + "lore/scripts/pack_kaggle.py",
-    A + "lore/tests/test_lora_active.py", A + "lore/tests/test_protocol.py",
-    A + "lore/train_lore.ipynb", A + "lore/results/",
+    A + "videomae-hubert-lora/lore/",
+    A + "videomae-hubert-lora/scripts/run_cv.py", A + "videomae-hubert-lora/scripts/fuse.py", A + "videomae-hubert-lora/scripts/build_face_cache.py",
+    A + "videomae-hubert-lora/scripts/export_results.py", A + "videomae-hubert-lora/scripts/cluster_test.py",
+    A + "videomae-hubert-lora/scripts/pack_kaggle.py",
+    A + "videomae-hubert-lora/tests/test_lora_active.py", A + "videomae-hubert-lora/tests/test_protocol.py",
+    A + "videomae-hubert-lora/train_lore.ipynb", A + "videomae-hubert-lora/results/",
     # MARLIN + ConvNeXt
-    A + "fab/train_marlin_kaggle.ipynb", A + "fab/results/",
+    A + "marlin-convnext/train_marlin_kaggle.ipynb", A + "marlin-convnext/results/",
 ]
 
 REPORT = ["report/report.pdf", "report/report.typ", "report/template.typ", "report/refs.bib",
+          "report/figures/fig1-protocol-gap.pdf", "report/figures/fig4-efficiency.pdf",
           "report/sections/"]
 
 # ---------------------------------------------------------------- patches of the copy
@@ -100,11 +101,11 @@ ENV_DATA = 'Path(os.environ.get("DOLOS_DATA", "/content/drive/MyDrive/dolos"))'
 
 # file (relative to deliverable/code/) -> [(old, new)], each old must occur exactly once
 PY_PATCHES = {
-    A + "lore/lore/config.py": [
+    A + "videomae-hubert-lora/lore/config.py": [
         ('lib = _pick(lib, "LORE_LIB", REPO_ROOT / "lie-detector")',
          'lib = _pick(lib, "LORE_LIB", LORE_ROOT.parents[2])      # the code/ folder that holds lib/'),
     ],
-    A + "lore/scripts/pack_kaggle.py": [
+    A + "videomae-hubert-lora/scripts/pack_kaggle.py": [
         ('        n = sum(add_tree(z, LORE_ROOT / d, f"lore/{d}") for d in CODE_DIRS if (LORE_ROOT / d).is_dir())\n',
          '        n = sum(add_tree(z, LORE_ROOT / d, f"lore/{d}") for d in CODE_DIRS if (LORE_ROOT / d).is_dir())\n'
          '        n += add_tree(z, LORE_ROOT.parents[2] / "lib", "lib")      # shared lib/, read through LORE_LIB\n'),
@@ -162,7 +163,7 @@ NB_PATCHES = {
          '    os.chdir(CODE_ROOT)\n'),
         ("sub", f"SHARED = {DRIVE_DATA}", f"SHARED = {ENV_DATA}"),
     ],
-    A + "lore/train_lore.ipynb": [
+    A + "videomae-hubert-lora/train_lore.ipynb": [
         ("sub",
          "# The team repo, only for lie-detector/lib (splits + metrics, never copied)\n"
          "if not os.path.isdir('/tmp/DeepLearningCourse/.git'):\n"
@@ -172,7 +173,7 @@ NB_PATCHES = {
          "LIB = find_one('lib/dataset.py', 'lib/ inside the code dataset').parent.parent\n"),
         ("sub", "'LORE_LIB': '/tmp/DeepLearningCourse/lie-detector',", "'LORE_LIB': str(LIB),"),
     ],
-    A + "fab/train_marlin_kaggle.ipynb": [
+    A + "marlin-convnext/train_marlin_kaggle.ipynb": [
         ("cell", "git clone -q -b fab_marlin https://github.com/mattsays/DeepLearningBigData", KAGGLE_SETUP),
     ],
 }

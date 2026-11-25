@@ -2,8 +2,9 @@
 
 == Results <sec:results>
 
-@tab:main compares all models on the official 3-fold protocol, @tab:folds breaks the scores down by
-fold, and @tab:unimodal isolates the contribution of each modality.
+@tab:main compares all models on the official 3-fold protocol and @fig:main-chart plots the same
+scores; @tab:folds breaks them down by fold, and @tab:unimodal isolates the contribution of each
+modality.
 
 #figure(
   table(
@@ -22,13 +23,32 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     [MARLIN + ConvNeXt], [58.9 ± 0.9], [59.8], [58.9], [59.0], [97,857],
     table.hline(),
   ),
-  caption: [Official 3-fold protocol: mean ± standard deviation over test folds (and seeds, for
-    the 3-seed models). Baseline, Temporal CNN and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT
-    and MARLIN + ConvNeXt: seed 0. Each model is scored on its own subset of the official test clips
-    (@tab:coverage), and the PECL row is quoted from the paper, not re-run (n.r.: not reported). The
-    majority class always predicts `deception`; its F1 is computed on the 1,427 downloadable test
-    clips, and a constant score has AUC 50 by definition.],
+  caption: [Official 3-fold protocol: mean ± standard deviation over test folds and, where more than
+    one seed was run, over seeds. Baseline, Temporal CNN and Cross-Modal Fusion: three seeds;
+    VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0, so their ± is the spread across folds alone and
+    is not comparable with a nine-run standard deviation. Each model is scored on its own subset of
+    the official test clips (@tab:coverage), and the PECL row is quoted from the paper, not re-run
+    (n.r.: not reported). The majority class always predicts `deception`; its F1 is computed on the
+    1,427 downloadable test clips, and a constant score has AUC 50 by definition.],
 ) <tab:main>
+
+#figure(
+  hbar-chart(
+    (
+      ([Theory-driven baseline], (56.5, 59.2)),
+      ([Temporal CNN], (56.3, 59.1)),
+      ([MARLIN + ConvNeXt], (58.9, 58.9)),
+      ([VideoMAE + HuBERT, LoRA], (66.3, 73.1)),
+      ([Cross-Modal Fusion], (72.2, 80.4)),
+    ),
+    series: (("ACC", rgb("#2f5d8a")), ("AUC", rgb("#9cc0e3"))),
+    refs: ((52.9, [majority ≈ 53]), (64.75, [PECL ACC (reported)])),
+    lo: 50, hi: 85, ticks: (50, 60, 70, 80),
+  ),
+  caption: [ACC and AUC (%) on the official 3-fold protocol, from @tab:main. The axis starts at 50,
+    the AUC of a random ranking; the dashed lines mark the majority-class accuracy on the same
+    clips and the PECL accuracy reported by #cite(<guo2023dolos>, form: "prose").],
+) <fig:main-chart>
 
 #figure(
   table(
@@ -45,7 +65,7 @@ fold, and @tab:unimodal isolates the contribution of each modality.
   ),
   caption: [ACC / AUC per official fold (mean over seeds where several were run); the last row
     repeats the three-fold means of @tab:main. MARLIN + ConvNeXt is recomputed from its per-clip
-    predictions (`fab/results/marlin-official/preds.csv`) against the `dataset.csv` labels.],
+    predictions (`marlin-convnext/results/marlin-official/preds.csv`) against the `dataset.csv` labels.],
 ) <tab:folds>
 
 #figure(
@@ -64,7 +84,7 @@ fold, and @tab:unimodal isolates the contribution of each modality.
   ),
   caption: [Unimodal ablations, ACC / AUC on the official protocol. —: the model has no such
     stream. n/a: single-stream variants of MARLIN + ConvNeXt were not run. The Temporal CNN's single-stream variants zero the other stream's input
-    columns (`teo/features/mask_streams.py`) and keep the same training recipe.],
+    columns (`temporal-cnn/features/mask_streams.py`) and keep the same training recipe.],
 ) <tab:unimodal>
 
 *Reading.* Every measured model beats the majority floor, but only two clearly beat the
@@ -81,7 +101,7 @@ pipelines, not of freezing against adaptation alone.
 MARLIN + ConvNeXt reaches 58.9 ± 0.9% accuracy and 58.9% AUC with 97,857 trainable parameters. A
 frozen encoder pre-trained specifically on faces, followed by an explicit temporal model, therefore
 does not close the gap to the general-purpose visual encoders on this protocol. The run's own summary
-files (`fab/results/*/summary.json`, `folds.csv`) report slightly different values (59.1 / 60.3
+files (`marlin-convnext/results/*/summary.json`, `folds.csv`) report slightly different values (59.1 / 60.3
 official, 54.1 / 56.4 subject) that its per-clip predictions do not reproduce, and its official
 prediction file marks 17 truthful clips of one episode as lies; every MARLIN + ConvNeXt number in
 this report is therefore recomputed from the per-clip predictions against the `dataset.csv` labels. No single-stream
@@ -103,8 +123,8 @@ pre-trained visual encoders. Its two streams are nearly interchangeable: landmar
 57.8) and eGeMAPS alone (55.9 / 59.1) each come within 1.3 points of the fused model, so neither
 stream adds much to the other.
 
-The results are stable across folds. Cross-Modal Fusion is the best model on every fold, and its
-spread across folds (69.0–74.2) is comparable to its spread across seeds (70.5–73.8, @tab:seeds).
-Fold 1 gives the lowest accuracy for Cross-Modal Fusion, VideoMAE + HuBERT and the baseline. For
+The results are stable across folds: Cross-Modal Fusion is the best model on every fold (69.0–74.2
+ACC), and fold 1 gives the lowest accuracy for Cross-Modal Fusion, VideoMAE + HuBERT and the
+baseline. For
 the three weaker models the spread across folds (1.6–4.9 accuracy points) is as large as the
 differences between them, so their ordering is not meaningful.

@@ -2,13 +2,20 @@
 
 = Subject-Independent Evaluation <app:subject>
 
-== Motivation: speakers on both sides of the split
-The official folds are drawn at random over _clips_, so the same person, often within the same
-round, appears in both training and test. @tab:leak measures this on the full annotation set. The
-1,678 clips also form only 151 (episode, label) groups, with a median of 10 clips per group, and all
-clips of a group share the speaker, clothing, set and label. On the downloadable clips the overlap
-is the same or larger: 95.0%, 96.9% and 99.6% of the test clips come from a training speaker, and
-100% from a training episode.
+== An open question about the official folds
+The main text follows the three official folds of the dataset paper, as earlier work on DOLOS does.
+While preparing the experiments we noticed that these folds are drawn at random over _clips_, so
+that a speaker, often within the same round, can appear in both training and test (@tab:leak). We
+could not establish whether this is intended, nor how much it affects the scores. The 1,678 clips
+form only 149 (episode, label) groups, with a median of 11 clips per group, and all clips of a group
+share the speaker, clothing, set and label; if a model partly learns these shared factors, a
+clip-level split could reward recognising the round as well as detecting the lie.
+
+This appendix treats the question as a doubt to be checked, not as a finding. It measures the
+overlap and repeats the experiments on an alternative split in which no speaker is shared. It does
+not replace the official protocol, which remains the basis of every comparison in the main text. On
+the clips that could still be downloaded the overlap is similar: 95.0%, 96.9% and 99.6% of their
+test clips come from a training speaker, and 100% from a training episode.
 
 #figure(
   table(
@@ -17,9 +24,9 @@ is the same or larger: 95.0%, 96.9% and 99.6% of the test clips come from a trai
     table.hline(),
     table.header([Fold], [Train / test clips], [Test speakers], [Also in train], [Test clips with a train speaker]),
     table.hline(stroke: 0.5pt),
-    [1], [1,099 / 549], [168], [153], [95.3%],
-    [2], [1,095 / 553], [162], [150], [95.7%],
-    [3], [1,100 / 548], [163], [160], [98.7%],
+    [1], [1,099 / 549], [161], [149], [96.0%],
+    [2], [1,095 / 553], [157], [148], [96.7%],
+    [3], [1,100 / 548], [159], [156], [98.7%],
     table.hline(),
   ),
   caption: [Speaker overlap in the official folds, computed from the official fold files on the
@@ -73,7 +80,16 @@ boundary. An episode-disjoint control has not been run.
     clips (152–165 per fold instead of 177–178).],
 ) <tab:protocol>
 
-On unseen speakers every model falls to within a few points of the majority floor. The drop is
+#figure(
+  image("../../figures/fig1-protocol-gap.pdf", width: 100%),
+  caption: [Every model on both protocols. Filled: official 3-fold; open: subject-independent 5-fold;
+    the numbers on the right give the change in accuracy and AUC. The drop is concentrated in the
+    visual channel: DINOv2 alone loses 23 accuracy and 29 AUC points and falls below the majority
+    floor (grey band), while the acoustic branches lose 3–7. MARLIN + ConvNeXt has the smallest gap
+    of the deep models.],
+) <fig:protocol-gap>
+
+On unseen speakers every model falls to within a few points of the majority floor (@fig:protocol-gap). The drop is
 concentrated in the visual channel: DINOv2 alone loses 23 accuracy points and falls to chance, and
 the LoRA-adapted VideoMAE loses 14, whereas WavLM, HuBERT and the 17 acoustic features lose 3–7. The
 acoustic representations exclude the _visual_ identity cues — face, clothing, set — but not
@@ -86,7 +102,7 @@ and head placement, so they too can carry speaker-specific information.
 Audio becomes the strongest single channel, but only its ranking is reliably above chance. We pooled
 the 886 holdout clips of VideoMAE + HuBERT (135 speakers), each judged at its own fold's threshold,
 and resampled whole speakers 10,000 times, comparing the model on every resample with the majority
-rate of that same resample (`lore/scripts/cluster_test.py`). HuBERT's accuracy of 56.1% is 4.0
+rate of that same resample (`videomae-hubert-lora/scripts/cluster_test.py`). HuBERT's accuracy of 56.1% is 4.0
 points above the 52.1% majority, but the 95% interval of that gain, −4.7 to +9.1, contains zero
 (one-sided $p = 0.21$): its accuracy is suggestive, not significant. Its pooled AUC of 58.7 is
 8.7 points above 0.5 with interval +2.8 to +14.7 ($p = 0.001$), and the fused model behaves the
@@ -103,11 +119,11 @@ single-stream variants, and its subject-split predictions, like those of Cross-M
 encoder relies less on identity than DINOv2 or VideoMAE, or simply has less to lose, cannot be
 decided from these numbers.
 
-Two further observations point the same way. The fused Cross-Modal Fusion model chooses very
+Two further observations are consistent with this reading. The fused Cross-Modal Fusion model chooses very
 different thresholds on different folds and seeds (0.06–0.84), a sign that its validation scores
 carry little signal. And the official split is not only easier but more reproducible: its per-seed
-AUCs span 2.2 points, against 5.0 on the subject split, consistent with identity being a stable signal and
-behaviour is not.
+AUCs span 2.2 points, against 5.0 on the subject split, consistent with identity being a more
+stable signal than behaviour.
 
 These five-fold numbers are _development estimates_, not untouched test results. The variants of
 @tab:variants and the design choices of each model were explored on the same folds, so any choice
@@ -126,3 +142,46 @@ frequent cues above their band in at least one modality. The encoders therefore 
 behaviours. Yet a logistic regression trained on the 41 ground-truth annotations themselves reaches
 only 51.1% ACC / 52.5% AUC on the subject split, against 58.84% reported in the paper on the official
 folds. The behaviours exist and are encoded; they do not predict deception on new people.
+
+== What the embedding knows: identity or scene? <app:probes>
+The subject split removes the person but not the recording session: an episode is one studio, one
+lighting setup, one day, and 82–94% of the holdout clips still come from an episode present in
+training (@tab:leak). To see which of the two the encoder carries, we fit linear probes
+(multinomial logistic regression on standardised inputs, five folds) to the time-averaged DINOv2
+vector of the 1,299 clips that have a cached embedding, and compare each probe with the same
+classifier on permuted labels.
+
+#figure(
+  table(
+    columns: (auto, auto, auto, auto, auto, auto),
+    align: (left, left, right, right, right, right),
+    table.hline(),
+    table.header([Probe], [Folds], [Accuracy], [Chance], [Classes], [Clips]),
+    table.hline(stroke: 0.5pt),
+    [Speaker], [random], [96.3%], [6.8%], [145], [1,299],
+    [Episode], [random], [88.0%], [1.7%], [59], [1,299],
+    [Episode], [speaker held out], [7.4%], [1.7%], [59], [1,299],
+    [Episode of Lee Mack], [random], [87.1%], [1.8%], [45], [186],
+    [Episode of David Mitchell], [random], [81.4%], [4.0%], [42], [172],
+    table.hline(),
+  ),
+  caption: [Linear probes on the frozen time-averaged DINOv2 vector. Chance is the mean accuracy of
+    the same classifier on permuted labels (five repeats) and Classes the number of distinct labels.
+    Random folds put clips of one round on both sides of the boundary, as the official protocol does;
+    speaker-held-out folds do not.],
+) <tab:probes>
+
+Under folds that put clips of one round on both sides — the situation the official protocol creates
+— the vector identifies the speaker with 96.3% accuracy over 145 speakers, against 6.8% for permuted
+labels, and the episode with 88.0% over 59 (1.7%). Identity is therefore not merely a correlate of
+the label in this representation: it is almost perfectly readable. When the speaker is held out,
+episode accuracy falls to 7.4% against the same 1.7%: the scene survives the split, at 4.4 times
+chance, but an order of magnitude weaker than identity. Within a single speaker the probe still
+separates the session at 87% and 81% over 45 and 42 episodes, but there clips of one round are
+adjacent frames of the same video, so we read those two as an upper bound.
+
+The official split is therefore not merely leaky but trivially leaky: identity alone is readable.
+This does not excuse the subject-independent estimate, which still contains the residual scene
+information because the split is not episode-disjoint; it says that an episode-disjoint split would
+remove the smaller of the two channels. We have not run it, so whether it would lower the numbers
+without reordering them remains an expectation.

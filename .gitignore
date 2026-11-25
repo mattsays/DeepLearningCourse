@@ -21,10 +21,10 @@ lie-detector/preds/
 .DS_Store
 
 # lore direction: local-only inputs and full run outputs (labelled preds, LoRA weights).
-# The committed, label-free export is notebooks/architectures/lore/results/.
-lie-detector/notebooks/architectures/lore/runs/
-lie-detector/notebooks/architectures/lore/assets/
-lie-detector/notebooks/architectures/lore/inputs/
-lie-detector/notebooks/architectures/lore/kaggle_upload/
-lie-detector/notebooks/architectures/lore/kaggle_results/
-lie-detector/notebooks/architectures/lore/**/*.pt
+# The committed, label-free export is notebooks/architectures/videomae-hubert-lora/results/.
+lie-detector/notebooks/architectures/videomae-hubert-lora/runs/
+lie-detector/notebooks/architectures/videomae-hubert-lora/assets/
+lie-detector/notebooks/architectures/videomae-hubert-lora/inputs/
+lie-detector/notebooks/architectures/videomae-hubert-lora/kaggle_upload/
+lie-detector/notebooks/architectures/videomae-hubert-lora/kaggle_results/
+lie-detector/notebooks/architectures/videomae-hubert-lora/**/*.pt

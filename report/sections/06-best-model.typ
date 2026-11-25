@@ -164,7 +164,7 @@ could not be downloaded or had no cached embedding. Second, each of our own mode
 different subset (@tab:coverage), so even our internal ranking is not on identical clips. Third,
 the reference implementation selects its reported epoch on the test fold#footnote[Re-scored in the
 same way — best test epoch, threshold 0.5 — VideoMAE + HuBERT reaches 68.0 ± 1.8 ACC and 72.9 AUC,
-as recorded in `lore/docs/report.md`; the per-fold files of that re-scoring were not kept, so we
+as recorded in `videomae-hubert-lora/docs/report.md`; the per-fold files of that re-scoring were not kept, so we
 cite it as an observation and not as a result. We do not use this selection rule anywhere else.],
 which, if anything, favours PECL. A direct
 comparison would require re-running PECL on exactly our clips.

@@ -29,9 +29,9 @@ Internal reference compiled from `lie-detector/notebooks/architectures/*/results
 
 ---
 
-## 2. Theory-Driven Baseline (`load`)
+## 2. Theory-Driven Baseline (`acoustic-baseline` / `load`)
 
-- **Path**: `lie-detector/notebooks/architectures/load/` (`features.py`, `run_load.py`, `results/load-{official,subject}/`).
+- **Path**: `lie-detector/notebooks/architectures/acoustic-baseline/` (`features.py`, `run_load.py`, `results/load-{official,subject}/`).
 - **Theoretical Basis**: Cognitive Load (Vrij — hesitations, pauses, speech rate) & Vocal Arousal (pitch, cycle-to-cycle instability, HNR).
 - **Features**: **17 hand-crafted acoustic features** from 16 kHz audio (`@tab:load-feats` in `04-baseline.typ`):
   - *Energy & Pauses (9, NumPy)*: `duration_s`, `rms_mean`, `rms_std`, `energy_range_db`, `voiced_ratio`, `pause_count`, `pause_ratio`, `pause_mean_ms`, `onsets_per_s`.
@@ -68,9 +68,9 @@ Internal reference compiled from `lie-detector/notebooks/architectures/*/results
 
 ---
 
-## 4. Direction 2: Spatio-Temporal Transformers with LoRA (`lore`)
+## 4. Direction 2: Spatio-Temporal Transformers with LoRA (`videomae-hubert-lora` / `lore`)
 
-- **Path**: `lie-detector/notebooks/architectures/lore/` (`lore/`, `scripts/`, `results/`).
+- **Path**: `lie-detector/notebooks/architectures/videomae-hubert-lora/` (`lore/`, `scripts/`, `results/`).
 - **Design Choices**:
   - Video: `MCG-NJU/videomae-base-finetuned-kinetics` (86.5M) on 16 × 224×224 speaker-centred face crops (YuNet detection + SFace 128-d clustering + median-smoothed boxes; 32 cached frames/clip).
   - Audio: `facebook/hubert-base-ls960` (94.7M) on raw 16 kHz z-normalised waveform (8 s random train window / first 10 s eval).
@@ -85,13 +85,13 @@ Internal reference compiled from `lie-detector/notebooks/architectures/*/results
     - Video only: **51.58 ± 4.60% ACC**, **41.70% F1**, **53.62 ± 8.61% AUC**, **51.51% bal. ACC** (reported **51.6 / 53.6**; Δ: −13.8 / −17.5).
     - Audio only: **56.10 ± 5.51% ACC**, **56.05% F1**, **59.54 ± 7.39% AUC**, **56.25% bal. ACC** (reported **56.1 / 59.5**; Δ: −6.7 / −7.4).
     - Fused ($w$ tuned on `val`): **56.1 ± 7.3% ACC**, **55.1% F1**, **60.6% AUC**, **56.2% bal. ACC** (Δ: −10.2 / −12.5).
-  - **Speaker-cluster bootstrap (10,000 resamples, `lore/scripts/cluster_test.py`)**: HuBERT pooled ACC 56.1% (+4.0 vs 52.1% majority, 95% CI −4.7 to +9.1, one-sided $p = 0.21$), pooled AUC 58.7 (+8.7, CI +2.8 to +14.7, $p = 0.001$); fused AUC 60.4 (CI +4.1 to +16.5); video AUC 53.5 (CI −3.2 to +10.3).
+  - **Speaker-cluster bootstrap (10,000 resamples, `videomae-hubert-lora/scripts/cluster_test.py`)**: HuBERT pooled ACC 56.1% (+4.0 vs 52.1% majority, 95% CI −4.7 to +9.1, one-sided $p = 0.21$), pooled AUC 58.7 (+8.7, CI +2.8 to +14.7, $p = 0.001$); fused AUC 60.4 (CI +4.1 to +16.5); video AUC 53.5 (CI −3.2 to +10.3).
 
 ---
 
-## 5. Direction 3: MARLIN + ConvNeXt (`fab`)
+## 5. Direction 3: MARLIN + ConvNeXt (`marlin-convnext` / `fab`)
 
-- **Path**: `lie-detector/notebooks/architectures/fab/` (`train_marlin_kaggle.ipynb`, `results/marlin-{official,subject}/`).
+- **Path**: `lie-detector/notebooks/architectures/marlin-convnext/` (`train_marlin_kaggle.ipynb`, `results/marlin-{official,subject}/`).
 - **Reported Configuration**:
   - **Visual stream**: frozen `marlin_vit_base_ytf` (CVPR 2023) on 16 MTCNN face crops (conf ≥ 0.85, 1.5× margin, 224×224) → 8 × 768 sequence.
   - **Acoustic stream**: 128-band 3-channel log-mel spectrogram ($S, \Delta, \Delta^2$) through frozen `convnext_tiny` (freq-pooled) → linearly interpolated to 8 steps × 768.
@@ -99,18 +99,18 @@ Internal reference compiled from `lie-detector/notebooks/architectures/*/results
 - **Results (seed 0, recomputed from `preds.csv` against `dataset.csv`)**:
   - **Official 3-fold** (1,426 clips; 15% clip-level `val`): **58.9 ± 0.9% ACC**, **59.8% F1**, **58.9% AUC**, **59.0% bal. ACC** (per-fold: 60.0/58.1, 58.4/56.8, 58.4/61.8).
   - **Subject 5-fold** (Appendix A, 800/886 clips): **54.8 ± 4.0% ACC**, **55.4% AUC** (Δ: −4.1 ACC / −3.5 AUC).
-  - *(Note: committed `fab/results/*/summary.json` / `folds.csv` report 59.1 / 60.3 official and 54.1 / 56.4 subject, which `preds.csv` does not reproduce; official `preds.csv` also mislabels 17 `ls_wilty_ep73_true*` clips. The report always uses the recomputed values.)*
+  - *(Note: committed `marlin-convnext/results/*/summary.json` / `folds.csv` report 59.1 / 60.3 official and 54.1 / 56.4 subject, which `preds.csv` does not reproduce; official `preds.csv` also mislabels 17 `ls_wilty_ep73_true*` clips. The report always uses the recomputed values.)*
 
 ---
 
-## 6. Direction 4: From-Scratch Temporal CNN (`teo`)
+## 6. Direction 4: From-Scratch Temporal CNN (`temporal-cnn` / `teo`)
 
-- **Path**: `lie-detector/notebooks/architectures/teo/` (`features/extract_features.py`, `cnn-batching/`, `results/temporal-{official,subject,official-video,official-audio}/`).
-- **Scope Note**: The repository also contains an experimental `DualHeadGAT` under `teo/gat/` (18,410 params at `hidden=64`) with `.pt` checkpoints only; **it is excluded from the report and deliverable**, which evaluate only `TemporalCNN`.
+- **Path**: `lie-detector/notebooks/architectures/temporal-cnn/` (`features/extract_features.py`, `cnn-batching/`, `results/temporal-{official,subject,official-video,official-audio}/`).
+- **Scope Note**: The repository also contains an experimental `DualHeadGAT` under `temporal-cnn/gat/` (18,410 params at `hidden=64`) with `.pt` checkpoints only; **it is excluded from the report and deliverable**, which evaluate only `TemporalCNN`.
 - **Reported Configuration (`TemporalCNN`, `cnn-batching/model_temporal.py`)**:
   - **Input (`(T, 53)` at 10 fps, zero pre-training)**: 45 dims from MediaPipe `FaceLandmarker` (15 pooled 3D facial regions) + 8 dims from openSMILE `eGeMAPSv02` LLDs.
   - **Architecture**: `Conv1d(53→64, k=5)` + 3× `Conv1d(64→64, k=3)` with `BatchNorm1d`, `ReLU`, `Dropout(0.3)` on first two blocks, masked temporal mean pool ("time batching"), `lie_head` (`Linear(64, 1)`). Optional `mumin_head` (`Linear(64, 41)`) is switched off (`mumin_weight = 0.0`). **57,322 trainable params** (54,657 used at inference).
-- **Committed Results (`teo/results/*/summary.json`, 3 seeds [0, 1, 2])**:
+- **Committed Results (`temporal-cnn/results/*/summary.json`, 3 seeds [0, 1, 2])**:
   - **`temporal-official`** (1,426 clips, 15% clip-level `val`): **56.33 ± 2.85% ACC**, **56.14% F1**, **59.08 ± 2.45% AUC**, **56.42% bal. ACC** (reported **56.3 ± 2.9 / 59.1**; per-fold: 55.1/56.8, 59.4/62.0, 54.5/58.4).
   - **`temporal-official-video`** (audio columns zeroed): **55.03 ± 1.76% ACC**, **57.40% F1**, **57.84 ± 1.62% AUC**, **54.51% bal. ACC** (reported **55.0 / 57.8**).
   - **`temporal-official-audio`** (landmark columns zeroed): **55.87 ± 2.65% ACC**, **55.82% F1**, **59.08 ± 2.01% AUC**, **55.75% bal. ACC** (reported **55.9 / 59.1**).
@@ -122,4 +122,4 @@ Internal reference compiled from `lie-detector/notebooks/architectures/*/results
 
 - **Dataset, Benchmarks & Psychology**: Guo et al., *DOLOS / PECL*, ICCV 2023 (`guo2023dolos`); Vrij et al., 2008 (`vrij2008cognitive`); DePaulo et al., 2003 (`depaulo2003cues`); Bond & DePaulo, 2006 (`bond2006accuracy`); Allwood et al., *MUMIN*, 2007 (`allwood2007mumin`); Pérez-Rosas et al., *Real-Life Trials*, ICMI 2015 (`perezrosas2015trial`); Gupta et al., *Bag-of-Lies*, CVPRW 2019 (`gupta2019bagoflies`); Soldner et al., *Box of Lies*, NAACL-HLT 2019 (`soldner2019boxoflies`).
 - **Baselines & Backbones**: Dosovitskiy et al., *ViT*, ICLR 2021 (`dosovitskiy2021vit`); Baevski et al., *wav2vec 2.0*, NeurIPS 2020 (`baevski2020wav2vec`); Oquab et al., *DINOv2*, TMLR 2024 (`oquab2024dinov2`); Chen et al., *WavLM*, IEEE JSTSP 2022 (`chen2022wavlm`); Hsu et al., *HuBERT*, IEEE/ACM TASLP 2021 (`hsu2021hubert`); Tong et al., *VideoMAE*, NeurIPS 2022 (`tong2022videomae`); Hu et al., *LoRA*, ICLR 2022 (`hu2022lora`); Cai et al., *MARLIN*, CVPR 2023 (`cai2023marlin`); Liu et al., *ConvNeXt*, CVPR 2022 (`liu2022convnext`); Zhang et al., *MTCNN*, IEEE SPL 2016 (`zhang2016mtcnn`); Jadoul et al., *Parselmouth*, J. Phonetics 2018 (`jadoul2018parselmouth`); Eyben et al., *GeMAPS*, IEEE TAFFC 2016 (`eyben2016gemaps`); Lugaresi et al., *MediaPipe*, 2019 (`lugaresi2019mediapipe`).
-- **Direction Reference Folders** (committed PDFs not all cited in `report.typ`): `cross-modal-fusion/reference paper/` (11 PDFs: DOLOS/PECL, DINOv2, WavLM, V-JEPA 2, MulT, Perceiver, GMU, Adapters, LoRA, Multimodal ML Survey, Shortcut Learning) and `lore/references/` (4 PDFs: DOLOS/PECL, VideoMAE, HuBERT, LoRA).
+- **Direction Reference Folders** (committed PDFs not all cited in `report.typ`): `cross-modal-fusion/reference paper/` (11 PDFs: DOLOS/PECL, DINOv2, WavLM, V-JEPA 2, MulT, Perceiver, GMU, Adapters, LoRA, Multimodal ML Survey, Shortcut Learning) and `videomae-hubert-lora/references/` (4 PDFs: DOLOS/PECL, VideoMAE, HuBERT, LoRA).

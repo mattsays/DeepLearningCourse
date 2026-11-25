@@ -44,11 +44,11 @@ deliverable/
     └── notebooks/
         ├── preprocessing.ipynb      runs build_dataset.py and make_splits.py on Colab
         └── architectures/
-            ├── load/                theory-driven baseline
-            ├── teo/                 Temporal CNN
-            ├── cross-modal-fusion/  Cross-Modal Fusion (best model)
-            ├── lore/                VideoMAE + HuBERT with LoRA
-            └── fab/                 MARLIN + ConvNeXt
+            ├── acoustic-baseline/       theory-driven baseline
+            ├── temporal-cnn/            Temporal CNN
+            ├── cross-modal-fusion/      Cross-Modal Fusion (best model)
+            ├── videomae-hubert-lora/    VideoMAE + HuBERT with LoRA
+            └── marlin-convnext/         MARLIN + ConvNeXt
 ```
 
 Each architecture folder has a `results/` subfolder with the files the paper's numbers come from.
@@ -93,14 +93,14 @@ with a default you can edit in the first cells:
 
 All commands below are run from the architecture's folder unless stated otherwise.
 
-### Theory-driven baseline (`load/`)
+### Theory-driven baseline (`acoustic-baseline/`)
 17 hand-crafted acoustic features (pauses, energy, pitch, voice quality) and a 609-parameter MLP.
 Requires `numpy`, `pandas`, `torch`, `scikit-learn`, `soundfile` and `praat-parselmouth`.
 ```bash
 python run_load.py --data <dolos>        # both protocols, 3 seeds -> results/load-{official,subject}/
 ```
 
-### Temporal CNN (`teo/`)
+### Temporal CNN (`temporal-cnn/`)
 MediaPipe face landmarks (15 regions) and 8 openSMILE eGeMAPS descriptors at 10 fps, fed to a
 from-scratch 1-D CNN. Requires `mediapipe`, `opensmile`, `opencv-python`, `soundfile`, `scipy`, `torch`,
 `scikit-learn` and `pandas`. The MediaPipe model file is downloaded automatically.
@@ -129,7 +129,7 @@ the result writer. Run on Colab in this order:
 4. `test.ipynb` runs the closed subject-independent test set. It is **deliberately not opened**
    (`OPEN_TEST_SET = False`): the paper reports development estimates only.
 
-### VideoMAE + HuBERT with LoRA (`lore/`)
+### VideoMAE + HuBERT with LoRA (`videomae-hubert-lora/`)
 VideoMAE-base (speaker-centred face crops, YuNet + SFace) and HuBERT-base, each adapted with LoRA
 (r = 8, α = 16), then late fusion of the two branches. Requires `transformers==5.23.0`,
 `peft==0.21.3`, `torch` 2.11, `opencv-python` (YuNet and SFace models download automatically),
@@ -140,7 +140,7 @@ VideoMAE-base (speaker-centred face crops, YuNet + SFace) and HuBERT-base, each 
 | `LORE_DATA` | `deliverable/dolos` |
 | `LORE_LIB` | `code/` |
 | `LORE_FACES_ROOT` | `<data>/cached_features` |
-| `LORE_RUNS` | `lore/runs` |
+| `LORE_RUNS` | `videomae-hubert-lora/runs` |
 
 ```bash
 python scripts/build_face_cache.py                               # face sprites for every usable clip
@@ -158,7 +158,7 @@ The reported runs used `train_lore.ipynb` on Kaggle with two T4 GPUs. That noteb
 steps; its first cell explains how `scripts/pack_kaggle.py` packs the code (`lib/` included) and the
 data as two private Kaggle datasets.
 
-### MARLIN + ConvNeXt (`fab/`)
+### MARLIN + ConvNeXt (`marlin-convnext/`)
 A frozen MARLIN ViT-Base on MTCNN face crops and a frozen ConvNeXt-Tiny on 3-channel log-mel
 spectrograms feed a dilated TCN head with mean pooling. Run `train_marlin_kaggle.ipynb` on Kaggle
 (GPU) with the `code/` folder and the data folder attached as datasets. The notebook installs
@@ -166,7 +166,7 @@ spectrograms feed a dilated TCN head with mean pooling. Run `train_marlin_kaggle
 `scripts/extract_features_marlin.py --encoder marlin_convnext --marlin-model marlin_vit_base_ytf`, and
 trains on both protocols.
 
-> **Note.** The committed `fab/results/*/summary.json` and `folds.csv` do not match the
+> **Note.** The committed `marlin-convnext/results/*/summary.json` and `folds.csv` do not match the
 > run's own `preds.csv`. The official `preds.csv` also labels 17 truthful clips of episode 73 as
 > lies. The paper therefore recomputes every MARLIN + ConvNeXt number from `preds.csv` against the
 > labels in `dataset.csv` (paper §5.5).

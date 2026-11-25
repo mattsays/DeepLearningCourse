@@ -105,9 +105,9 @@ orientation; the shared feature cache is named after the encoder that produced i
 
 | Direction | Paradigm | Backbones | Owner | Notebook (target) |
 |---|---|---|---|---|
-| `tia` | 1 — frozen backbones + cross-modal fusion | `dinov2-small` / `siglip-base`, `wavlm-base-plus` | — | `tia/train_tia.ipynb` |
-| `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | Lorenzo | `lore/train_lore.ipynb` |
-| `fab` | 3 — 3D CNN + temporal head | `marlin-vit-base` / `convnext_tiny`, mel-spectrogram | Fabio | `fab/train_marlin.ipynb` |
+| `tia` | 1 — frozen backbones + cross-modal fusion | `dinov2-small` / `siglip-base`, `wavlm-base-plus` | — | `cross-modal-fusion/train.ipynb` |
+| `lore` | 2 — spatio-temporal Transformer + LoRA | `videomae-base`, `hubert-base` | Lorenzo | `videomae-hubert-lora/train_lore.ipynb` |
+| `fab` | 3 — 3D CNN + temporal head | `marlin-vit-base` / `convnext_tiny`, mel-spectrogram | Fabio | `marlin-convnext/train_marlin.ipynb` |
 
 Only three paradigms are documented so far ([`docs/architectures.md`](docs/architectures.md)); add the
 fourth row here when it is assigned. Fill the Owner column in the same commit. `notebooks/architectures/pecl.ipynb`

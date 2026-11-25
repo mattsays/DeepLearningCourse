@@ -102,7 +102,7 @@ and head placement, so they too can carry speaker-specific information.
 Audio becomes the strongest single channel, but only its ranking is reliably above chance. We pooled
 the 886 holdout clips of VideoMAE + HuBERT (135 speakers), each judged at its own fold's threshold,
 and resampled whole speakers 10,000 times, comparing the model on every resample with the majority
-rate of that same resample (`lore/scripts/cluster_test.py`). HuBERT's accuracy of 56.1% is 4.0
+rate of that same resample (`videomae-hubert-lora/scripts/cluster_test.py`). HuBERT's accuracy of 56.1% is 4.0
 points above the 52.1% majority, but the 95% interval of that gain, −4.7 to +9.1, contains zero
 (one-sided $p = 0.21$): its accuracy is suggestive, not significant. Its pooled AUC of 58.7 is
 8.7 points above 0.5 with interval +2.8 to +14.7 ($p = 0.001$), and the fused model behaves the

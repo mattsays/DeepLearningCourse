@@ -65,7 +65,7 @@ modality.
   ),
   caption: [ACC / AUC per official fold (mean over seeds where several were run); the last row
     repeats the three-fold means of @tab:main. MARLIN + ConvNeXt is recomputed from its per-clip
-    predictions (`fab/results/marlin-official/preds.csv`) against the `dataset.csv` labels.],
+    predictions (`marlin-convnext/results/marlin-official/preds.csv`) against the `dataset.csv` labels.],
 ) <tab:folds>
 
 #figure(
@@ -84,7 +84,7 @@ modality.
   ),
   caption: [Unimodal ablations, ACC / AUC on the official protocol. —: the model has no such
     stream. n/a: single-stream variants of MARLIN + ConvNeXt were not run. The Temporal CNN's single-stream variants zero the other stream's input
-    columns (`teo/features/mask_streams.py`) and keep the same training recipe.],
+    columns (`temporal-cnn/features/mask_streams.py`) and keep the same training recipe.],
 ) <tab:unimodal>
 
 *Reading.* Every measured model beats the majority floor, but only two clearly beat the
@@ -101,7 +101,7 @@ pipelines, not of freezing against adaptation alone.
 MARLIN + ConvNeXt reaches 58.9 ± 0.9% accuracy and 58.9% AUC with 97,857 trainable parameters. A
 frozen encoder pre-trained specifically on faces, followed by an explicit temporal model, therefore
 does not close the gap to the general-purpose visual encoders on this protocol. The run's own summary
-files (`fab/results/*/summary.json`, `folds.csv`) report slightly different values (59.1 / 60.3
+files (`marlin-convnext/results/*/summary.json`, `folds.csv`) report slightly different values (59.1 / 60.3
 official, 54.1 / 56.4 subject) that its per-clip predictions do not reproduce, and its official
 prediction file marks 17 truthful clips of one episode as lies; every MARLIN + ConvNeXt number in
 this report is therefore recomputed from the per-clip predictions against the `dataset.csv` labels. No single-stream

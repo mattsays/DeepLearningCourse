@@ -11,8 +11,8 @@ speech and adds pauses. Crucially, this effect is strongest when an interviewer 
 load (for instance through unexpected questions); passive observation of short answers is far
 weaker. The _arousal_ account links concealed emotion to changes in respiration and vocal-fold
 tension, and so to pitch, voice quality and facial tension. Large meta-analyses find these passive
-cues real but weak, with small effect sizes, large variation between individuals, and human
-accuracy barely above chance @depaulo2003cues.
+cues real but weak, with small effect sizes and large variation between individuals
+@depaulo2003cues, and human judges barely above chance @bond2006accuracy.
 
 Early automatic systems therefore relied on hand-coded behaviour. The MUMIN scheme
 @allwood2007mumin annotates facial expressions, head movements, gaze and gestures, and multimodal
@@ -35,11 +35,10 @@ deception cues are low-level, and trains two kinds of modules:
   both directions.
 
 In total PECL trains 5.06M of 71.08M parameters (7.12%). An optional multi-task variant also
-predicts 25 MUMIN labels. @tab:pecl reports its results on the official folds. Like earlier
-deception corpora, the official DOLOS folds split randomly at the clip level, placing the same
-speakers on both sides of the split; when the paper cross-tests PECL on external datasets with
-unseen subjects, accuracy drops to 57.54% (Bag-of-Lies) and 56.17% (Real-Life Trials). We measure
-this protocol effect directly in Appendix A.
+predicts 25 MUMIN labels. @tab:pecl reports its results on the three train/test folds released with
+the dataset, which follow the convention of earlier deception corpora and which we adopt
+(@sec:data). The paper also cross-tests PECL on external datasets, reaching 57.54% on Bag-of-Lies
+and 56.17% on Real-Life Trials.
 
 #figure(
   table(
@@ -60,7 +59,7 @@ this protocol effect directly in Appendix A.
     (quoted, not reproduced).],
 ) <tab:pecl>
 
-== Self-supervised encoders, graph/temporal models, and adaptation
+== Pre-trained encoders, from-scratch models and adaptation
 DOLOS is too small to train or fully fine-tune large backbones from scratch. Our study therefore
 contrasts a compact model trained from scratch—a 1-D temporal CNN over facial-landmark and acoustic
 descriptors—against architectures built on self-supervised pre-training:
@@ -89,7 +88,7 @@ and with PECL's internal adapters.
     table.hline(),
     table.header([Regime], [Trainable component], [Trainable params], [Main trade-off]),
     table.hline(stroke: 0.5pt),
-    [Theory-driven], [MLP on 17 acoustic stats], [609], [No visual identity leak; limited to passive acoustics],
+    [Theory-driven], [MLP on 17 acoustic stats], [609], [Interpretable acoustic floor; no visual cues],
     [From scratch], [1-D CNN on landmarks + LLDs], [57k], [Strong task inductive bias; no pre-trained priors],
     [Frozen + head], [Linear projections + fusion MLP or TCN], [58k–165k], [Fast, low overfitting; cannot adapt internal layers],
     [Adapters (PECL)], [UT-Adapter + PAVF inside 4 layers], [5.06M], [Mid-level cross-attention; higher capacity on ~1.7k clips],

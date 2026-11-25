@@ -26,11 +26,11 @@
 //
 // Sources of the numbers (paths relative to notebooks/architectures/ of the code tree):
 //   Cross-Modal Fusion   cross-modal-fusion/results/{late,video,audio}-{official,subject}/
-//   VideoMAE + HuBERT    lore/results/fusion-video-lora-r8-official+audio-lora-r8-official/
-//                        lore/results/fusion-video-lora-r8+audio-lora-r8/
-//   Theory baseline      load/results/load-{official,subject}/
-//   Temporal CNN         teo/results/temporal-{official,subject,official-video,official-audio}/
-//   MARLIN + ConvNeXt    fab/results/marlin-{official,subject}/preds.csv, rescored against
+//   VideoMAE + HuBERT    videomae-hubert-lora/results/fusion-video-lora-r8-official+audio-lora-r8-official/
+//                        videomae-hubert-lora/results/fusion-video-lora-r8+audio-lora-r8/
+//   Theory baseline      acoustic-baseline/results/load-{official,subject}/
+//   Temporal CNN         temporal-cnn/results/temporal-{official,subject,official-video,official-audio}/
+//   MARLIN + ConvNeXt    marlin-convnext/results/marlin-{official,subject}/preds.csv, rescored against
 //                        dataset.csv (its summary.json / folds.csv are not reproduced)
 
 #import "template.typ": todo, notrun, blk, arr, frozen-fill, train-fill

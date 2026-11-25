@@ -8,7 +8,7 @@ Every number is read from a committed file, never typed in:
 
     fig1-protocol-gap.pdf   official vs subject-independent ACC/AUC
                             cross-modal-fusion/results/*/summary.json
-                            lore/results/*/summary.json and *fusion_report.json
+                            videomae-hubert-lora/results/*/summary.json and *fusion_report.json
                             MARLIN and the theory baseline: report/context.md (§2, §5)
     fig2-roc.pdf            pooled ROC on the official folds
                             cross-modal-fusion/results/{late,video,audio}-official/preds.csv
@@ -17,7 +17,7 @@ Every number is read from a committed file, never typed in:
                             (saved by the notebook as results/diagnostics_mumin.csv)
     fig4-efficiency.pdf     official AUC against trainable parameters and training time
                             cross-modal-fusion/results/*/summary.json,
-                            lore/results/*/summary.json,
+                            videomae-hubert-lora/results/*/summary.json,
                             MARLIN, baseline and PECL: report/context.md (§1, §2, §5)
 
 The MUMIN table is parsed from the notebook's stored output because the CSV it wrote was
@@ -88,7 +88,7 @@ def protocol_rows() -> list[dict]:
         rows.append({"label": label, "official": (off["acc"], off["auc"]),
                      "subject": (sub["acc"], sub["auc"])})
 
-    lore = RESULTS / "lore/results"
+    lore = RESULTS / "videomae-hubert-lora/results"
     fused = read_json(lore / "fusion-video-lora-r8-official+audio-lora-r8-official/fusion_report.json")
     fused_sub = read_json(lore / "fusion-video-lora-r8+audio-lora-r8/fusion_report.json")
     pick = {r["name"]: r for r in fused["reports"]}
@@ -100,14 +100,14 @@ def protocol_rows() -> list[dict]:
                      "official": (pick[name]["cv"]["acc"], pick[name]["cv"]["auc"]),
                      "subject": (pick_sub[name]["cv"]["acc"], pick_sub[name]["cv"]["auc"])})
 
-    load = RESULTS / "load/results"
+    load = RESULTS / "acoustic-baseline/results"
     rows.insert(0, {"label": "Theory baseline",
                     "official": (read_json(load / "load-official/summary.json")["acc"],
                                  read_json(load / "load-official/summary.json")["auc"]),
                     "subject": (read_json(load / "load-subject/summary.json")["acc"],
                                 read_json(load / "load-subject/summary.json")["auc"])})
 
-    teo = RESULTS / "teo/results"
+    teo = RESULTS / "temporal-cnn/results"
     rows.append({"label": "Temporal CNN",
                  "official": (read_json(teo / "temporal-official/summary.json")["acc"],
                               read_json(teo / "temporal-official/summary.json")["auc"]),
@@ -279,7 +279,7 @@ def efficiency_points() -> list[dict]:
         pts.append({"label": label, "params": s["trainable_params"], "auc": s["auc"] * 100,
                     "time": "25 s", "regime": "head", "marker": "o", "color": "#2c6ea3"})
 
-    lore = RESULTS / "lore/results"
+    lore = RESULTS / "videomae-hubert-lora/results"
     for run, label, minutes in (("video-lora-r8-official", "VideoMAE+HuBERT · video", "45 min"),
                                 ("audio-lora-r8-official", "VideoMAE+HuBERT · audio", "10 min")):
         s = read_json(lore / f"{run}/summary.json")
@@ -289,12 +289,12 @@ def efficiency_points() -> list[dict]:
                 "time": "54 min", "regime": "lora", "marker": "s", "color": "#c8732b"})
 
     # report/context.md §2 (baseline, 609 parameters) and §5 (MARLIN); times from report @tab:main
-    load = RESULTS / "load/results"
+    load = RESULTS / "acoustic-baseline/results"
     pts.append({"label": "Theory baseline", "params": 609,
                 "auc": 100 * read_json(load / "load-official/summary.json")["auc"], "time": "10 s",
                 "regime": "theory", "marker": "D", "color": "#6f6f6f"})
 
-    teo = RESULTS / "teo/results"
+    teo = RESULTS / "temporal-cnn/results"
     pts.append({"label": "Temporal CNN", "params": 57_322,
                 "auc": 100 * read_json(teo / "temporal-official/summary.json")["auc"], "time": "2.6 min",
                 "regime": "head", "marker": "X", "color": "#7b5c9e"})
