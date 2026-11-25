@@ -17,7 +17,7 @@ comparison. The fixed-epoch rule gives Cross-Modal Fusion no tuning advantage, s
 unlikely to be an artefact of the rule. The front ends differ as well — face detector, crop, number
 of frames and audio window (@tab:inputs) — so the ranking compares complete pipelines rather than
 isolated architectural choices. All results in the main text use the official folds; Appendix A
-adds a complementary evaluation of the same models on an alternative, speaker-disjoint split.
+adds a complementary evaluation of the same models on an alternative split.
 
 *Temporal resolution.* Sixteen frames per clip is about 3 frames per second at the median duration
 of 5 s, 5.3 fps on a 3 s clip (5th percentile of duration) and 1.8 fps on a 9 s clip (95th
@@ -30,6 +30,12 @@ HuBERT branch hears at most the first 10 s of a clip at evaluation, while its vi
 spans the whole clip. Both late-fusion models combine the modalities only after averaging each over
 time, so they cannot test whether the _timing_ of facial and vocal cues relative to each other
 carries signal.
+
+*Scope.* The transcript is never an explicit input and no lexical baseline is run. The acoustic
+encoders do hear the words, but no model here is asked to read the content: a text model would test a
+different hypothesis, how much of the label the claim itself carries, and we leave that out of scope
+rather than approximate it with a bag of words. The claim that the visual channel carries the
+performance is therefore relative to the audio-visual channels, not to language.
 
 *External validity.* A game show is a low-stakes, performed setting, and its contestants are
 practised comedians who lie for entertainment. Detecting deception in a courtroom, an interview or at

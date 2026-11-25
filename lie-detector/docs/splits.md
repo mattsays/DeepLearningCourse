@@ -70,13 +70,13 @@ Per fold: `train` ≈ 102 subjects / 1,160 clips (captains included), `val` ≈ 
 
 The paper's protocol (`Training_Protocols/*.csv`, shipped with the annotations) is a random split over
 **clips**, so the same speaker lands on both sides. Measured on the shipped files by joining `file_name`
-to the `Participants name` column of `Dolos.xlsx`:
+to the `Participants name` column of `Dolos.xlsx`, with the names as recorded (no alias merging):
 
 | Fold | train / test clips | test speakers | also in train | test clips with a train speaker |
 |---|---:|---:|---:|---:|
-| 1 | 1,099 / 549 | 168 | 153 | 95.3% |
-| 2 | 1,095 / 553 | 162 | 150 | 95.7% |
-| 3 | 1,100 / 548 | 163 | 160 | 98.7% |
+| 1 | 1,099 / 549 | 161 | 149 | 96.0% |
+| 2 | 1,095 / 553 | 157 | 148 | 96.7% |
+| 3 | 1,100 / 548 | 159 | 156 | 98.7% |
 
 One clip is in both `train_fold1` and `test_fold1`, and one in both sides of fold 3. The deception rate
 per test fold (45.2 / 46.3 / 46.9%) matches the corpus (46.7%), which is what a random split over clips

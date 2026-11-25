@@ -31,10 +31,10 @@
   the field: a temporal CNN trained from scratch on facial landmarks and acoustic descriptors, a
   cross-modal fusion head on frozen DINOv2 and WavLM embeddings, VideoMAE and HuBERT adapted with
   LoRA, and a temporal convolutional head on frozen MARLIN and ConvNeXt features. The cross-modal
-  fusion model scores highest, with 72.2% accuracy and 80.4% AUC while training only 165k
-  parameters; this is 7.4 accuracy points above the PECL result reported by the dataset paper,
-  under a related but non-identical evaluation. LoRA adaptation reaches 66.3% / 73.1%,
-  MARLIN + ConvNeXt 58.9% / 58.9%, the temporal CNN 56.3% / 59.1% and the acoustic baseline
+  fusion model reaches 72.2% accuracy and 80.4% AUC (the highest AUC of the four paradigms) while
+  training only 165k parameters; this is 7.4 accuracy points above the PECL result reported by the
+  dataset paper, under a related but non-identical evaluation. LoRA adaptation reaches 66.3% /
+  73.1%, MARLIN + ConvNeXt 58.9% / 58.9%, the temporal CNN 56.3% / 59.1% and the acoustic baseline
   56.5% / 59.2%. Unimodal ablations show that the visual stream carries most of the performance and
   that late fusion adds little over the best single modality.
 ]

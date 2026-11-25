@@ -59,7 +59,10 @@ out of the encoders. @fig:fusion shows the data flow, and @tab:params the parame
 clipping at 1.0, no learning-rate schedule and no augmentation. The loss is binary cross-entropy
 with the positive class weighted by the negative/positive ratio of the training fold (0.88–0.94 on
 the official folds). On the official folds the model trains for a fixed 30 epochs, the final weights
-are used, and the threshold is 0.5. Each fold takes about 8 s on a T4 GPU, because the encoders never
+are used, and the threshold is 0.5. Thirty is the epoch budget of the five-fold development split
+(Appendix A), where early stopping picks the epoch (19.7 on average over the fifteen runs); with no
+validation set on the official folds we train to that budget, so no official-fold score informed the
+number. Each fold takes about 8 s on a T4 GPU, because the encoders never
 run during training. Three seeds (0, 1, 2) control initialisation and shuffling; reported means and
 standard deviations are over the nine seed × fold runs.
 
@@ -102,8 +105,10 @@ combine the two any better than video alone.
   caption: [ACC / AUC per seed, averaged over the three official folds.],
 ) <tab:seeds>
 
-Across seeds the AUC of the fused model stays between 79.6 and 81.8 (@tab:seeds), so the ranking of
-the variants does not depend on initialisation. Summed over the nine runs, the fused model makes
+Across seeds the AUC of each variant stays within 2.3 points (@tab:seeds), but the ordering of the
+two heads is not stable: late fusion leads on seed 0 (81.8 vs 79.5) and video-only on seeds 1 and 2
+(80.8 vs 79.8, 80.5 vs 79.6). A difference of this size does not separate them. Summed over the nine
+runs, the fused model makes
 1,313 true negatives, 505 false positives, 559 false negatives and 1,445 true positives: precision
 74.1%, recall on lies 72.1% and specificity 72.2%. Errors are therefore balanced between the two
 classes, as expected from a threshold of 0.5 combined with class weighting.
@@ -132,7 +137,7 @@ the official folds, so we report no numbers for them.
 == Comparison with PECL
 On the official folds the model scores 7.4 ACC and 17.7 AUC points above the PECL result reported
 by #cite(<guo2023dolos>, form: "prose"), and 5.3 and 15.8 above its multi-task variant, while
-training 30 times fewer _trainable_ parameters. This is a higher reported score under a related but
+training 30 times fewer _trainable_ parameters (@fig:efficiency). This is a higher reported score under a related but
 non-identical evaluation, not a head-to-head result: we did not re-run PECL, and the two numbers are
 computed on different sets of test clips (caveats below). The two designs differ on three points:
 - *Frozen encoders vs adapters.* PECL trains 5.06M parameters inside the first four layers of its
@@ -142,20 +147,34 @@ computed on different sets of test clips (caveats below). The two designs differ
 - *Temporal modelling.* PECL aligns 64 frames with 64 audio tokens and fuses them layer by layer; we
   average 16 frames and 64 tokens over time and fuse once.
 
+#figure(
+  image("../figures/fig4-efficiency.pdf", width: 100%),
+  caption: [Official-protocol AUC against the number of trainable parameters (log scale), with the
+    training time for one seed over the three folds in parentheses. The frozen-encoder heads reach
+    the highest AUC with 30–90 times fewer trainable parameters than PECL's adapters, while the
+    from-scratch CNN and MARLIN + ConvNeXt sit at the level of the 609-parameter acoustic baseline.
+    Training time excludes feature extraction; AUC is threshold-free, so a constant predictor scores
+    50, below the plotted range.],
+) <fig:efficiency>
+
 PECL's multi-task supervision with MUMIN labels is not used: annotations are never part of our
 models. The comparison has three caveats. First, we score 1,274 test clips instead of the 1,650
 of the paper's test files, and the missing clips are not a random sample: they are the ones that
 could not be downloaded or had no cached embedding. Second, each of our own models is scored on a
 different subset (@tab:coverage), so even our internal ranking is not on identical clips. Third,
 the reference implementation selects its reported epoch on the test fold#footnote[Re-scored in the
-same way — best test epoch, threshold 0.5 — VideoMAE + HuBERT reaches 68.0 ± 1.8 ACC and 72.9 AUC.
-We do not use this selection rule anywhere else.], which, if anything, favours PECL. A direct
+same way — best test epoch, threshold 0.5 — VideoMAE + HuBERT reaches 68.0 ± 1.8 ACC and 72.9 AUC,
+as recorded in `lore/docs/report.md`; the per-fold files of that re-scoring were not kept, so we
+cite it as an observation and not as a result. We do not use this selection rule anywhere else.],
+which, if anything, favours PECL. A direct
 comparison would require re-running PECL on exactly our clips.
 
 == Analysis
 *By gender.* Female speakers are 20% of the test clips. Using the seed-averaged predictions of the
 fused model (pooled ACC 73.3%, AUC 81.3%), accuracy is 70.3% (AUC 79.3) on the 256 clips of women
-and 74.1% (AUC 81.9) on the 1,016 clips of men. VideoMAE + HuBERT shows the same gap (64.9% vs
+and 74.1% (AUC 81.9) on the 1,016 clips of men. Pooled the same way, the video-only head scores
+75.3% and 81.6 AUC on the same 1,272 clips, so averaging the seeds reverses the ordering of
+@tab:ablation and neither aggregation settles which head is better. VideoMAE + HuBERT shows the same gap (64.9% vs
 66.6%), so the gap is not specific to one architecture; the acoustic baseline, on the other hand,
 shows none (57.6% on 290 female and 56.5% on 1,135 male clips). The smaller amount of female
 training data is one plausible explanation for the gap of the two visual models, but our

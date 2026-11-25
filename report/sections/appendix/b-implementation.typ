@@ -6,8 +6,10 @@
 and the Cross-Modal Fusion, baseline and MARLIN heads ran on Google Colab or Kaggle with an NVIDIA T4
 GPU; VideoMAE + HuBERT ran on Kaggle with two T4 GPUs, one branch per GPU (torch 2.11,
 transformers 5.23, peft 0.21.3); the Temporal CNN (MediaPipe 1.2.3, openSMILE 2.6.0, feature
-extraction included) and the acoustic features run on CPU. All numbers in
-this report come from the saved result files of each run, which record the dataset and split hashes.
+extraction included) and the acoustic features run on CPU. Every number in the tables of this report
+comes from the saved result files of each run, which record the dataset and split hashes; the only
+exception is the re-scoring quoted in the PECL comparison, which we mark as an observation because
+its per-fold files were not kept.
 
 #figure(
   table(

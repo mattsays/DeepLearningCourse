@@ -80,7 +80,7 @@ mostly does not.
 ## Why: the round is the unit
 
 A DOLOS clip is one answer inside one round of the game show. The annotation set has **1,678 clips in
-151 groups** of (episode, label) — a median of **10 clips per group**, and 99.9% of clips belong to a
+149 groups** of (episode, label) — a median of **11 clips per group**, and every clip belongs to a
 group with at least two members. All the clips of a group share the label, the speaker, the clothes,
 the set and often the same few seconds of video.
 
@@ -158,8 +158,8 @@ other.
 > three seeds, while the same model on a subject-independent split reaches 53.0 / 55.2. The gain is
 > confined to the visual channel: DINOv2 alone moves from 52.2 / 53.7 to 72.8 / 79.5, while WavLM
 > alone moves only from 54.7 / 58.9 to 58.8 / 62.5, and 17 hand-chosen acoustic features with 609
-> parameters move from 50.8 / 54.0 to 55.1 / 58.8. The dataset has 1,678 clips in 151 episode-label
-> groups (median 10 clips per group), so a random clip-level split places same-episode, same-label
+> parameters move from 50.8 / 54.0 to 55.1 / 58.8. The dataset has 1,678 clips in 149 episode-label
+> groups (median 11 clips per group), so a random clip-level split places same-episode, same-label
 > siblings on both sides of the boundary, and a frozen face encoder only has to recognise the round.
 > The paper's own cross-dataset results (57.54 on Bag-of-Lies, 56.17 on Real-Life Trials) sit in the
 > same range as our subject-level estimate, which suggests the in-dataset figure is a within-dataset
