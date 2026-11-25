@@ -11,10 +11,11 @@ poorly. On the official folds, test clips share speakers and recording sessions 
 each fold 95.0–99.6% of the downloadable test clips have their speaker in the training set, and every test clip comes
 from an episode that is also in training. A clip of a given speaker in a given round shares the
 label, clothing, lighting and studio with the other clips of that round. Part of the accuracy may
-therefore reflect recognising the person and the round rather than the lie. Two observations support
-this reading: VideoMAE + HuBERT ranks clips of the _same_ speaker only moderately well (within-speaker
-AUC 0.63 for audio and 0.66 for video, against 0.67 and 0.71 over all test clips), and Appendix A shows that all models
-lose most of their advantage when speakers are disjoint.
+therefore reflect recognising the person and the round rather than the lie. Three observations support
+this reading: a linear probe on the frozen DINOv2 vector names the speaker with 96.3% accuracy over
+145 speakers (@tab:probes); VideoMAE + HuBERT ranks clips of the _same_ speaker only moderately well
+(within-speaker AUC 0.63 for audio and 0.66 for video, against 0.67 and 0.71 over all test clips); and
+Appendix A shows that all models lose most of their advantage when speakers are disjoint.
 
 *Small and imbalanced data.* Each official fold trains on about 800–970 clips, depending on whether the model carves out a
 validation set. 79% of the clips show men, and two
@@ -38,6 +39,12 @@ frames entirely. The HuBERT branch hears at most the first 10 s of a clip at eva
 video counterpart spans the whole clip. Both late-fusion models combine the modalities only after
 averaging each over time, so they cannot test whether the _timing_ of facial and vocal cues
 relative to each other carries signal.
+
+*Scope.* The transcript is never an explicit input and no lexical baseline is run. The acoustic
+encoders do hear the words, but no model here is asked to read the content: a text model would test a
+different hypothesis, how much of the label the claim itself carries, and we leave that out of scope
+rather than approximate it with a bag of words. The claim that the visual channel carries the
+performance is therefore relative to the audio-visual channels, not to language.
 
 *External validity.* A game show is a low-stakes, performed setting, and its contestants are
 practised comedians who lie for entertainment. Detecting deception in a courtroom, an interview or at

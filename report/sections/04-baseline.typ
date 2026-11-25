@@ -71,7 +71,9 @@ with dropout 0.3. This gives *609 trainable parameters* ($17 times 32 + 32$ in t
 $32 times 1 + 1$ in the output layer). The model is trained with binary cross-entropy weighted by
 the class ratio of the training fold, AdamW (learning rate $10^(-3)$, weight decay $10^(-2)$),
 batch size 32 and gradient clipping at 1.0, for a fixed 60 epochs on the official 3-fold split,
-with three seeds; the threshold is the paper's 0.5. One fold trains in about four seconds on CPU.
+with three seeds; the threshold is the paper's 0.5. As for the fusion head, 60 is the budget of the
+subject-independent protocol, where early stopping stops at 18.1 epochs on average, so the number
+was not read off official-fold scores. One fold trains in about four seconds on CPU.
 The features are computed for every downloadable clip (no extraction failed, and Praat left no
 missing values), so the baseline is scored on all 1,427 downloadable official test clips. On the
 official split, `LoadHead` reaches *56.5 ± 1.7% ACC* and *59.2% AUC* (per-seed AUC: 59.6, 59.2,

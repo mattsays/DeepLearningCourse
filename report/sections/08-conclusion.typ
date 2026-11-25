@@ -6,7 +6,8 @@
 We compared four audio-visual architectures for deception detection on DOLOS, against a
 theory-driven acoustic baseline, on the official 3-fold protocol. Three conclusions stand out.
 
-First, _on the official split, a light head on strong frozen representations scored highest_. A
+First, _on the official split, a light head on strong frozen representations reached the best AUC
+of the four paradigms_. A
 165k-parameter head on frozen DINOv2 and WavLM embeddings reaches 72.2% accuracy and 80.4% AUC,
 above the PECL result reported by the dataset paper (under a related but non-identical evaluation),
 above our VideoMAE + HuBERT pipeline adapted with LoRA (66.3% / 73.1%) and above MARLIN + ConvNeXt
@@ -22,8 +23,9 @@ and close to it only for the from-scratch Temporal CNN, whose two streams are eq
 two models built on general-purpose pre-trained visual encoders.
 
 Third, _benchmark accuracy is not yet evidence of lie detection_. The probes show that the visual
-embeddings encode static posture and framing far better than fast facial motion, and the
-subject-disjoint evaluation of Appendix A brings every model back to 50–56% accuracy. We therefore
+embeddings encode static posture and framing far better than fast facial motion, and the same vectors
+name the speaker with 96.3% accuracy (@tab:probes); on the subject-disjoint evaluation of Appendix A
+every model then falls back to chance level (49.9–56.1% accuracy). We therefore
 recommend reporting a speaker-independent split alongside the official one.
 
 Future work follows from these limits: re-running PECL and

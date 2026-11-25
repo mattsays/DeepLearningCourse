@@ -16,8 +16,8 @@ particular, 5 of their clips are longer than the 19 s maximum stated by the pape
 most likely annotation errors. The clips
 are not distributed as video: they are cut from YouTube episodes. Of the 1,678 annotated clips,
 1,452 could still be downloaded with their media; all download failures come from 9 episodes that
-are no longer available. Structurally, the corpus consists of *151 episode–label rounds* (a
-median of 10 clips per round), is skewed by gender (*79.1% male* vs. *20.9% female* clips,
+are no longer available. Structurally, the corpus consists of *149 episode–label rounds* (a
+median of 11 clips per round), is skewed by gender (*79.1% male* vs. *20.9% female* clips,
 with deception rates of 56.4% and 43.6%, respectively), and includes two recurring team captains
 (_Lee Mack_ and _David Mitchell_) who contribute 468 clips (28% of the dataset, deceptive 69.0%
 of the time).

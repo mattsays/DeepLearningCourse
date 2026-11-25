@@ -25,6 +25,8 @@ embeddings, parameter-efficient LoRA adaptation of VideoMAE and HuBERT, and temp
 modelling over frozen MARLIN and ConvNeXt features, anchored to a 609-parameter baseline built
 solely from theory-motivated acoustic statistics.
 
+#pagebreak()
+
 Our contributions are:
 - a comparison of four audio-visual paradigms spanning the full pre-training spectrum, together
   with a 609-parameter baseline grounded in psychological theory, evaluated under the official
