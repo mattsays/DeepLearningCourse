@@ -36,8 +36,8 @@ output.
 mean and standard deviation of their own validation logits, giving $z_v$ and $z_a$, and combined as
 $ s = w z_v + (1 - w) z_a, quad w in {0, 0.05, ..., 1}, $
 with $w$ chosen by validation AUC. The decision threshold is then chosen on the fused validation
-scores. The chosen weights on the official folds were 0.50, 0.80 and 0.45: the video branch
-contributes at least half.
+scores. The chosen weights on the official folds were 0.50, 0.80 and 0.45: the two branches
+receive roughly equal weight in two folds, and video dominates in the third.
 
 *Training.* Binary cross-entropy with positive-class weighting; AdamW with learning rate
 $2 dot 10^(-4)$ for the adapters and $10^(-3)$ for the head, weight decay 0.01; one epoch of linear

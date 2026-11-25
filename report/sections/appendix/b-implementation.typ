@@ -16,7 +16,7 @@ this report come from the saved result files of each run, which record the datas
     table.hline(),
     table.header([Model], [Optimiser, LR], [Weight decay], [Batch], [Epochs], [Other]),
     table.hline(stroke: 0.5pt),
-    [Theory baseline], [AdamW, 1e-3], [0.01], [32], [60 (fixed)], [dropout 0.3, clip 1.0, 3 seeds],
+    [Theory baseline], [AdamW, 1e-3], [0.01], [32], [60 (fixed) official; ≤ 60, patience 10 subject], [dropout 0.3, clip 1.0, 3 seeds],
     [Temporal CNN], [AdamW, 3e-4], [1e-4], [16], [≤ 40, early stop (val AUC), patience 15], [plateau LR ×0.5, clip 5.0, dropout 0.3, 3 seeds],
     [Cross-Modal Fusion], [AdamW, 1e-3], [0.05], [16], [30 (fixed)], [dropout 0.3, clip 1.0, 3 seeds],
     [VideoMAE + HuBERT], [AdamW, 2e-4 (LoRA), 1e-3 (head)], [0.01], [16 (accum.)], [≤ 10 video, ≤ 15 audio], [warm-up + cosine, fp16, r 8, α 16],

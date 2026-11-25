@@ -22,21 +22,24 @@ is the same or larger: 95.0%, 96.9% and 99.6% of the test clips come from a trai
     [3], [1,100 / 548], [163], [160], [98.7%],
     table.hline(),
   ),
-  caption: [Speaker overlap in the official folds (`lie-detector/docs/splits.md`).],
+  caption: [Speaker overlap in the official folds, computed from the official fold files on the
+    full annotation set.],
 ) <tab:leak>
 
 == Our 5-fold protocol
 The unit is the person: no subject ever crosses a boundary.
 + The two team captains (468 clips, 69.0% deception) are always in training and never evaluated;
   otherwise they would make up ≈70% of a test fold and the fold would measure two people.
-+ 27 subjects (182 clips) are held out as a test set that is opened only once, at the end.
-+ The remaining 151 subjects (1,021 clips, 47.7% deception) are split into 5 folds. The assignment
++ 27 subjects (182 annotated clips; 24 subjects and 155 clips among the downloadable ones) are held
+  out as a test set that is opened only once, at the end.
++ The remaining 151 subjects (1,021 annotated clips, 47.7% deception; 135 subjects and 886 clips
+  downloadable) are split into 5 folds. The assignment
   is optimised so that every fold has 47.3–48.0% deception and the same share of female clips; a
   naive random split would give folds from 42% to 66% deception.
 + Inside each fold, 15% of the training subjects form a validation set, used for early stopping and
   for choosing the threshold.
 
-The script is `lie-detector/scripts/make_splits.py`; same annotations and same seed give
+The script is `scripts/make_splits.py`; same annotations and same seed give
 byte-identical files, and every split file is verified against a hash at load time.
 
 The folds are subject-disjoint but not episode-disjoint: clips of different speakers recorded in the
@@ -58,15 +61,16 @@ boundary. An episode-disjoint control has not been run.
     [#h(1em) audio only], [58.8 / 62.5], [54.9 / 58.3], [−3.9], [−4.2],
     [VideoMAE + HuBERT, LoRA], [66.3 / 73.1], [56.1 / 60.6], [−10.2], [−12.5],
     [#h(1em) video only], [65.4 / 71.1], [51.6 / 53.6], [−13.8], [−17.5],
-    [#h(1em) audio only], [62.8 / 67.0], [56.1 / 59.5], [−6.7], [−7.5],
+    [#h(1em) audio only], [62.8 / 67.0], [56.1 / 59.5], [−6.7], [−7.4],
     [MARLIN + ConvNeXt#super[‡]], [58.9 / 58.9], [54.8 / 55.4], [−4.1], [−3.5],
-    [Majority class], [52.4–53.6], [52.1–52.6], [—], [—],
+    [Majority class], [52.4–53.3], [52.1–52.6], [—], [—],
     table.hline(),
   ),
   caption: [The same models on the official and the subject-independent protocol. Baseline,
     Temporal CNN and Cross-Modal Fusion: 3 seeds; VideoMAE + HuBERT and MARLIN + ConvNeXt: seed 0.
-    #super[‡]Recomputed from the run's per-clip predictions; its subject-split file covers 800 of the
-    886 holdout clips (152–165 per fold instead of 177–178).],
+    #super[‡]Recomputed from the run's per-clip predictions against the `dataset.csv` labels (@sec:results).
+    Its subject-split predictions, like those of Cross-Modal Fusion, cover 800 of the 886 holdout
+    clips (152–165 per fold instead of 177–178).],
 ) <tab:protocol>
 
 On unseen speakers every model falls to within a few points of the majority floor. The drop is
@@ -95,7 +99,7 @@ subject-independent estimates.
 
 MARLIN + ConvNeXt has the smallest protocol gap of the deep models (−4.1 ACC, −3.5 AUC), but also
 the lowest official score of the three models built on pre-trained encoders, it was run without
-single-stream variants, and its subject-split predictions miss 86 holdout clips. Whether its face-specific
+single-stream variants, and its subject-split predictions, like those of Cross-Modal Fusion, miss 86 holdout clips. Whether its face-specific
 encoder relies less on identity than DINOv2 or VideoMAE, or simply has less to lose, cannot be
 decided from these numbers.
 
@@ -108,11 +112,11 @@ behaviour is not.
 These five-fold numbers are _development estimates_, not untouched test results. The variants of
 @tab:variants and the design choices of each model were explored on the same folds, so any choice
 made by looking at them is optimistically biased; a clean estimate needs model selection nested
-inside the training folds. The reserved test set of 27 subjects (182 clips) exists for this reason.
+inside the training folds. The reserved test set of 24 subjects (155 downloadable clips) exists for this reason.
 The configuration to be scored on it is frozen — Cross-Modal Fusion, late variant, seeds 0, 1 and
 2, retrained on the same five folds (`cross-modal-fusion/test.ipynb`) — and the set is opened
-exactly once; it was not opened for this report. With 27 subjects its interval would be about
-±18.5 points (`lie-detector/docs/evaluation.md`), enough to confirm the order of magnitude of the
+exactly once; it was not opened for this report. With 24 subjects, a subject-level binomial
+interval around 60% accuracy is about ±19.6 points, enough to confirm the order of magnitude of the
 five-fold estimate but not to rank models.
 
 == MUMIN diagnostics

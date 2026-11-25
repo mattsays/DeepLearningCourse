@@ -1,0 +1,30 @@
+{
+  "run": "marlin-subject",
+  "n_folds": 5,
+  "n_seeds": 1,
+  "folds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "seeds": [
+    0
+  ],
+  "acc": 0.541,
+  "acc_std": 0.030700162866017473,
+  "f1": 0.585,
+  "f1_std": 0.02896549671592047,
+  "auc": 0.5640000000000001,
+  "auc_std": 0.027973201461398697,
+  "balanced_acc": 0.547,
+  "balanced_acc_std": 0.029748949561287007,
+  "train_minutes": 0.25,
+  "epochs_mean": 30.0,
+  "trainable_params": 97857,
+  "threshold_range": [
+    0.45,
+    0.48
+  ]
+}

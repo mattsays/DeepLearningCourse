@@ -1,0 +1,51 @@
+{
+  "run": "video-subject",
+  "direction": "tia",
+  "variant": "video",
+  "split": "subject",
+  "protocol": "v1",
+  "captains": "include",
+  "owner": "mattsays",
+  "folds": 5,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "encoders": {
+    "video": "dinov2-small",
+    "audio": "wavlm-base-plus",
+    "text": "text-minilm"
+  },
+  "widths": {
+    "video": 384,
+    "audio": 768,
+    "text": 384
+  },
+  "trainable_params": 57857,
+  "training": {
+    "batch_size": 16,
+    "epochs": 30,
+    "patience": 8,
+    "lr": 0.001,
+    "weight_decay": 0.05,
+    "optimiser": "AdamW",
+    "loss": "BCEWithLogitsLoss(pos_weight=train-fold prevalence)"
+  },
+  "device": "cuda",
+  "created_utc": "2026-11-21T14:42:17Z",
+  "git_commit": "69b92b0ab7e369790346b1a0e0db27a10e528b91",
+  "git_branch": "main",
+  "git_dirty": true,
+  "python": "3.13.16",
+  "dataset": {
+    "fingerprint": "8fa198b1fe71",
+    "clips": 1678,
+    "source": "dataset.csv sha256:8fa198b1fe71  1678 clips  1452 with media"
+  },
+  "protocol_files": {
+    "directory": "/content/drive/MyDrive/dolos/splits",
+    "manifest_sha256": "fbc88b132eb7",
+    "verified": true
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "fold": 2,
+  "run": "video-lora-r8-official",
+  "modality": "video",
+  "best_epoch": 10,
+  "epochs_run": 10,
+  "best_val_auc": 0.6824,
+  "threshold": 0.6439,
+  "holdout": {
+    "acc": 0.6625258799171843,
+    "f1": 0.6128266033254157,
+    "auc": 0.736953904368765,
+    "balanced_acc": 0.6718008255933953,
+    "precision": 0.7771084337349398,
+    "recall": 0.5058823529411764,
+    "threshold": 0.6439,
+    "n": 483,
+    "confusion": {
+      "tn": 191,
+      "fp": 37,
+      "fn": 126,
+      "tp": 129
+    }
+  },
+  "holdout_at_0.5": {
+    "acc": 0.6894409937888198,
+    "f1": 0.70703125,
+    "auc": 0.736953904368765,
+    "balanced_acc": 0.6882352941176471,
+    "precision": 0.7042801556420234,
+    "recall": 0.7098039215686275,
+    "threshold": 0.5,
+    "n": 483,
+    "confusion": {
+      "tn": 152,
+      "fp": 76,
+      "fn": 74,
+      "tp": 181
+    }
+  },
+  "val": {
+    "acc": 0.6408450704225352,
+    "f1": 0.592,
+    "auc": 0.6824162679425837,
+    "balanced_acc": 0.652511961722488,
+    "precision": 0.7551020408163265,
+    "recall": 0.4868421052631579,
+    "threshold": 0.6439,
+    "n": 142,
+    "confusion": {
+      "tn": 54,
+      "fp": 12,
+      "fn": 39,
+      "tp": 37
+    }
+  },
+  "majority_holdout": 0.5279503105590062,
+  "sizes": {
+    "train": 802,
+    "val": 142,
+    "holdout": 483
+  },
+  "pos_weight": 0.8651,
+  "parameters": {
+    "total": 86522881,
+    "trainable": 297217,
+    "adapters": 294912,
+    "trainable_pct": 0.344
+  },
+  "lora_check": {
+    "lora_matrices": 24,
+    "max_logit_change_with_random_B": 0.003835
+  },
+  "seconds": {
+    "train_total": 880.1,
+    "train_per_epoch": 88.0,
+    "val_per_epoch": 28.5
+  },
+  "peak_gpu_gb": 0.79,
+  "paper_style": {
+    "note": "best epoch picked ON THE TEST FOLD at threshold 0.5, as the paper's train_test.py does: optimistic, only for comparison with the paper",
+    "test_acc_at_05": 0.6894,
+    "test_f1_at_05": 0.707,
+    "test_auc": 0.737,
+    "epoch": 10
+  }
+}

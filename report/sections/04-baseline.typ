@@ -27,8 +27,8 @@ Each clip becomes a 17-dimensional vector, computed on CPU in milliseconds per c
 energy of each frame is expressed in dB. A frame is _voiced_ if its energy is within 25 dB of the
 clip's 90th-percentile energy; the relative threshold makes the rule independent of recording level.
 Silent runs of at least 200 ms count as _pauses_, so that the short silences of stop consonants are
-ignored. From this envelope we compute the duration, the mean and standard deviation of the RMS
-amplitude, the energy range of voiced frames (95th minus 5th percentile, in dB), the voiced ratio,
+ignored. From the waveform and this envelope we compute the duration, the root-mean-square amplitude, the
+square root of the standard deviation of the instantaneous power, the energy range of voiced frames (95th minus 5th percentile, in dB), the voiced ratio,
 the number of pauses, the share of time spent in pauses, the mean pause length and the number of
 voice onsets per second, a proxy for the syllable rate.
 

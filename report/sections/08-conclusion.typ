@@ -16,9 +16,9 @@ freezing beats adapting in general.
 
 Second, _the visual channel carries the official-split performance, and our late-fusion heads did
 not improve on it_. Video alone comes within about a point of the fused model in all three
-architectures where we measured it; audio alone is 4–14 points lower for the two pre-trained models,
+architectures where we measured it; audio alone is 3.5–13.3 points lower for the two pre-trained models,
 and close to it only for the from-scratch Temporal CNN, whose two streams are equally weak. The psychologically motivated acoustic features reach
-56.5% accuracy: above chance, level with the Temporal CNN and MARLIN + ConvNeXt, and far below the
+56.5% accuracy: above chance, level with the Temporal CNN, within 2.4 points of MARLIN + ConvNeXt, and far below the
 two models built on general-purpose pre-trained visual encoders.
 
 Third, _benchmark accuracy is not yet evidence of lie detection_. The probes show that the visual

@@ -12,7 +12,7 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     table.hline(),
     table.header([Model], [ACC], [F1], [AUC], [Bal. ACC], [Trainable]),
     table.hline(stroke: 0.5pt),
-    [Majority class (same clips)], [52.4–53.6], [69.6], [50.0], [50.0], [0],
+    [Majority class (same clips)], [52.4–53.3], [69.6], [50.0], [50.0], [0],
     [PECL @guo2023dolos (reported)], [64.75], [71.20], [62.71], [n.r.], [5.06M],
     [Theory-driven baseline], [56.5 ± 1.7], [60.2], [59.2], [56.1], [609],
     table.hline(stroke: 0.3pt),
@@ -37,7 +37,7 @@ fold, and @tab:unimodal isolates the contribution of each modality.
     table.hline(),
     table.header([Fold], [Cross-Modal Fusion], [VideoMAE + HuBERT], [MARLIN + ConvNeXt], [Temporal CNN], [Theory-driven baseline]),
     table.hline(stroke: 0.5pt),
-    [1], [69.0 / 77.1], [65.2 / 72.9], [60.0 / 58.1], [55.1 / 56.8], [54.9 / 57.2],
+    [1], [69.0 / 77.1], [65.1 / 72.9], [60.0 / 58.1], [55.1 / 56.8], [54.9 / 57.2],
     [2], [73.4 / 81.3], [67.9 / 76.0], [58.4 / 56.8], [59.4 / 62.0], [56.7 / 60.3],
     [3], [74.2 / 82.9], [65.7 / 70.3], [58.4 / 61.8], [54.5 / 58.4], [57.9 / 60.2],
     [Mean], [72.2 / 80.4], [66.3 / 73.1], [58.9 / 58.9], [56.3 / 59.1], [56.5 / 59.2],
@@ -80,7 +80,11 @@ pipelines, not of freezing against adaptation alone.
 
 MARLIN + ConvNeXt reaches 58.9 ± 0.9% accuracy and 58.9% AUC with 97,857 trainable parameters. A
 frozen encoder pre-trained specifically on faces, followed by an explicit temporal model, therefore
-does not close the gap to the general-purpose visual encoders on this protocol. No single-stream
+does not close the gap to the general-purpose visual encoders on this protocol. The run's own summary
+files (`fab/results/*/summary.json`, `folds.csv`) report slightly different values (59.1 / 60.3
+official, 54.1 / 56.4 subject) that its per-clip predictions do not reproduce, and its official
+prediction file marks 17 truthful clips of one episode as lies; every MARLIN + ConvNeXt number in
+this report is therefore recomputed from the per-clip predictions against the `dataset.csv` labels. No single-stream
 variant of it was run, so we cannot say how its score splits between the face and the voice.
 
 This late-fusion design, which averages each stream over time before combining them, did not

@@ -38,8 +38,9 @@
   reported by the dataset paper, under a related but non-identical evaluation: we score a subset of
   the official test clips and do not re-run PECL. LoRA adaptation reaches 66.3% accuracy and 73.1%
   AUC, MARLIN + ConvNeXt 58.9% and 58.9%, and the from-scratch temporal CNN 56.3% and 59.1%.
-  Unimodal ablations show that the visual stream carries almost all of the performance on the
-  official split. In Appendix A, we re-evaluate the models on a strict subject-independent 5-fold
+  Unimodal ablations show that, on the official split, video alone comes within about a point of
+  the fused model in every architecture where we measured it, while the pre-trained audio branches
+  trail by 3.5–13.3 points. In Appendix A, we re-evaluate the models on a strict subject-independent 5-fold
   split where no speaker crosses training, validation, and test boundaries: the development
   estimates drop to 50–56% accuracy, driven by a collapse in the visual
   channel, while the acoustic stream keeps a modest signal whose AUC, unlike its accuracy, stays

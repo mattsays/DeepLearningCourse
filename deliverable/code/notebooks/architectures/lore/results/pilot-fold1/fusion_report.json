@@ -1,0 +1,282 @@
+{
+  "reports": [
+    {
+      "name": "video only",
+      "cv": {
+        "n_folds": 1,
+        "acc": 0.5706214689265536,
+        "acc_std": 0.0,
+        "f1": 0.6346153846153846,
+        "f1_std": 0.0,
+        "auc": 0.6095268542199488,
+        "auc_std": 0.0,
+        "balanced_acc": 0.5784526854219949,
+        "balanced_acc_std": 0.0
+      },
+      "pooled": {
+        "acc": 0.5706214689265536,
+        "f1": 0.6346153846153846,
+        "auc": 0.6095268542199488,
+        "balanced_acc": 0.5784526854219949,
+        "precision": 0.5365853658536586,
+        "recall": 0.7764705882352941,
+        "threshold": 0.5,
+        "n": 177,
+        "confusion": {
+          "tn": 35,
+          "fp": 57,
+          "fn": 19,
+          "tp": 66
+        }
+      },
+      "majority": 0.519774011299435,
+      "per_gender": {
+        "female": {
+          "n": 50,
+          "acc": 0.66,
+          "balanced_acc": 0.6850594227504245,
+          "lie_rate": 0.62
+        },
+        "male": {
+          "n": 127,
+          "acc": 0.5354330708661418,
+          "balanced_acc": 0.5814307458143074,
+          "lie_rate": 0.4251968503937008
+        }
+      },
+      "per_fold": [
+        {
+          "fold": 1,
+          "threshold": 0.3044,
+          "holdout": {
+            "acc": 0.5706214689265536,
+            "f1": 0.6346153846153846,
+            "auc": 0.6095268542199488,
+            "balanced_acc": 0.5784526854219949,
+            "precision": 0.5365853658536586,
+            "recall": 0.7764705882352941,
+            "threshold": 0.3044,
+            "n": 177,
+            "confusion": {
+              "tn": 35,
+              "fp": 57,
+              "fn": 19,
+              "tp": 66
+            }
+          },
+          "best_epoch": 5
+        }
+      ]
+    },
+    {
+      "name": "audio only",
+      "cv": {
+        "n_folds": 1,
+        "acc": 0.655367231638418,
+        "acc_std": 0.0,
+        "f1": 0.7053140096618358,
+        "f1_std": 0.0,
+        "auc": 0.7268542199488491,
+        "auc_std": 0.0,
+        "balanced_acc": 0.6631074168797954,
+        "balanced_acc_std": 0.0
+      },
+      "pooled": {
+        "acc": 0.655367231638418,
+        "f1": 0.7053140096618358,
+        "auc": 0.7268542199488491,
+        "balanced_acc": 0.6631074168797954,
+        "precision": 0.5983606557377049,
+        "recall": 0.8588235294117647,
+        "threshold": 0.5,
+        "n": 177,
+        "confusion": {
+          "tn": 43,
+          "fp": 49,
+          "fn": 12,
+          "tp": 73
+        }
+      },
+      "majority": 0.519774011299435,
+      "per_gender": {
+        "female": {
+          "n": 50,
+          "acc": 0.68,
+          "balanced_acc": 0.6706281833616299,
+          "lie_rate": 0.62
+        },
+        "male": {
+          "n": 127,
+          "acc": 0.6456692913385826,
+          "balanced_acc": 0.6845509893455098,
+          "lie_rate": 0.4251968503937008
+        }
+      },
+      "per_fold": [
+        {
+          "fold": 1,
+          "threshold": 0.2801,
+          "holdout": {
+            "acc": 0.655367231638418,
+            "f1": 0.7053140096618358,
+            "auc": 0.7268542199488491,
+            "balanced_acc": 0.6631074168797954,
+            "precision": 0.5983606557377049,
+            "recall": 0.8588235294117647,
+            "threshold": 0.2801,
+            "n": 177,
+            "confusion": {
+              "tn": 43,
+              "fp": 49,
+              "fn": 12,
+              "tp": 73
+            }
+          },
+          "best_epoch": 4
+        }
+      ]
+    },
+    {
+      "name": "fused (w tuned on val)",
+      "cv": {
+        "n_folds": 1,
+        "acc": 0.6892655367231638,
+        "acc_std": 0.0,
+        "f1": 0.7150259067357513,
+        "f1_std": 0.0,
+        "auc": 0.729539641943734,
+        "auc_std": 0.0,
+        "balanced_acc": 0.693925831202046,
+        "balanced_acc_std": 0.0
+      },
+      "pooled": {
+        "acc": 0.6892655367231638,
+        "f1": 0.7150259067357513,
+        "auc": 0.729539641943734,
+        "balanced_acc": 0.693925831202046,
+        "precision": 0.6388888888888888,
+        "recall": 0.8117647058823529,
+        "threshold": 0.5,
+        "n": 177,
+        "confusion": {
+          "tn": 53,
+          "fp": 39,
+          "fn": 16,
+          "tp": 69
+        }
+      },
+      "majority": 0.519774011299435,
+      "per_gender": {
+        "female": {
+          "n": 50,
+          "acc": 0.66,
+          "balanced_acc": 0.6748726655348047,
+          "lie_rate": 0.62
+        },
+        "male": {
+          "n": 127,
+          "acc": 0.7007874015748031,
+          "balanced_acc": 0.7300862506341959,
+          "lie_rate": 0.4251968503937008
+        }
+      },
+      "per_fold": [
+        {
+          "fold": 1,
+          "threshold": 0.4926,
+          "holdout": {
+            "acc": 0.6892655367231638,
+            "f1": 0.7150259067357513,
+            "auc": 0.729539641943734,
+            "balanced_acc": 0.693925831202046,
+            "precision": 0.6388888888888888,
+            "recall": 0.8117647058823529,
+            "threshold": 0.4926,
+            "n": 177,
+            "confusion": {
+              "tn": 53,
+              "fp": 39,
+              "fn": 16,
+              "tp": 69
+            }
+          },
+          "video_weight": 0.25
+        }
+      ]
+    },
+    {
+      "name": "fused (w = 0.5)",
+      "cv": {
+        "n_folds": 1,
+        "acc": 0.6610169491525424,
+        "acc_std": 0.0,
+        "f1": 0.6629213483146067,
+        "f1_std": 0.0,
+        "auc": 0.710613810741688,
+        "auc_std": 0.0,
+        "balanced_acc": 0.6622762148337595,
+        "balanced_acc_std": 0.0
+      },
+      "pooled": {
+        "acc": 0.6610169491525424,
+        "f1": 0.6629213483146067,
+        "auc": 0.710613810741688,
+        "balanced_acc": 0.6622762148337595,
+        "precision": 0.6344086021505376,
+        "recall": 0.6941176470588235,
+        "threshold": 0.5,
+        "n": 177,
+        "confusion": {
+          "tn": 58,
+          "fp": 34,
+          "fn": 26,
+          "tp": 59
+        }
+      },
+      "majority": 0.519774011299435,
+      "per_gender": {
+        "female": {
+          "n": 50,
+          "acc": 0.56,
+          "balanced_acc": 0.6247877758913413,
+          "lie_rate": 0.62
+        },
+        "male": {
+          "n": 127,
+          "acc": 0.7007874015748031,
+          "balanced_acc": 0.7252663622526636,
+          "lie_rate": 0.4251968503937008
+        }
+      },
+      "per_fold": [
+        {
+          "fold": 1,
+          "threshold": 0.5085,
+          "holdout": {
+            "acc": 0.6610169491525424,
+            "f1": 0.6629213483146067,
+            "auc": 0.710613810741688,
+            "balanced_acc": 0.6622762148337595,
+            "precision": 0.6344086021505376,
+            "recall": 0.6941176470588235,
+            "threshold": 0.5085,
+            "n": 177,
+            "confusion": {
+              "tn": 58,
+              "fp": 34,
+              "fn": 26,
+              "tp": 59
+            }
+          },
+          "video_weight": 0.5
+        }
+      ]
+    }
+  ],
+  "board_row": "| lore | \u2014 | VideoMAE-B + HuBERT-B \u00b7 LoRA \u00b7 late fusion | 594,434 | 68.9 \u00b1 0.0 | 71.5 | 73.0 | 69.4 | 52.0 | 18 min train (Tesla T4) |",
+  "selected": "fused (w tuned on val)",
+  "runs": {
+    "video": "/kaggle/working/runs/video-lora-r8",
+    "audio": "/kaggle/working/runs/audio-lora-r8"
+  }
+}

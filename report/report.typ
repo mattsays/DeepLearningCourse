@@ -21,16 +21,17 @@
 // report/template.typ. Section numbering, cross-references and the bibliography index
 // are computed over the whole document, so splitting a file never changes a number.
 //
-// Every red TODO box marks a number or a passage that is not measured yet. Do not fill
-// a TODO with a remembered number: take it from the run's results file.
+// No TODO box is left: every number is taken from a run's results file. Do not add a
+// remembered number.
 //
-// Sources of the numbers (paths relative to lie-detector/notebooks/architectures/):
+// Sources of the numbers (paths relative to notebooks/architectures/ of the code tree):
 //   Cross-Modal Fusion   cross-modal-fusion/results/{late,video,audio}-{official,subject}/
 //   VideoMAE + HuBERT    lore/results/fusion-video-lora-r8-official+audio-lora-r8-official/
-//                        lore/results/fusion-video-lora-r8+audio-lora-r8/  and lore/docs/report.md
-//   Theory baseline      load/train_load.ipynb (cell outputs) and load/README.md
-//   Temporal CNN         teo/runs/cnn_baseline/best.pt (validation metadata only)
-//   MARLIN + ConvNeXt    fab/train_marlin_kaggle.ipynb (code only, no outputs committed)
+//                        lore/results/fusion-video-lora-r8+audio-lora-r8/
+//   Theory baseline      load/results/load-{official,subject}/
+//   Temporal CNN         teo/results/temporal-{official,subject,official-video,official-audio}/
+//   MARLIN + ConvNeXt    fab/results/marlin-{official,subject}/preds.csv, rescored against
+//                        dataset.csv (its summary.json / folds.csv are not reproduced)
 
 #import "template.typ": todo, notrun, blk, arr, frozen-fill, train-fill
 

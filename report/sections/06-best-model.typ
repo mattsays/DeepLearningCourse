@@ -95,7 +95,7 @@ combine the two any better than video alone.
     table.header([Seed], [Late fusion], [Video only], [Audio only]),
     table.hline(stroke: 0.5pt),
     [0], [73.8 / 81.8], [72.8 / 79.5], [59.3 / 62.7],
-    [1], [70.5 / 79.8], [73.7 / 80.8], [59.1 / 61.9],
+    [1], [70.5 / 79.8], [73.6 / 80.8], [59.1 / 61.9],
     [2], [72.2 / 79.6], [73.0 / 80.5], [58.1 / 62.9],
     table.hline(),
   ),
@@ -110,8 +110,9 @@ classes, as expected from a threshold of 0.5 combined with class weighting.
 
 The code implements a wider design space (@tab:variants): attention pooling instead of the mean,
 frame-difference ("delta") features that describe facial motion, a _congruence_ model that decides
-only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were explored
-only on the subject-independent split of Appendix A and were not run on the official folds.
+only from the disagreement $1 - cos(v, a)$ between the two streams. These variants were tried
+during development on the subject-independent split of Appendix A, but those exploratory runs were
+not kept as result files and none was run on the official folds, so we report no numbers for them.
 
 #figure(
   table(
@@ -153,13 +154,13 @@ comparison would require re-running PECL on exactly our clips.
 
 == Analysis
 *By gender.* Female speakers are 20% of the test clips. Using the seed-averaged predictions of the
-fused model (pooled ACC 73.4%, AUC 81.3%), accuracy is 70.3% (AUC 79.3) on the 256 clips of women
+fused model (pooled ACC 73.3%, AUC 81.3%), accuracy is 70.3% (AUC 79.3) on the 256 clips of women
 and 74.1% (AUC 81.9) on the 1,016 clips of men. VideoMAE + HuBERT shows the same gap (64.9% vs
 66.6%), so the gap is not specific to one architecture; the acoustic baseline, on the other hand,
 shows none (57.6% on 290 female and 56.5% on 1,135 male clips). The smaller amount of female
 training data is one plausible explanation for the gap of the two visual models, but our
-experiments do not isolate it: female clips also have a different base rate (43.8% deception
-against 56.6% for male clips).
+experiments do not isolate it: female test clips also have a different base rate (46.9% deception
+against 53.8% for male clips).
 
 *By clip length.* Splitting the test clips into three equal groups by duration (2–4 s, 4–5 s,
 5–48 s), the fused model reaches 71.2%, 71.7% and 77.1% accuracy (AUC 79.0, 80.4, 84.2). Longer
@@ -169,12 +170,13 @@ spreads the frames over more of the answer and over more camera shots, so the vi
 more of the scene; we have not tested this directly.
 
 *What the visual embedding contains.* Linear probes trained on the frozen, time-averaged embeddings
+(seed 0, on the subject-independent folds of Appendix A)
 recover the hand-annotated MUMIN behaviours well above a prevalence-matched noise level: 24 of 26
 frequent cues from DINOv2 (mean AUC 0.665 against 0.567 for noise) and 18 from WavLM (0.585 against
 0.539). The best-read visual cues are static configurations — touching the head or body (0.759),
 mouth corners down (0.756), facing the interlocutor (0.753) — while fast facial actions such as
 eyebrow raising (0.549), nodding and frowning are barely readable at 16 frames per clip. The best
-audio cues are vocalisations: filled pauses such as "ah"/"mmh" (0.818) and laughter (0.737). The
+audio cues are vocalisations: speech disturbances other than "ah"/"mmh" fillers (0.818) and laughter (0.737). The
 visual embeddings therefore encode static configuration — posture, position, framing — far better
 than facial motion. This is consistent with, though not proof of, the reading in @sec:discussion
 that the video branch partly recognises the person and the scene.

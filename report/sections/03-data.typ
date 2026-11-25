@@ -18,7 +18,7 @@ are not distributed as video: they are cut from YouTube episodes. Of the 1,678 a
 1,452 could still be downloaded with their media; all download failures come from 9 episodes that
 are no longer available. Structurally, the corpus consists of *151 episode–label rounds* (a
 median of 10 clips per round), is skewed by gender (*79.1% male* vs. *20.9% female* clips,
-with deception rates of 56.6% and 43.8%, respectively), and includes two recurring team captains
+with deception rates of 56.4% and 43.6%, respectively), and includes two recurring team captains
 (_Lee Mack_ and _David Mitchell_) who contribute 468 clips (28% of the dataset, deceptive 69.0%
 of the time).
 
@@ -99,7 +99,7 @@ each other.
     table.hline(),
   ),
   caption: [Test clips actually scored on each official fold. Cross-Modal Fusion needs a cached
-    embedding for every modality. The fold-1 test file lists one clip twice: the baseline scores both
+    embedding for every modality. The fold-1 test file lists one clip twice: the baseline and Cross-Modal Fusion score both
     entries, the other models score it once.],
 ) <tab:coverage>
 
@@ -112,7 +112,7 @@ We report the three metrics of the paper:
 
 We add *balanced accuracy* (the mean of the two per-class recalls) where available, and the
 _majority baseline_, always predicting the most frequent class on the same clips, as the floor
-every model must beat: 52.4–53.6% depending on the subset.
+every model must beat: 52.4–53.3% depending on the subset.
 
 The official folds have no validation set, and the models handle this in two ways (@tab:rules).
 Cross-Modal Fusion and the theory-driven baseline train for a fixed number of epochs and classify at

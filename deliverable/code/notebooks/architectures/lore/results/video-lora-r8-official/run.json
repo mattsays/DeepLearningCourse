@@ -1,0 +1,93 @@
+{
+  "config": {
+    "modality": "video",
+    "run_name": "video-lora-r8-official",
+    "protocol": "official",
+    "backbone": "MCG-NJU/videomae-base-finetuned-kinetics",
+    "head_only": false,
+    "lora_r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.1,
+    "lora_targets": [
+      "query",
+      "value"
+    ],
+    "lora_mlp_last_n": 0,
+    "use_dora": false,
+    "head_dropout": 0.3,
+    "face_cache": "faces-yunet-t32-s224",
+    "num_frames": 16,
+    "rrc_scale": [
+      0.8,
+      1.0
+    ],
+    "eval_tta": false,
+    "audio_train_seconds": 8.0,
+    "audio_eval_seconds": 10.0,
+    "subject_balanced": false,
+    "epochs": 10,
+    "patience": 3,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "lr_lora": 0.0002,
+    "lr_head": 0.001,
+    "weight_decay": 0.01,
+    "warmup_epochs": 1.0,
+    "max_grad_norm": 1.0,
+    "grad_checkpointing": true,
+    "num_workers": 2,
+    "seed": 0,
+    "debug": false,
+    "limit": null
+  },
+  "paths": {
+    "data": "/kaggle/input/datasets/lorenzomariotti03/lore-data/dolos",
+    "lib": "/tmp/DeepLearningCourse/lie-detector",
+    "faces": "/kaggle/input/datasets/lorenzomariotti03/lore-data/dolos/cached_features/faces-yunet-t32-s224",
+    "audio": "/kaggle/input/datasets/lorenzomariotti03/lore-data/dolos/audio",
+    "runs": "/kaggle/working/runs"
+  },
+  "environment": {
+    "python": "3.13.16",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.23.0",
+    "peft": "0.21.3",
+    "device": "cuda",
+    "gpu": "Tesla T4",
+    "gpu_memory_gb": 15.6
+  },
+  "data": {
+    "dataset_csv_sha256_12": "8fa198b1fe71",
+    "split_sha256": {
+      "subject_test.json": "c8a49b76b6cee074841f31322bf4ca93c1acb1e9de2fb81a84ca25c6a6af2a46",
+      "subject_fold1.json": "c96b58a11e730a08daac8ec67a960220906ab1e44fb6922d364d31c4b6962e0b",
+      "subject_fold2.json": "775ce5965f615edd1fbcc5a534fe7ddc6f4bc6e032298b2de6b432ffc00efc9a",
+      "subject_fold3.json": "96637b9117f69ab88229c9764195d0bd53bbfbf6406aa05bffb08c02448f5e57",
+      "subject_fold4.json": "84decd717d40553aba6b72902eeb56897e2e831b430852566f7e68481baf7565",
+      "subject_fold5.json": "c0f4a2f2d9fd5b9ea5c0bc0c43d919d86a5491431ab4ac849ef26612ef0f5df6",
+      "official_fold1.json": "ee6ad31433d0a62340419e912dcf9aa362f688e33823dfca88ab9a3c62fcca21",
+      "official_fold2.json": "11453036ae586ca22fb86b2558cad29d7fe808b101ec1ce0ce73d392060bbfa2",
+      "official_fold3.json": "1a16990e9f083888320a1e9900003880f8a3205fa18a1dee30085a48c4d246c8"
+    }
+  },
+  "team_repo_commit": "9b0b101",
+  "started": "2026-11-19 07:45:46",
+  "face_cache": {
+    "name": "faces-yunet-t32-s224",
+    "index_sha256_12": "372cc04b3e6e",
+    "config": {
+      "frames": 32,
+      "size": 224,
+      "scale": 1.6,
+      "min_crop": 64,
+      "score": 0.6,
+      "det_max_side": 640,
+      "smooth": 5,
+      "min_iou": 0.1,
+      "identity": true,
+      "id_threshold": 0.363,
+      "jpeg_quality": 90,
+      "mode": "face"
+    }
+  }
+}
